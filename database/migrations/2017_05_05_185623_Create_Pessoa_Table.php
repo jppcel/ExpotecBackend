@@ -29,8 +29,9 @@ class CreatePessoaTable extends Migration
           $table->string("Instituicao", 100)->nullable();
           $table->string("Senha", 60)->nullable();
           $table->boolean("AlunoUnivel");
+          $table->rememberToken();
           $table->timestamps();
-          $table->foreign("Cidade_Cod_Ibge")->references("Cidade")->on("Cod_Ibge");
+          $table->foreign("Cidade_Cod_Ibge")->references("Cod_Ibge")->on("Cidade");
       });
     }
 
