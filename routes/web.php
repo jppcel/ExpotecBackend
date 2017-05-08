@@ -14,3 +14,11 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::group(["prefix" => "api"], function(){
+  Route::group(["prefix" => "web"], function(){
+    Route::group(["prefix" => "inscricao"], function(){
+      Route::post("/new", "InscricaoController@postNew");
+    });
+  });
+});
