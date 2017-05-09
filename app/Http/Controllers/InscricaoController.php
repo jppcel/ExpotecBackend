@@ -12,6 +12,7 @@ use App\Pessoa;
 use App\Cidade;
 use App\Estado;
 use App\Pais;
+use App\CEP;
 
 class InscricaoController extends Controller
 {
@@ -40,6 +41,36 @@ class InscricaoController extends Controller
    *  @param  string  curso [0-50] => Course of Person (nullable)
    *  @param  int alunoUnivel [1] => If is AlunoUnivel of Person (nullable)
    */
+
+  public function migrateCEP(){
+    // $array = array('ac', 'al', 'am', 'ap', 'ba', 'ce', 'df', 'es', 'go', 'ma', 'mg', 'ms', 'mt', 'pa', 'pb', 'pe', 'pi', 'pr', 'rj', 'rn', 'ro', 'rr', 'rs', 'sc', 'se', 'sp', 'to');
+    // foreach($array as $uf){
+    //   $CEPs = DB::select("select * from ".$uf.";");
+    //   foreach($CEPs as $CEP){
+    //     $cidade = DB::select("select * from cidade c inner join estado e on e.id = c.estado_id where c.Cidade = :p1 && e.UF = :p2;", [$CEP[]]);
+    //   }
+    // }
+
+    $CEPs = DB::select("select * from cep_unico;");
+    foreach($CEPs as $CEP){
+      if($CEP->Cep){
+        if(count(CEP::where("cep", $CEP->Cep)->get()) == 0){
+          $cidades = DB::select("select * from cidade c inner join estado e on e.id = c.estado_id where c.Cidade = :p1 && e.UF = :p2;", [mb_convert_case($CEP->Nome, MB_CASE_UPPER, 'UTF-8'), $CEP->UF]);
+          if(count($cidades) > 0){
+            foreach($cidades as $cidade){
+              $cep = new CEP;
+              $cep->Cidade_Cod_Ibge = $cidade->Cod_Ibge;
+              $cep->CEP = $CEP->Cep;
+              $cep->CEPUnico = 1;
+              $cep->save();
+            }
+          }
+        }
+      }
+    }
+  }
+
+
   public function postNew(Request $request){
 
     // Faz a validação dos dados
