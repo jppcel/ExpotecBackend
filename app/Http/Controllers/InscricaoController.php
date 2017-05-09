@@ -51,23 +51,50 @@ class InscricaoController extends Controller
     //   }
     // }
 
-    $CEPs = DB::select("select * from cep_unico;");
-    foreach($CEPs as $CEP){
-      if($CEP->Cep){
-        if(count(CEP::where("cep", $CEP->Cep)->get()) == 0){
-          $cidades = DB::select("select * from cidade c inner join estado e on e.id = c.estado_id where c.Cidade = :p1 && e.UF = :p2;", [mb_convert_case($CEP->Nome, MB_CASE_UPPER, 'UTF-8'), $CEP->UF]);
-          if(count($cidades) > 0){
-            foreach($cidades as $cidade){
-              $cep = new CEP;
-              $cep->Cidade_Cod_Ibge = $cidade->Cod_Ibge;
-              $cep->CEP = $CEP->Cep;
-              $cep->CEPUnico = 1;
-              $cep->save();
-            }
-          }
-        }
-      }
-    }
+    // $BaseCEPs = DB::select("select * from cep_log_index where ok = 0 limit 0,10;");
+    // foreach($BaseCEPs as $BaseCEP){
+    //   $sql = "select * from ".$BaseCEP->uf." where cep like '".$BaseCEP->cep5."%';";
+    //   $CEPs = DB::select($sql);
+    //   echo count($CEPs)."<br> --->";
+    //   foreach($CEPs as $CEP){
+    //     $hasCEP = CEP::where("cep", $CEP->cep)->get();
+    //     if(count($hasCEP) == 0){
+    //       echo $CEP->cep." -- " . "select * from cidade c inner join estado e on e.id = c.estado_id where c.Cidade = '".mb_convert_case($CEP->cidade, MB_CASE_UPPER, 'UTF-8')."' && e.UF = '".strtoupper($BaseCEP->uf)."';\n";
+    //       $cidades = DB::select("select * from cidade c inner join estado e on e.id = c.estado_id where c.Cidade = '".mb_convert_case($CEP->cidade, MB_CASE_UPPER, 'UTF-8')."' && e.UF = '".strtoupper($BaseCEP->uf)."';");
+    //       if(count($cidades) > 0){
+    //         foreach($cidades as $cidade){
+    //           echo $cidade->Cod_Ibge . " - " . $CEP->cep . "<br>";
+    //           $cep = new CEP;
+    //           $cep->Cidade_Cod_Ibge = $cidade->Cod_Ibge;
+    //           $cep->TipoLogradouro = $CEP->tp_logradouro;
+    //           $cep->Logradouro = $CEP->logradouro;
+    //           $cep->Bairro = $CEP->bairro;
+    //           $cep->CEP = $CEP->cep;
+    //           $cep->CEPUnico = 1;
+    //           $cep->save();
+    //         }
+    //       }
+    //     }
+    //   }
+    //   DB::update("update cep_log_index set ok = 1 where id = :p1;", [$BaseCEP->id]);
+    // }
+
+    $json_raw = file_get_contents("http://localhost:8000/cidades.json");
+    $json = json_decode($json_raw);
+    print_r($json);
+    // foreach($json as $item){
+    //   $getCity = explode(" (", $item->Nome);
+    //   $getUF = explode(")", $getCity[1]);
+    //   $UFs = Estado::where("UF", $getUF[0])->get();
+    //   foreach($UFs as $UF){
+    //     $cidade = new Cidade;
+    //     $cidade->Cod_Ibge = $item->IBGE;
+    //     $cidade->Cidade = $getCity[0];
+    //     $cidade->Estado_Id = $UF["Id"];
+    //     $cidade->save();
+    //     echo $item->IBGE . " -> " . $getCity[0];
+    //   }
+    // }
   }
 
 
