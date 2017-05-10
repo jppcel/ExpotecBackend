@@ -17,7 +17,7 @@ class CreateCEPTable extends Migration
           $table->increments("id");
           $table->integer("Cidade_Cod_Ibge")->unsigned();
           $table->string("TipoLogradouro", 30)->nullable();
-          $table->string("Logradouro", 60)->nullable();
+          $table->string("Logradouro",70)->nullable();
           $table->string("Bairro", 80)->nullable();
           $table->string("CEP", 9);
           $table->boolean("CEPUnico");
