@@ -21,8 +21,8 @@ class CreateEstadoTable extends Migration
            $table->primary("Id");
        });
 
-        DB::Table('Estado')->insert(array('Id' => 1, 'Pais_Id' => 1, 'UF' => 'AC' ));
-        DB::Table('Estado')->insert(array('Id' => 2, 'Pais_Id' => 1, 'UF' => 'AL' ));
+        DB::Table('Estado')->insert(array('Id' => 1, 'Pais_Id' => 1, 'UF' => 'AL' ));
+        DB::Table('Estado')->insert(array('Id' => 2, 'Pais_Id' => 1, 'UF' => 'AC' ));
         DB::Table('Estado')->insert(array('Id' => 3, 'Pais_Id' => 1, 'UF' => 'AM' ));
         DB::Table('Estado')->insert(array('Id' => 4, 'Pais_Id' => 1, 'UF' => 'AP' ));
         DB::Table('Estado')->insert(array('Id' => 5, 'Pais_Id' => 1, 'UF' => 'BA' ));
