@@ -18,7 +18,7 @@
 Route::group(['prefix' => 'api'], function(){
   Route::group(['prefix' => 'web'], function(){
     Route::group(['prefix' => 'inscricao'], function(){
-      Route::get('/migrate', 'InscricaoController@migrateCEP');
+      Route::get('/new', 'InscricaoController@postNew');
     });
   });
 });
