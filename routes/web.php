@@ -20,5 +20,7 @@ Route::group(['prefix' => 'api'], function(){
     Route::group(['prefix' => 'inscricao'], function(){
       Route::get('/new', 'InscricaoController@postNew');
     });
+    Route::get('/states', 'CityController@listStates');
+    Route::get('/cities/{id}', 'CityController@listCities');
   });
 });
