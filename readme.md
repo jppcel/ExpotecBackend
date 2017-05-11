@@ -1,51 +1,55 @@
-<p align="center"><img src="https://laravel.com/assets/img/components/logo-laravel.svg"></p>
+# O uso do framework
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
-</p>
+Você pode usar o projeto do <a href="https://github.com/Expotec2017/ExpotecDocker" target="\_blank">container docker</a> que o @felipefrizzo fez, ou pode usar um semi-tutorial abaixo.
 
-## About Laravel
+## O Artisan
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable, creative experience to be truly fulfilling. Laravel attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as:
+Se você observar o projeto, você encontrará um arquivo chamado "artisan". Esse arquivo é um """"executável"""" do laravel para a criação de diversos itens do projeto, como migrations, controllers, models e assim vai. Além disso, ele é usado para executar comandos que são para executar o servidor de desenvolvimento local, migrar databases e assim vai(novamente...).
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+O nome artisan(Artesão) tem tudo a ver até com o framework: o Laravel diz que é para os Artesões da Web... :)
 
-Laravel is accessible, yet powerful, providing tools needed for large, robust applications. A superb combination of simplicity, elegance, and innovation give you tools you need to build any application with which you are tasked.
+# O semi-tutorial
 
-## Learning Laravel
+Requisitos:
+- PHP (Mínimo PHP5) - https://blog.schoolofnet.com/2015/04/como-instalar-o-php-no-windows-do-jeito-certo-e-usar-o-servidor-embutido/;
+- MariaDB (ou MySQL) - https://downloads.mariadb.org/;
 
-Laravel has the most extensive and thorough documentation and video tutorial library of any modern web application framework. The [Laravel documentation](https://laravel.com/docs) is thorough, complete, and makes it a breeze to get started learning the framework.
+## Pré-configurações
 
-If you're not in the mood to read, [Laracasts](https://laracasts.com) contains over 900 video tutorials on a range of topics including Laravel, modern PHP, unit testing, JavaScript, and more. Boost the skill level of yourself and your entire team by digging into our comprehensive video library.
+Com os requisitos instalados e configurados, vamos à configuração das variáveis de ambiente do Laravel.
+copie o arquivo .env.example para .env e faça algumas alterações:
 
-## Laravel Sponsors
+  Troque os seguintes campos para os dados de acesso ao banco. É necessário que tenha um banco de dados cadastrado para uso do laravel.
 
-We would like to extend our thanks to the following sponsors for helping fund on-going Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](http://patreon.com/taylorotwell):
+  DB_HOST=127.0.0.1
+  DB_PORT=3306
+  DB_DATABASE=homestead
+  DB_USERNAME=homestead
+  DB_PASSWORD=secret
 
-- **[Vehikl](http://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[British Software Development](https://www.britishsoftware.co)**
-- **[Styde](https://styde.net)**
-- **[Codecourse](https://www.codecourse.com)**
-- [Fragrantica](https://www.fragrantica.com)
+## Baixando as dependências
 
-## Contributing
+Abra o CMD e acesse a pasta do projeto e baixe o composer(https://getcomposer.org/download/).
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](http://laravel.com/docs/contributions).
+Após os comandos informados no site tenham sido executados, execute: "php composer.phar install"
+Esse processo pode demorar um pouco. Ele vai baixar todas as dependências do projeto. Além disso, ele vai gerar uma chave que o projeto irá utilizar, mas enfim, isso é da parte de execução do Laravel.
 
-## Security Vulnerabilities
+## Migrando a base de dados
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell at taylor@laravel.com. All security vulnerabilities will be promptly addressed.
+Com as dependências do projeto baixadas e as variáveis de ambiente configuradas, vamos migrar o banco de dados.
+No laravel, temos arquivos de configuração que geram as tabelas do banco, esses são chamados de <i>migrations</i>.
 
-## License
+Para executar as migrations é necessário apenas executar o seguinte comando do artisan: "php artisan migrate".
 
-The Laravel framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
+## Executando o servidor de testes
+
+Agora estamos próximos de executar o inicial do projeto, mas antes temos que ter uma certeza: O laravel usa a porta 8000 do seu computador para poder executar o servidor de testes, então, tenha certeza que nenhum outro aplicativo ou software esteja usando essa porta para evitar problemas de execução.
+
+Para executar o servidor de testes, execute no cmd na pasta do projeto: "php artisan serve".
+Se tudo der certo ele vai aparecer o seguinte: Laravel development server started: <http://127.0.0.1:8000>.
+Se isso aconteceu, pode acessar o link que está aparecendo no cmd e você terá acesso ao servidor de testes.
+
+
+# Não estou conseguindo executar aqui em meu computador dessa forma!
+
+Então, utilize o <a href="https://github.com/Expotec2017/ExpotecDocker" target="\_blank">container docker</a> que o @felipefrizzo fez, é mais certo que irá funcionar.
