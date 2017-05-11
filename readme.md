@@ -46,7 +46,7 @@ Para executar as migrations é necessário apenas executar o seguinte comando do
 Agora estamos próximos de executar o inicial do projeto, mas antes temos que ter uma certeza: O laravel usa a porta 8000 do seu computador para poder executar o servidor de testes, então, tenha certeza que nenhum outro aplicativo ou software esteja usando essa porta para evitar problemas de execução.
 
 Para executar o servidor de testes, execute no cmd na pasta do projeto: "php artisan serve".
-Se tudo der certo ele vai aparecer o seguinte: Laravel development server started: <http://127.0.0.1:8000>.
+Se tudo der certo ele vai aparecer o seguinte: <i>Laravel development server started: <http://127.0.0.1:8000></i>.
 Se isso aconteceu, pode acessar o link que está aparecendo no cmd e você terá acesso ao servidor de testes.
 
 
