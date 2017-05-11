@@ -14,6 +14,8 @@ Route::group(['prefix' => 'api'], function(){
   Route::group(['prefix' => 'web'], function(){
     Route::group(['prefix' => 'inscricao'], function(){
       Route::post('/new', 'InscricaoController@postNew');
+      Route::get('/pessoa/{id}/{token}', 'InscricaoController@getPessoa');
+      Route::post('/activate', 'InscricaoController@activateInscricao');
     });
     Route::get('/states', 'CityController@listStates');
     Route::get('/cities/{id}', 'CityController@listCities');
