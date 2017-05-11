@@ -42,11 +42,10 @@ class InscricaoController extends Controller
    *  @param  string  curso [0-50] => Course of Person (nullable)
    *  @param  int alunoUnivel [1] => If is AlunoUnivel of Person (nullable)
    */
-
   public function postNew(Request $request){
 
     // Faz a validação dos dados
-    $this->validate($request, [
+    $validator = \Validator::make($request->all(), [
       'nome' => 'required|string|min:5|max:60',
       'cpf' => 'required|string|min:11|max:14|unique:Pessoa,Cpf',
       'email' => 'required|string|min:5|max:100|unique:Pessoa,Email',
@@ -54,38 +53,98 @@ class InscricaoController extends Controller
       'logradouro' => 'required|string|max:100',
       'numero' => 'nullable|string|max:5',
       'bairro' => 'nullable|string|max:40',
-      'cidade' => 'required|integer|min:7|max:7',
-      'uf' => 'required|string|min:2|max:2',
+      'cidade' => 'required|integer|min:1000000|max:9999999',
       'telefone1' => 'required|string|min:11|max:11',
       'telefone2' => 'nullable|string|min:11|max:11',
       'instituicao' => 'nullable|string|max:100',
       'curso' => 'nullable|string|max:50',
-      'alunoUnivel' => 'required|int|min:1|max:1'
+      'alunoUnivel' => 'required|integer|min:1|max:1'
     ]);
-
+    // Se a validação falha, retorna um JSON de erro
+    if($validator->fai/ls()){
+      return response()->json(array("ok" => 0, "error" => 1, "typeError" => "1.0", "errors" => $validator->errors()), 422);
+    }else{
       // Agora confere se a cidade informada existe
-    $cidades = Cidade::find($request->input("cidade"));
-    foreach($cidades as $cidade){
-      $pessoa = new Pessoa;
-      $pessoa->Cidade_Cod_Ibge = $request->input("cidade");
-      $pessoa->Nome = $request->input("nome");
-      $pessoa->Cpf = $request->input("cpf");
-      $pessoa->Logradouro = $request->input("logradouro");
-      $pessoa->NumEndereco = $request->input("numero");
-      $pessoa->Bairro = $request->input("bairro");
-      $pessoa->Cep = $request->input("cep");
-      $pessoa->Fone1 = $request->input("telefone1");
-      $pessoa->Fone2 = ($request->input("telefone2")) ? $request->input("telefone2") : NULL;
-      $pessoa->Email = $request->input("email");
-      if($request->input("alunoUnivel") == 0){
-        $pessoa->Instituicao = $request->input("instituicao");
-        $pessoa->Curso = $request->input("curso");
+      $cidades = Cidade::find($request->input("cidade"));
+      if(count($cidades) == 1){
+        $pessoa = new Pessoa;
+        $pessoa->Cidade_Cod_Ibge = $request->input("cidade");
+        $pessoa->Nome = $request->input("nome");
+        $pessoa->Cpf = $request->input("cpf");
+        $pessoa->Logradouro = $request->input("logradouro");
+        $pessoa->NumEndereco = $request->input("numero");
+        $pessoa->Bairro = $request->input("bairro");
+        $pessoa->Cep = $request->input("cep");
+        $pessoa->Fone1 = $request->input("telefone1");
+        $pessoa->Fone2 = ($request->input("telefone2")) ? $request->input("telefone2") : NULL;
+        $pessoa->Email = $request->input("email");
+        if($request->input("alunoUnivel") == 0){
+          $pessoa->Instituicao = $request->input("instituicao");
+          $pessoa->Curso = $request->input("curso");
+        }
+        $pessoa->AlunoUnivel = $request->input("alunoUnivel");
+        $pessoa->remember_token = sha1($request->input("cpf") . date("YmdHis"));
+        $pessoa->save();
+        Mail::send('mail.ActivationLink', ["link" => env("APP_URL")."/token/".$pessoa->id."/".$pessoa->remember_token], function($message) use ($pessoa){
+          $message->to($pessoa->Email, $pessoa->Nome)->subject('Cadastro realizado na Expotec - Necessita ativação.');
+        });
+        return response()->json(array("ok" => 1));
+      }else{
+        return response()->json(array("ok" => 0, "error" => 1, "typeError" => "1.1", "message" => "A cidade informada não existe."));
       }
-      $pessoa->AlunoUnivel = $request->input("alunoUnivel");
-      $pessoa->save();
-      Mail::send('mail.ActivationLink', ["link" => '1'], function($message) use ($pessoa){
-        $message->to($pessoa->Email, $pessoa->Nome)->subject('Welcome!');
-      });
+    }
+  }
+
+
+  /**
+   *  @route: /api/web/inscricao/pessoa/{id}/{token}
+   *
+   *  @method: Get
+   */
+  public function getPessoa($id, $token){
+    $pessoa = Pessoa::find($id);
+    if($pessoa){
+      if($pessoa->remember_token == $token){
+        return response()->json(array("ok" => 1, "nome" => $pessoa->Nome));
+      }else {
+        return response()->json(array("ok" => 0, "error" => 1, "typeError" => "2.1", "message" => "O token informado não é válido."));
+      }
+    }else{
+      return response()->json(array("ok" => 0, "error" => 1, "typeError" => "2.2", "message" => "O usuário informado não existe."));
+    }
+  }
+
+
+  /**
+   *  @route: /api/web/inscricao/activate
+   *
+   *  @method: Post
+   *
+   *  @param  string  senha [8-60] => Password
+   *  @param  string  senha_confirmation [8-60] => Password confirmation
+   */
+  public function activateInscricao(Request $request){
+    $pessoa = Pessoa::find($request->input("id"));
+    if($pessoa){
+      if($pessoa->remember_token == $request->input("token") && $pessoa->Senha == NULL){
+        // Faz a validação dos dados
+        $validator = \Validator::make($request->all(), [
+          'senha' => 'required|string|min:8|max:60|confirmed'
+        ]);
+        // Se a validação falha, retorna um json de erro
+        if($validator->fails()){
+          return response()->json(array("ok" => 0, "error" => 1, "typeError" => "2.0", "errors" => $validator->errors()), 422);
+        }else{
+          $pessoa->Senha = bcrypt($request->input("senha"));
+          $pessoa->remember_token = sha1($pessoa->cpf . date("YmdHis"));
+          $pessoa->save();
+          return response()->json(array("ok" => 1));
+        }
+      }else{
+        return response()->json(array("ok" => 0, "error" => 1, "typeError" => "2.1", "message" => "Um erro inesperado aconteceu."));
+      }
+    }else{
+      return response()->json(array("ok" => 0, "error" => 1, "typeError" => "2.2", "message" => "O usuário informado não existe."));
     }
   }
 }
