@@ -10,15 +10,10 @@
 | contains the 'web' middleware group. Now create something great!
 |
 */
-
-// Route::get('/', function () {
-//     return view('welcome');
-// });
-// /api/web/inscricao/new
 Route::group(['prefix' => 'api'], function(){
   Route::group(['prefix' => 'web'], function(){
     Route::group(['prefix' => 'inscricao'], function(){
-      Route::get('/new', 'InscricaoController@postNew');
+      Route::post('/new', 'InscricaoController@postNew');
     });
     Route::get('/states', 'CityController@listStates');
     Route::get('/cities/{id}', 'CityController@listCities');

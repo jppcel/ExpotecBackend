@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 // Importando os Models que serão utilizados nesse controller
 use App\Pessoa;
@@ -13,6 +14,7 @@ use App\Cidade;
 use App\Estado;
 use App\Pais;
 use App\CEP;
+use App\Mail\SendActivationLink;
 
 class InscricaoController extends Controller
 {
@@ -33,8 +35,7 @@ class InscricaoController extends Controller
    *  @param  string  logradouro [0-100] => Address of Person's Address
    *  @param  integer numero [0-5] => number of Person's Address (nullable)
    *  @param  string  bairro [0-40] => zone of Person's Address (nullable)
-   *  @param  string  cidade [1-100] => city of Person's Address
-   *  @param  string  uf [2] => state of Person's Address
+   *  @param  string  cidade [7] => Cod_IBGE of the Person's City
    *  @param  string  telefone1 [11] => Phone 1 of Person
    *  @param  string  telefone2 [0 || 11] => Phone 2 of Person (nullable)
    *  @param  string  instituicao [0-100] => College of Person (nullable)
@@ -48,12 +49,12 @@ class InscricaoController extends Controller
     $this->validate($request, [
       'nome' => 'required|string|min:5|max:60',
       'cpf' => 'required|string|min:11|max:14|unique:Pessoa,Cpf',
-      'email' => 'required|string|min:5|max:100',
+      'email' => 'required|string|min:5|max:100|unique:Pessoa,Email',
       'cep' => 'required|string|min:8|max:9',
       'logradouro' => 'required|string|max:100',
       'numero' => 'nullable|string|max:5',
       'bairro' => 'nullable|string|max:40',
-      'cidade' => 'required|string|min:1|max:100',
+      'cidade' => 'required|integer|min:7|max:7',
       'uf' => 'required|string|min:2|max:2',
       'telefone1' => 'required|string|min:11|max:11',
       'telefone2' => 'nullable|string|min:11|max:11',
@@ -62,34 +63,29 @@ class InscricaoController extends Controller
       'alunoUnivel' => 'required|int|min:1|max:1'
     ]);
 
-    // Confere se o estado informado existe
-    $estados = Estado::where("UF", strtoupper($request->input("uf")))->get();
-    foreach($estados as $estado){
-
       // Agora confere se a cidade informada existe
-      $cidades = Cidade::where([
-        "Cidade" => strtoupper($request->input("cidade")),
-        "Estado_Id" => $estado["Id"]
-      ])->get();
-      foreach($cidades as $cidade){
-        $pessoa = new Pessoa;
-        $pessoa->Cidade_Cod_Ibge = $cidade["Cod_Ibge"];
-        $pessoa->Nome = $request->input("nome");
-        $pessoa->Cpf = $request->input("cpf");
-        $pessoa->Logradouro = $request->input("logradouro");
-        $pessoa->NumEndereco = $request->input("numero");
-        $pessoa->Bairro = $request->input("bairro");
-        $pessoa->Cep = $request->input("cep");
-        $pessoa->Fone1 = $request->input("telefone1");
-        $pessoa->Fone2 = ($request->input("telefone2")) ? $request->input("telefone2") : NULL;
-        $pessoa->Email = $request->input("email");
-        if($request->input("alunoUnivel") == 0){
-          $pessoa->Instituicao = $request->input("instituicao");
-          $pessoa->Curso = $request->input("curso");
-        }
-        $pessoa->AlunoUnivel = $request->input("alunoUnivel");
-        $pessoa->save();
+    $cidades = Cidade::find($request->input("cidade"));
+    foreach($cidades as $cidade){
+      $pessoa = new Pessoa;
+      $pessoa->Cidade_Cod_Ibge = $request->input("cidade");
+      $pessoa->Nome = $request->input("nome");
+      $pessoa->Cpf = $request->input("cpf");
+      $pessoa->Logradouro = $request->input("logradouro");
+      $pessoa->NumEndereco = $request->input("numero");
+      $pessoa->Bairro = $request->input("bairro");
+      $pessoa->Cep = $request->input("cep");
+      $pessoa->Fone1 = $request->input("telefone1");
+      $pessoa->Fone2 = ($request->input("telefone2")) ? $request->input("telefone2") : NULL;
+      $pessoa->Email = $request->input("email");
+      if($request->input("alunoUnivel") == 0){
+        $pessoa->Instituicao = $request->input("instituicao");
+        $pessoa->Curso = $request->input("curso");
       }
+      $pessoa->AlunoUnivel = $request->input("alunoUnivel");
+      $pessoa->save();
+      Mail::send('mail.ActivationLink', ["link" => '1'], function($message) use ($pessoa){
+        $message->to($pessoa->Email, $pessoa->Nome)->subject('Welcome!');
+      });
     }
   }
 }
