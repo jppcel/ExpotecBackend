@@ -138,7 +138,7 @@ class InscricaoController extends Controller
           $pessoa->Senha = bcrypt($request->input("senha"));
           $pessoa->remember_token = sha1($pessoa->cpf . date("YmdHis"));
           $pessoa->save();
-          return response()->json(array("ok" => 1));
+          return response()->json(array("ok" => 1, "token" => $pessoa->remember_token));
         }
       }else{
         return response()->json(array("ok" => 0, "error" => 1, "typeError" => "2.1", "message" => "Um erro inesperado aconteceu."));
