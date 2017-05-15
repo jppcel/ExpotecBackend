@@ -8,6 +8,9 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 
+// Importado o arquivo Util para uso
+use App\Http\Util\Util;
+
 // Importando os Models que serão utilizados nesse controller
 use App\Pessoa;
 use App\Cidade;
@@ -47,7 +50,7 @@ class InscricaoController extends Controller
     // Faz a validação dos dados
     $validator = \Validator::make($request->all(), [
       'nome' => 'required|string|min:5|max:60',
-      'cpf' => 'required|string|min:11|max:14|unique:Pessoa,Cpf',
+      'cpf' => 'required|cpf|min:14|max:14|unique:Pessoa,Cpf',
       'email' => 'required|string|min:5|max:100|unique:Pessoa,Email',
       'cep' => 'required|string|min:8|max:9',
       'logradouro' => 'required|string|max:100',
@@ -61,36 +64,43 @@ class InscricaoController extends Controller
       'alunoUnivel' => 'required|integer|min:1|max:1'
     ]);
     // Se a validação falha, retorna um JSON de erro
-    if($validator->fai/ls()){
+    if($validator->fails()){
       return response()->json(array("ok" => 0, "error" => 1, "typeError" => "1.0", "errors" => $validator->errors()), 422);
     }else{
-      // Agora confere se a cidade informada existe
-      $cidades = Cidade::find($request->input("cidade"));
-      if(count($cidades) == 1){
-        $pessoa = new Pessoa;
-        $pessoa->Cidade_Cod_Ibge = $request->input("cidade");
-        $pessoa->Nome = $request->input("nome");
-        $pessoa->Cpf = $request->input("cpf");
-        $pessoa->Logradouro = $request->input("logradouro");
-        $pessoa->NumEndereco = $request->input("numero");
-        $pessoa->Bairro = $request->input("bairro");
-        $pessoa->Cep = $request->input("cep");
-        $pessoa->Fone1 = $request->input("telefone1");
-        $pessoa->Fone2 = ($request->input("telefone2")) ? $request->input("telefone2") : NULL;
-        $pessoa->Email = $request->input("email");
-        if($request->input("alunoUnivel") == 0){
-          $pessoa->Instituicao = $request->input("instituicao");
-          $pessoa->Curso = $request->input("curso");
+      $CPF = Util::CPFNumbers($request->input("cpf"));
+      $CEP = Util::CEPNumbers($request->input("cep"));
+      if($CEP){
+        // Agora confere se a cidade informada existe
+        $cidades = Cidade::find($request->input("cidade"));
+        if(count($cidades) == 1){
+          $pessoa = new Pessoa;
+          $pessoa->Cidade_Cod_Ibge = $request->input("cidade");
+          $pessoa->Nome = $request->input("nome");
+          $pessoa->Cpf = $CPF;
+          $pessoa->Logradouro = $request->input("logradouro");
+          $pessoa->NumEndereco = $request->input("numero");
+          $pessoa->Bairro = $request->input("bairro");
+          $pessoa->Cep = $CEP;
+          $pessoa->Fone1 = $request->input("telefone1");
+          $pessoa->Fone2 = ($request->input("telefone2")) ? $request->input("telefone2") : NULL;
+          $pessoa->Email = $request->input("email");
+          if($request->input("alunoUnivel") == 0){
+            $pessoa->Instituicao = $request->input("instituicao");
+            $pessoa->Curso = $request->input("curso");
+          }
+          $pessoa->AlunoUnivel = $request->input("alunoUnivel");
+          $pessoa->remember_token = sha1($request->input("cpf") . date("YmdHis"));
+          $pessoa->save();
+          Mail::send('mail.ActivationLink', ["link" => env("APP_URL")."/token/".$pessoa->id."/".$pessoa->remember_token], function($message) use ($pessoa){
+            $message->to($pessoa->Email, $pessoa->Nome)->subject('Cadastro realizado na Expotec - Necessita ativação.');
+          });
+          return response()->json(array("ok" => 1));
+        }else{
+          return response()->json(array("ok" => 0, "error" => 1, "typeError" => "1.1", "message" => "A cidade informada não existe."));
         }
-        $pessoa->AlunoUnivel = $request->input("alunoUnivel");
-        $pessoa->remember_token = sha1($request->input("cpf") . date("YmdHis"));
-        $pessoa->save();
-        Mail::send('mail.ActivationLink', ["link" => env("APP_URL")."/token/".$pessoa->id."/".$pessoa->remember_token], function($message) use ($pessoa){
-          $message->to($pessoa->Email, $pessoa->Nome)->subject('Cadastro realizado na Expotec - Necessita ativação.');
-        });
-        return response()->json(array("ok" => 1));
       }else{
-        return response()->json(array("ok" => 0, "error" => 1, "typeError" => "1.1", "message" => "A cidade informada não existe."));
+        return response()->json(array("ok" => 0, "error" => 1, "typeError" => "1.2", "message" => "O CEP não foi informado."));
+
       }
     }
   }
