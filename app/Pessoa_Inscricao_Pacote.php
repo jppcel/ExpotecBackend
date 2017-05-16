@@ -15,7 +15,7 @@ class Pessoa_Inscricao_Pacote extends Model
     }
 
     public function pacotes(){
-      return $this->belongsTo("App\Pessoa");
+      return $this->belongsTo("App\Pacote");
     }
 
     public function pagamento(){

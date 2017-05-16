@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\PessoaController;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
@@ -17,7 +18,8 @@ use App\Cidade;
 use App\Estado;
 use App\Pais;
 use App\CEP;
-use App\Mail\SendActivationLink;
+use App\Pagamento;
+use App\Pessoa_Inscricao_Pacote;
 
 class InscricaoController extends Controller
 {
@@ -116,7 +118,7 @@ class InscricaoController extends Controller
     if($pessoa){
       if($pessoa->remember_token == $token){
         return response()->json(array("ok" => 1, "nome" => $pessoa->Nome));
-      }else {
+      }else{
         return response()->json(array("ok" => 0, "error" => 1, "typeError" => "2.1", "message" => "O token informado não é válido."));
       }
     }else{
@@ -130,6 +132,8 @@ class InscricaoController extends Controller
    *
    *  @method: Post
    *
+   *  @param  integer id => id of Person
+   *  @param  string  token => token of this session
    *  @param  string  senha [8-60] => Password
    *  @param  string  senha_confirmation [8-60] => Password confirmation
    */
@@ -157,4 +161,50 @@ class InscricaoController extends Controller
       return response()->json(array("ok" => 0, "error" => 1, "typeError" => "2.2", "message" => "O usuário informado não existe."));
     }
   }
+
+
+    /**
+     *  @route: /api/web/inscricao/pacote
+     *
+     *  @method: Post
+     *
+     *  @param  string cpf => [14] id of Person
+     *  @param  string token => token of this session
+     *  @param  string idPacote => Pacote's Id
+     */
+    public function makeInscricao(Request $request){
+      if(PessoaController::verifyLogin($request->input("cpf"), $request->input("token"))){
+        $pessoa = Pessoa::where("Cpf", $request->input("cpf"))->get();
+        foreach($pessoa as $Pessoa){
+          foreach($Pessoa->pacotes->all() as $pacote){
+            foreach($pacote->pagamento->all() as $pagamento){
+              if($pagamento->statusPagamento == 3){
+                return response()->json(array("ok" => 0, "error" => 1, "typeError" => "3.1", "message" => "Já há uma inscrição confirmada para esse usuário."));
+                exit();
+              }elseif($pagamento->statusPagamento == 2){
+                return response()->json(array("ok" => 0, "error" => 1, "typeError" => "3.2", "message" => "Há um pagamento pendente de uma inscrição, caso a mesma seja cancelada, poderá ser feita uma nova inscrição."));
+              }
+            }
+          }
+          $pacote = new Pessoa_Inscricao_Pacote;
+          $pacote->Pessoa_id = $Pessoa->Id;
+          $pacote->Pacote_id = $request->input("idPacote");
+          $pacote->save();
+
+          $pagamento = new Pagamento;
+          $pagamento->Pessoa_Inscricao_Pacote_id = $pacote->id;
+          $pagamento->idTransacao = rand(0,100000000);
+          $paymentOk = rand(0,1);
+          if($paymentOk == 1){
+            $pagamento->statusPagamento = 3;
+          }else{
+            $pagamento->statusPagamento = 0;            
+          }
+          $pagamento->save();
+          return response()->json(array("ok" => 1, "paymentOk" => $paymentOk));
+        }
+      }else{
+        return response()->json(array("ok" => 0, "error" => 1, "typeError" => "0.0", "message" => "Usuário deslogado."));
+      }
+    }
 }

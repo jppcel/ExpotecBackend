@@ -22,17 +22,21 @@ class PessoaController extends Controller
         'cpf' => 'required|cpf',
         'token' => 'required',
       ]);
-      // Se a validação falha, retorna um JSON de erro
-      if($validator->fails()){
-        return false;
-      }else{
+      // Se a validação falha, retorna falso
+      $retorno = false;
+      if(!$validator->fails()){
         $CPF = Util::CPFNumbers($cpf);
         $pessoa = Pessoa::where(["Cpf" => $CPF, "remember_token" => $token])->get();
-        if(count($pessoa) == 1){
-          return true;
-        }else{
-          return false;
+        foreach($pessoa as $Pessoa){
+          if($Pessoa->remember_token == $token){,
+            if($Pessoa->updated_at < time()-900){
+                $retorno = true;
+            }else{
+              LoginController::logout($cpf, $token, 0);
+            }
+          }
         }
       }
+      return $retorno;
     }
 }
