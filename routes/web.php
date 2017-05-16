@@ -17,6 +17,12 @@ Route::group(['prefix' => 'api'], function(){
       Route::get('/pessoa/{id}/{token}', 'InscricaoController@getPessoa');
       Route::post('/activate', 'InscricaoController@activateInscricao');
     });
+    Route::group(['prefix' => 'trilha'], function(){
+      Route::post('/list', 'TrilhaController@listAll');
+    });
+    Route::group(['prefix' => 'pacote'], function(){
+      Route::post('/list', 'PacoteController@listAll');
+    });
     Route::get('/states', 'CityController@listStates');
     Route::get('/cities/{id}', 'CityController@listCities');
   });
