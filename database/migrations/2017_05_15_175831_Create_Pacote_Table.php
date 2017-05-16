@@ -17,6 +17,7 @@ class CreatePacoteTable extends Migration
           $table->increments("id");
           $table->string("nome", 50);
           $table->float("valor");
+          $table->date("dataLimite");
           $table->timestamps();
       });
     }

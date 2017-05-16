@@ -18,7 +18,8 @@ class CreateTrilhaTable extends Migration
           $table->string("nome", 50);
           $table->date("diaInicio");
           $table->date("diaFim");
-          $table->integer("limite");
+          $table->integer("limite")->nullable();
+          $table->integer("vagas")->nullable();
           $table->timestamps();
       });
     }
