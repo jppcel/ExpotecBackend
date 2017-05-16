@@ -10,11 +10,11 @@ class Trilha extends Model
     protected $primaryKey = 'id';
     protected $table = 'Trilha';
 
-    public function trilha_pacote(){
-      return $this->hasMany("Trilha_Pacote");
+    public function atividades(){
+      return $this->hasMany("App\Atividade", "Trilha_id", "id");
     }
 
-    public function atividades(){
-      return $this->hasMany("App\Atividade");
+    public function trilha_pacote(){
+      return $this->hasMany("App\Trilha_Pacote");
     }
 }
