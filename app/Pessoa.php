@@ -14,4 +14,8 @@ class Pessoa extends Model
     {
       return $this->belongsTo('App\Cidade');
     }
+
+    public function pacotes(){
+      return $this->hasMany("App\Pessoa_Inscricao_Pacote");
+    }
 }

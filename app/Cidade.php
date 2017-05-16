@@ -15,6 +15,11 @@ class Cidade extends Model
       return $this->belongsTo('App\Estado');
     }
 
+    public function CEPs()
+    {
+      return $this->hasMany('App\CEP');
+    }
+
     public function pessoas()
     {
       return $this->hasMany('App\Pessoa');
