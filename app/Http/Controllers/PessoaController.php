@@ -11,6 +11,12 @@ use App\Pessoa;
 
 class PessoaController extends Controller
 {
+  /**
+   *  Method Util: Verify login | Don't have route!
+   *  @param  string  cpf [14] => CPF of Person
+   *  @param  string  token => Token of this session
+   *
+   */
     public static function verifyLogin($cpf, $token){
       $validator = \Validator::make(["cpf" => $cpf, "token" => $token], [
         'cpf' => 'required|cpf',

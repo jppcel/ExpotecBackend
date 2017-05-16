@@ -8,6 +8,15 @@ use App\Pacote;
 
 class PacoteController extends Controller
 {
+  /**
+   *  @route: /api/web/pacote/list
+   *
+   *  @method: Post
+   *
+   *  @param  string  cpf [14] => CPF of Person
+   *  @param  string  token => Token of this session
+   *
+   */
     public function listAll(Request $request){
       if(PessoaController::verifyLogin($request->input("cpf"), $request->input("token"))){
         $pacotes = Pacote::all();
