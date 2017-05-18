@@ -17,6 +17,8 @@ class CreateAtividadeTable extends Migration
           $table->increments("id");
           $table->string("nome", 50);
           $table->string("palestrante", 70);
+          $table->integer("limite")->nullable();
+          $table->integer("vagas")->nullable();
           $table->datetime("dataInicio");
           $table->datetime("dataFim");
           $table->integer("Trilha_id")->unsigned();

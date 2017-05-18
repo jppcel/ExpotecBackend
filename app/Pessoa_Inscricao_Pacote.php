@@ -19,6 +19,6 @@ class Pessoa_Inscricao_Pacote extends Model
     }
 
     public function pagamento(){
-      return $this->hasMany("App\Pagamento");
+      return $this->hasMany("App\Pagamento", "Pessoa_Inscricao_Pacote_id");
     }
 }

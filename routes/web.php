@@ -27,4 +27,9 @@ Route::group(['prefix' => 'api'], function(){
     Route::get('/states', 'CityController@listStates');
     Route::get('/cities/{id}', 'CityController@listCities');
   });
+  Route::post('/pagseguro/notification', [
+      'uses' => '\laravel\pagseguro\Platform\Laravel5\NotificationController@notification',
+      'as' => 'pagseguro.notification',
+  ]);
+  Route::get('/pagseguro/redirect', ['uses' => 'CityController@listCities', 'as' => 'pagseguro.redirect']);
 });

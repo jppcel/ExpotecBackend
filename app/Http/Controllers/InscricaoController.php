@@ -8,6 +8,7 @@ use App\Http\Controllers\PessoaController;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use laravel\pagseguro\Platform\Laravel5\PagSeguro;
 
 // Importado o arquivo Util para uso
 use App\Http\Util\Util;
@@ -19,6 +20,8 @@ use App\Estado;
 use App\Pais;
 use App\CEP;
 use App\Pagamento;
+use App\Pacote;
+use App\Atividade;
 use App\Pessoa_Inscricao_Pacote;
 
 class InscricaoController extends Controller
@@ -84,7 +87,7 @@ class InscricaoController extends Controller
           $pessoa->Bairro = $request->input("bairro");
           $pessoa->Cep = $CEP;
           $pessoa->Fone1 = $request->input("telefone1");
-          $pessoa->Fone2 = ($request->input("telefone2")) ? $request->input("telefone2") : NULL;
+          $pessoa->Fone2 = $request->input("telefone2");
           $pessoa->Email = $request->input("email");
           if($request->input("alunoUnivel") == 0){
             $pessoa->Instituicao = $request->input("instituicao");
@@ -102,7 +105,6 @@ class InscricaoController extends Controller
         }
       }else{
         return response()->json(array("ok" => 0, "error" => 1, "typeError" => "1.2", "message" => "O CEP não foi informado."));
-
       }
     }
   }
@@ -170,13 +172,13 @@ class InscricaoController extends Controller
      *
      *  @param  string cpf => [14] id of Person
      *  @param  string token => token of this session
-     *  @param  string idPacote => Pacote's Id
+     *  @param  integer idPacote => Pacote's Id
+     *  @param  integer idAtividade => Atividade's id (nullable)
      */
     public function makeInscricao(Request $request){
-      if(PessoaController::verifyLogin($request->input("cpf"), $request->input("token"))){
-        $pessoa = Pessoa::where("Cpf", $request->input("cpf"))->get();
-        foreach($pessoa as $Pessoa){
-          foreach($Pessoa->pacotes->all() as $pacote){
+      $pessoa = PessoaController::verifyLogin($request->input("cpf"), $request->input("token"));
+      if($pessoa){
+          foreach($pessoa->pacotes->all() as $pacote){
             foreach($pacote->pagamento->all() as $pagamento){
               if($pagamento->statusPagamento == 3){
                 return response()->json(array("ok" => 0, "error" => 1, "typeError" => "3.1", "message" => "Já há uma inscrição confirmada para esse usuário."));
@@ -186,23 +188,63 @@ class InscricaoController extends Controller
               }
             }
           }
-          $pacote = new Pessoa_Inscricao_Pacote;
-          $pacote->Pessoa_id = $Pessoa->Id;
-          $pacote->Pacote_id = $request->input("idPacote");
-          $pacote->save();
 
-          $pagamento = new Pagamento;
-          $pagamento->Pessoa_Inscricao_Pacote_id = $pacote->id;
-          $pagamento->idTransacao = rand(0,100000000);
-          $paymentOk = rand(0,1);
-          if($paymentOk == 1){
-            $pagamento->statusPagamento = 3;
-          }else{
-            $pagamento->statusPagamento = 0;            
+          $pacote = new Pessoa_Inscricao_Pacote;
+          $pacote->Pessoa_id = $pessoa->id;
+          $pacote->Pacote_id = $request->input("idPacote");
+          if($request->input("idAtividade")){
+            $atividade = Atividade::find($request->input("idAtividade"));
+            if($atividade->limite){
+              $atividade->vagas--;
+            }
+            $pacote->Atividade_id = $request->input("idAtividade");
           }
-          $pagamento->save();
-          return response()->json(array("ok" => 1, "paymentOk" => $paymentOk));
-        }
+          $pacote->save();
+          if($pacote->save){
+            if($request->input("idAtividade")){
+              $atividade->save();
+            }
+          }
+
+          $Pacote = Pacote::find($pacote->Pacote_id);
+
+          $data = [
+              'items' => [
+                  [
+                      'id' => $pacote->id,
+                      'description' => 'Expotec 2017 - Pacote: '.$Pacote->nome,
+                      'quantity' => '1',
+                      'amount' => $Pacote->valor,
+                  ],
+              ],
+              'sender' => [
+                  'email' => $pessoa->email,
+                  'name' => $pessoa->Nome,
+                  'documents' => [
+                      [
+                          'number' => $pessoa->Cpf,
+                          'type' => 'CPF'
+                      ]
+                  ],
+                  'phone' => $pessoa->telefone1,
+              ]
+          ];
+
+          $checkout = PagSeguro::checkout()->createFromArray($data);
+          $credentials = PagSeguro::credentials()->get();
+          $information = $checkout->send($credentials); // Retorna um objeto de laravel\pagseguro\Checkout\Information\Information
+          if ($information) {
+              print_r($information->getCode());
+              print_r($information->getDate());
+              print_r($information->getLink());
+
+              $pagamento = new Pagamento;
+              $pagamento->Pessoa_Inscricao_Pacote_id = $pacote->id;
+              $pagamento->idTransacao = $information->getCode();
+              $pagamento->statusPagamento = 1;
+              $pagamento->save();
+              return redirect($information->getLink());
+          }
       }else{
         return response()->json(array("ok" => 0, "error" => 1, "typeError" => "0.0", "message" => "Usuário deslogado."));
       }

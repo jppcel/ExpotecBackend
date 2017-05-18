@@ -20,6 +20,7 @@ class CreateTrilhaTable extends Migration
           $table->date("diaFim");
           $table->integer("limite")->nullable();
           $table->integer("vagas")->nullable();
+          $table->boolean("escolherAtividade");
           $table->timestamps();
       });
     }
