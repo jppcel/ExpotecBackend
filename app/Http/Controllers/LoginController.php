@@ -5,6 +5,12 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
+// Importado o arquivo Util para uso
+use App\Http\Util\Util;
+
+// Importando os Models que serão utilizados nesse controller
+use App\Pessoa;
+
 class LoginController extends Controller
 {
   /**
@@ -27,7 +33,7 @@ class LoginController extends Controller
         $pessoa = Pessoa::where(["Cpf" => $CPF])->get();
         foreach($pessoa as $Pessoa){
           if($Pessoa->password == bcrypt($request->input("password"))){
-            $Pessoa->remember_token = sha1($pessoa->cpf . date("YmdHis"));
+            $Pessoa->remember_token = sha1($pessoa->Cpf . date("YmdHis"));
             $Pessoa->save();
             return response()->json(array("ok" => 1, "login" => 1, "token" => $Pessoa->remember_token));
           }else{
@@ -63,11 +69,11 @@ class LoginController extends Controller
        *  @param  string  returnType => Return type of the function, 0 for boolean and 1 for json
        */
       public static function logout($cpf, $token, $returnType = 1){
-        $CPF = Util::CPFNumbers($request->input("cpf"));
+        $CPF = Util::CPFNumbers($cpf);
         $pessoa = Pessoa::where(["Cpf" => $CPF])->get();
         foreach($pessoa as $Pessoa){
-          if($Pessoa->password == bcrypt($request->input("password"))){
-            $Pessoa->remember_token = sha1($pessoa->cpf . date("YmdHis"));
+          if($Pessoa->remember_token == $token){
+            $Pessoa->remember_token = sha1($Pessoa->Cpf . date("YmdHis"));
             $Pessoa->save();
             if($returnType == 1){
               return response()->json(array("ok" => 1, "logout" => 1));

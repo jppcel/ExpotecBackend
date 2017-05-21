@@ -17,6 +17,7 @@ Route::group(['prefix' => 'api'], function(){
       Route::get('/pessoa/{id}/{token}', 'InscricaoController@getPessoa');
       Route::post('/activate', 'InscricaoController@activateInscricao');
       Route::post('/pacote', 'InscricaoController@makeInscricao');
+      Route::post('/teste', 'InscricaoController@test');
     });
     Route::group(['prefix' => 'trilha'], function(){
       Route::post('/list', 'TrilhaController@listAll');

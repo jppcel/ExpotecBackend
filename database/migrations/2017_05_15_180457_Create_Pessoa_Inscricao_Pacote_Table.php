@@ -17,8 +17,10 @@ class CreatePessoaInscricaoPacoteTable extends Migration
           $table->increments("id");
           $table->integer("Pessoa_id")->unsigned();
           $table->integer("Pacote_id")->unsigned();
+          $table->integer("Atividade_id")->unsigned()->nullable();
           $table->foreign("Pessoa_id")->references("id")->on("Pessoa");
           $table->foreign("Pacote_id")->references("id")->on("Pacote");
+          $table->foreign("Atividade_id")->references("id")->on("Atividade");
           $table->timestamps();
       });
     }
@@ -30,6 +32,6 @@ class CreatePessoaInscricaoPacoteTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('Atividade');
+        Schema::dropIfExists('Pessoa_Inscricao_Pacote');
     }
 }

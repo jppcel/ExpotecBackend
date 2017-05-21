@@ -12,7 +12,7 @@ class Cidade extends Model
 
     public function estado()
     {
-      return $this->belongsTo('App\Estado');
+      return $this->belongsTo('App\Estado', 'Estado_Id');
     }
 
     public function CEPs()
