@@ -8,7 +8,6 @@ use App\Http\Controllers\PessoaController;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
-use laravel\pagseguro\Platform\Laravel5\PagSeguro;
 
 // Importado o arquivo Util para uso
 use App\Http\Util\Util;
@@ -51,49 +50,51 @@ class InscricaoController extends Controller
    *  @param  int alunoUnivel [1] => If is AlunoUnivel of Person (nullable)
    */
   public function postNew(Request $request){
-
     // Faz a validação dos dados
     $validator = \Validator::make($request->all(), [
-      'nome' => 'required|string|min:5|max:60',
-      'cpf' => 'required|cpf|min:14|max:14|unique:Pessoa,Cpf',
-      'email' => 'required|string|min:5|max:100|unique:Pessoa,Email',
-      'cep' => 'required|string|min:8|max:9',
-      'logradouro' => 'required|string|max:100',
-      'numero' => 'nullable|string|max:5',
-      'bairro' => 'nullable|string|max:40',
-      'cidade' => 'required|integer|min:1000000|max:9999999',
-      'telefone1' => 'required|string|min:11|max:11',
-      'telefone2' => 'nullable|string|min:11|max:11',
-      'instituicao' => 'nullable|string|max:100',
-      'curso' => 'nullable|string|max:50',
-      'alunoUnivel' => 'required|integer|min:1|max:1'
+      'person.name' => 'required|string|min:5|max:60',
+      'person.document' => 'required|cpf|min:14|max:14|unique:Pessoa,Cpf',
+      'person.email' => 'required|string|min:5|max:100|unique:Pessoa,Email',
+      'address.zip' => 'required|string|min:9|max:9',
+      'address.type_street' => 'required|string|max:100',
+      'address.street' => 'required|string|max:100',
+      'address.number' => 'nullable|string|max:5',
+      'address.neighborhood' => 'nullable|string|max:40',
+      'address.city' => 'required|integer|min:1000000|max:9999999',
+      'phone.ddd' => 'required|string|min:2|max:3',
+      'phone.number' => 'required|string|min:8|max:9'
     ]);
     // Se a validação falha, retorna um JSON de erro
     if($validator->fails()){
       return response()->json(array("ok" => 0, "error" => 1, "typeError" => "1.0", "errors" => $validator->errors()), 422);
     }else{
-      $CPF = Util::CPFNumbers($request->input("cpf"));
-      $CEP = Util::CEPNumbers($request->input("cep"));
+      $CPF = Util::CPFNumbers($request->input("person.document"));
+      $CEP = Util::CEPNumbers($request->input("address.zip"));
       if($CEP){
         // Agora confere se a cidade informada existe
-        $cidades = Cidade::find($request->input("cidade"));
+        $cidades = Cidade::find($request->input("address.city"));
         if(count($cidades) == 1){
           $pessoa = new Pessoa;
-          $pessoa->Cidade_Cod_Ibge = $request->input("cidade");
-          $pessoa->Nome = $request->input("nome");
+          $pessoa->Cidade_Cod_Ibge = $request->input("address.city");
+          $pessoa->Nome = $request->input("person.name");
           $pessoa->Cpf = $CPF;
-          $pessoa->Logradouro = $request->input("logradouro");
-          $pessoa->NumEndereco = $request->input("numero");
-          $pessoa->Bairro = $request->input("bairro");
+          $pessoa->Logradouro = $request->input("address.type_street")." ".$request->input("street");
+          $pessoa->NumEndereco = $request->input("address.number");
+          $pessoa->Bairro = $request->input("address.neighborhood");
           $pessoa->Cep = $CEP;
-          $pessoa->Fone1 = $request->input("telefone1");
-          $pessoa->Fone2 = $request->input("telefone2");
-          $pessoa->Email = $request->input("email");
-          if($request->input("alunoUnivel") == 0){
-            $pessoa->Instituicao = $request->input("instituicao");
-            $pessoa->Curso = $request->input("curso");
+          $pessoa->Fone1 = $request->input("phone.ddd").$request->input("phone.number");
+          $pessoa->Email = $request->input("person.email");
+          if(count($request->input("university")) > 0){
+            if($request->input("university.is_from_another_college") == 0){
+              $pessoa->Instituicao = $request->input("university.college");
+              $pessoa->Curso = $request->input("university.course");
+              $pessoa->AlunoUnivel = 0;
+            }else{
+              $pessoa->AlunoUnivel = 1;
+            }
+          }else{
+            $pessoa->AlunoUnivel = 0;
           }
-          $pessoa->AlunoUnivel = $request->input("alunoUnivel");
           $pessoa->remember_token = sha1($request->input("cpf") . date("YmdHis"));
           $pessoa->save();
           Mail::send('mail.ActivationLink', ["link" => env("APP_URL")."/token/".$pessoa->id."/".$pessoa->remember_token], function($message) use ($pessoa){
@@ -152,7 +153,7 @@ class InscricaoController extends Controller
           return response()->json(array("ok" => 0, "error" => 1, "typeError" => "2.0", "errors" => $validator->errors()), 422);
         }else{
           $pessoa->Senha = bcrypt($request->input("senha"));
-          $pessoa->remember_token = sha1($pessoa->cpf . date("YmdHis"));
+          $pessoa->remember_token = sha1($pessoa->Cpf . date("YmdHis"));
           $pessoa->save();
           return response()->json(array("ok" => 1, "token" => $pessoa->remember_token));
         }
@@ -208,45 +209,46 @@ class InscricaoController extends Controller
 
           $Pacote = Pacote::find($pacote->Pacote_id);
 
-          $data = [
-              'items' => [
-                  [
-                      'id' => $pacote->id,
-                      'description' => 'Expotec 2017 - Pacote: '.$Pacote->nome,
-                      'quantity' => '1',
-                      'amount' => $Pacote->valor,
-                  ],
-              ],
-              'sender' => [
-                  'email' => $pessoa->email,
-                  'name' => $pessoa->Nome,
-                  'documents' => [
-                      [
-                          'number' => $pessoa->Cpf,
-                          'type' => 'CPF'
-                      ]
-                  ],
-                  'phone' => $pessoa->telefone1,
-              ]
-          ];
+          $Cidade = $pessoa->cidade;
+          $Estado = $Cidade->estado;
 
-          $checkout = PagSeguro::checkout()->createFromArray($data);
-          $credentials = PagSeguro::credentials()->get();
-          $information = $checkout->send($credentials); // Retorna um objeto de laravel\pagseguro\Checkout\Information\Information
-          if ($information) {
-              print_r($information->getCode());
-              print_r($information->getDate());
-              print_r($information->getLink());
+          \PagSeguro\Library::initialize();
+          \PagSeguro\Library::cmsVersion()->setName("Nome")->setRelease("1.0.0");
+          \PagSeguro\Library::moduleVersion()->setName("Nome")->setRelease("1.0.0");
 
+          $payment = new \PagSeguro\Domains\Requests\Payment();
+          $payment->addItems()->withParameters($Pacote->id, 'Expotec 2017 - Pacote: '.$Pacote->nome, 1, $Pacote->valor);
+          $payment->setCurrency("BRL");
+          $payment->setReference($pacote->id);
+          $payment->setSender()->setName($pessoa->Nome);
+          $payment->setSender()->setEmail($pessoa->Email);
+          $payment->setSender()->setDocument()->withParameters(
+              'CPF',
+              $pessoa->Cpf
+          );
+          $payment->setShipping()->setType()->withParameters(\PagSeguro\Enum\Shipping\Type::NOT_SPECIFIED);
+          $payment->setRedirectUrl("http://www.polles.xyz");
+          $payment->setNotificationUrl("http://www.polles.xyz/nofitication");
+          try {
+              $result = $payment->register(\PagSeguro\Configuration\Configure::getAccountCredentials(), true);
               $pagamento = new Pagamento;
               $pagamento->Pessoa_Inscricao_Pacote_id = $pacote->id;
-              $pagamento->idTransacao = $information->getCode();
+              $pagamento->idTransacao = $result->getCode();
               $pagamento->statusPagamento = 1;
               $pagamento->save();
-              return redirect($information->getLink());
+              $retorno["ok"] = 1;
+              $retorno["redirectURL"] = "https://pagseguro.uol.com.br/v2/checkout/payment.html?code=".$result->getCode();
+              // print_r($result->getCode());
+              echo json_encode($retorno);
+          } catch (Exception $e) {
+              die($e->getMessage());
           }
       }else{
         return response()->json(array("ok" => 0, "error" => 1, "typeError" => "0.0", "message" => "Usuário deslogado."));
       }
+    }
+
+    public function test(Request $request){
+      print_r($request->all());
     }
 }

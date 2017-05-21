@@ -32,6 +32,6 @@ class CreatePessoaInscricaoPacoteTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('Atividade');
+        Schema::dropIfExists('Pessoa_Inscricao_Pacote');
     }
 }

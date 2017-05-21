@@ -12,7 +12,7 @@ class Pessoa extends Model
 
     public function cidade()
     {
-      return $this->belongsTo('App\Cidade');
+      return $this->belongsTo('App\Cidade', 'Cidade_Cod_Ibge');
     }
 
     public function pacotes(){

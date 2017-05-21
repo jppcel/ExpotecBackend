@@ -29,7 +29,7 @@ class PessoaController extends Controller
         $pessoa = Pessoa::where(["Cpf" => $CPF, "remember_token" => $token])->get();
         foreach($pessoa as $Pessoa){
           if($Pessoa->remember_token == $token){
-            if($Pessoa->updated_at < date("Y-m-d H:i:s",time()-900)){
+            if($Pessoa->updated_at > date("Y-m-d H:i:s",time()-900)){
                 $retorno = $Pessoa;
             }else{
               LoginController::logout($cpf, $token, 0);
