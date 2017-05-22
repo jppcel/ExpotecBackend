@@ -4,13 +4,13 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class User extends Model
+class Product extends Model
 {
     public $timestamps = true;
     protected $primaryKey = 'id';
-    protected $table = 'User';
+    protected $table = 'Product';
 
-    public function Person(){
-      return $this->belongsTo("App\Person");
+    public function track(){
+      return $this->belongsTo("App\Track");
     }
 }

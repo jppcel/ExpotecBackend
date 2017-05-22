@@ -13,12 +13,12 @@ class CreatePagamentoTable extends Migration
      */
     public function up()
     {
-      Schema::create('Pagamento', function (Blueprint $table) {
+      Schema::create('Payment', function (Blueprint $table) {
           $table->increments("id");
-          $table->integer("Pessoa_Inscricao_Pacote_id")->unsigned();
-          $table->string("idTransacao");
-          $table->integer("statusPagamento");
-          $table->foreign("Pessoa_Inscricao_Pacote_id")->references("id")->on("Pessoa_Inscricao_Pacote");
+          $table->integer("Subscription_id")->unsigned();
+          $table->string("Trasaction_id");
+          $table->integer("paymentStatus");
+          $table->foreign("Subscription_id")->references("id")->on("Subscription");
           $table->timestamps();
       });
     }
@@ -30,6 +30,6 @@ class CreatePagamentoTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('Pagamento');
+        Schema::dropIfExists('Payment');
     }
 }

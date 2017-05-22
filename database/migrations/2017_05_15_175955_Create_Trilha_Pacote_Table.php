@@ -13,11 +13,11 @@ class CreateTrilhaPacoteTable extends Migration
      */
     public function up()
     {
-      Schema::create('Trilha_Pacote', function (Blueprint $table) {
-          $table->integer("Trilha_id")->unsigned();
-          $table->integer("Pacote_id")->unsigned();
-          $table->foreign("Trilha_id")->references("id")->on("Trilha");
-          $table->foreign("Pacote_id")->references("id")->on("Pacote");
+      Schema::create('Track_Package', function (Blueprint $table) {
+          $table->integer("Track_id")->unsigned();
+          $table->integer("Package_id")->unsigned();
+          $table->foreign("Track_id")->references("id")->on("Track");
+          $table->foreign("Package_id")->references("id")->on("Package");
           $table->timestamps();
       });
     }
@@ -29,6 +29,6 @@ class CreateTrilhaPacoteTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('Trilha_Pacote');
+        Schema::dropIfExists('Track_Package');
     }
 }

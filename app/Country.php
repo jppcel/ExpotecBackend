@@ -4,13 +4,14 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class User extends Model
+class Country extends Model
 {
     public $timestamps = true;
     protected $primaryKey = 'id';
-    protected $table = 'User';
+    protected $table = 'Country';
 
-    public function Person(){
-      return $this->belongsTo("App\Person");
+    public function states()
+    {
+      return $this->hasMany('App\State');
     }
 }

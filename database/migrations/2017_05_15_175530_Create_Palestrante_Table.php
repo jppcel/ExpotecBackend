@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTrilhaTable extends Migration
+class CreatePalestranteTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,12 @@ class CreateTrilhaTable extends Migration
      */
     public function up()
     {
-      Schema::create('Track', function (Blueprint $table) {
+      Schema::create('Speaker', function (Blueprint $table) {
           $table->increments("id");
           $table->string("name", 50);
-          $table->date("startDay");
-          $table->date("endDay");
-          $table->integer("slots")->nullable();
-          $table->boolean("selectProduct");
+          $table->string("photo")->nullable();
+          $table->string("website", 100)->nullable();
+          $table->string("description", 150);
           $table->timestamps();
       });
     }
@@ -31,6 +30,6 @@ class CreateTrilhaTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('Track');
+        Schema::dropIfExists('Speaker');
     }
 }

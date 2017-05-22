@@ -13,15 +13,18 @@ use Illuminate\Support\Facades\Mail;
 use App\Http\Util\Util;
 
 // Importando os Models que serão utilizados nesse controller
-use App\Pessoa;
-use App\Cidade;
-use App\Estado;
-use App\Pais;
+use App\Person;
+use App\City;
+use App\State;
+use App\Country;
 use App\CEP;
-use App\Pagamento;
-use App\Pacote;
-use App\Atividade;
-use App\Pessoa_Inscricao_Pacote;
+use App\Payment;
+use App\Package;
+use App\Address;
+use App\Phone;
+use App\User;
+use App\Activity;
+use App\Subscription;
 
 class InscricaoController extends Controller
 {
@@ -53,8 +56,8 @@ class InscricaoController extends Controller
     // Faz a validação dos dados
     $validator = \Validator::make($request->all(), [
       'person.name' => 'required|string|min:5|max:60',
-      'person.document' => 'required|cpf|min:14|max:14|unique:Pessoa,Cpf',
-      'person.email' => 'required|string|min:5|max:100|unique:Pessoa,Email',
+      'person.document' => 'required|cpf|min:14|max:14|unique:Person,document',
+      'person.email' => 'required|string|min:5|max:100|unique:Person,email',
       'address.zip' => 'required|string|min:9|max:9',
       'address.type_street' => 'required|string|max:100',
       'address.street' => 'required|string|max:100',
@@ -72,35 +75,64 @@ class InscricaoController extends Controller
       $CEP = Util::CEPNumbers($request->input("address.zip"));
       if($CEP){
         // Agora confere se a cidade informada existe
-        $cidades = Cidade::find($request->input("address.city"));
-        if(count($cidades) == 1){
-          $pessoa = new Pessoa;
-          $pessoa->Cidade_Cod_Ibge = $request->input("address.city");
-          $pessoa->Nome = $request->input("person.name");
-          $pessoa->Cpf = $CPF;
-          $pessoa->Logradouro = $request->input("address.type_street")." ".$request->input("street");
-          $pessoa->NumEndereco = $request->input("address.number");
-          $pessoa->Bairro = $request->input("address.neighborhood");
-          $pessoa->Cep = $CEP;
-          $pessoa->Fone1 = $request->input("phone.ddd").$request->input("phone.number");
-          $pessoa->Email = $request->input("person.email");
+        $cities = City::find($request->input("address.city"));
+        if(count($cities) == 1){
+          $pessoa = new Person;
+          $pessoa->name = $request->input("person.name");
+          $pessoa->document = $CPF;
+          $pessoa->email = $request->input("person.email");
           if(count($request->input("university")) > 0){
             if($request->input("university.is_from_another_college") == 0){
-              $pessoa->Instituicao = $request->input("university.college");
-              $pessoa->Curso = $request->input("university.course");
-              $pessoa->AlunoUnivel = 0;
+              $pessoa->college = $request->input("university.college");
+              $pessoa->course = $request->input("university.course");
+              $pessoa->univelStudent = 0;
             }else{
-              $pessoa->AlunoUnivel = 1;
+              $pessoa->univelStudent = 1;
             }
           }else{
-            $pessoa->AlunoUnivel = 0;
+            $pessoa->univelStudent = 0;
           }
-          $pessoa->remember_token = sha1($request->input("cpf") . date("YmdHis"));
           $pessoa->save();
-          Mail::send('mail.ActivationLink', ["link" => env("APP_URL")."/token/".$pessoa->id."/".$pessoa->remember_token], function($message) use ($pessoa){
-            $message->to($pessoa->Email, $pessoa->Nome)->subject('Cadastro realizado na Expotec - Necessita ativação.');
-          });
-          return response()->json(array("ok" => 1));
+          if($pessoa->id > 0){
+            $address = new Address;
+            $address->Person_id = $pessoa->id;
+            $address->TypeStreet_id = $request->input("address.type_street");
+            $address->street = $request->input("address.street");
+            $address->number = $request->input("address.number");
+            $address->neighborhood = $request->input("address.neighborhood");
+            $address->complement = $request->input("address.complement");
+            $address->zip = $CEP;
+            $address->City_Cod_Ibge = $request->input("address.city");
+            $address->save();
+            if($address->id > 0){
+              $phone = new Phone;
+              $phone->Person_id = $pessoa->id;
+              $phone->ddd = $request->input("phone.ddd");
+              $phone->number = $request->input("phone.number");
+              $phone->save();
+              if($phone->id > 0){
+                $user = new User;
+                $user->is_admin = false;
+                $user->is_active = false;
+                $user->Person_id = $pessoa->id;
+                $user->last_update = date("Y-m-d H:i:s");
+                $user->remember_token = sha1($request->input("person.document") . date("YmdHis"));
+                $user->save();
+                if($user->id > 0){
+                  Mail::send('mail.ActivationLink', ["link" => env("APP_URL")."/token/".$pessoa->id."/".$user->remember_token], function($message) use ($pessoa){
+                    $message->to($pessoa->email, $pessoa->nome)->subject('Cadastro realizado na Expotec - Necessita ativação.');
+                  });
+                  return response()->json(array("ok" => 1));
+                }else{
+
+                }
+              }else{
+
+              }
+            }else{
+
+            }
+          }
         }else{
           return response()->json(array("ok" => 0, "error" => 1, "typeError" => "1.1", "message" => "A cidade informada não existe."));
         }
@@ -117,10 +149,10 @@ class InscricaoController extends Controller
    *  @method: Get
    */
   public function getPessoa($id, $token){
-    $pessoa = Pessoa::find($id);
+    $pessoa = Person::find($id);
     if($pessoa){
-      if($pessoa->remember_token == $token){
-        return response()->json(array("ok" => 1, "nome" => $pessoa->Nome));
+      if($pessoa->user->remember_token == $token){
+        return response()->json(array("ok" => 1, "nome" => $pessoa->name));
       }else{
         return response()->json(array("ok" => 0, "error" => 1, "typeError" => "2.1", "message" => "O token informado não é válido."));
       }
@@ -137,23 +169,23 @@ class InscricaoController extends Controller
    *
    *  @param  integer id => id of Person
    *  @param  string  token => token of this session
-   *  @param  string  senha [8-60] => Password
-   *  @param  string  senha_confirmation [8-60] => Password confirmation
+   *  @param  string  password [8-60] => Password
+   *  @param  string  password_confirmation [8-60] => Password confirmation
    */
   public function activateInscricao(Request $request){
-    $pessoa = Pessoa::find($request->input("id"));
+    $pessoa = Person::find($request->input("id"));
     if($pessoa){
-      if($pessoa->remember_token == $request->input("token") && $pessoa->Senha == NULL){
+      if($pessoa->user->remember_token == $request->input("token") && $pessoa->user->password == NULL){
         // Faz a validação dos dados
         $validator = \Validator::make($request->all(), [
-          'senha' => 'required|string|min:8|max:60|confirmed'
+          'password' => 'required|string|min:8|max:60|confirmed'
         ]);
         // Se a validação falha, retorna um json de erro
         if($validator->fails()){
           return response()->json(array("ok" => 0, "error" => 1, "typeError" => "2.0", "errors" => $validator->errors()), 422);
         }else{
-          $pessoa->Senha = bcrypt($request->input("senha"));
-          $pessoa->remember_token = sha1($pessoa->Cpf . date("YmdHis"));
+          $pessoa->user->pasword = bcrypt($request->input("senha"));
+          $pessoa->user->remember_token = sha1($pessoa->Cpf . date("YmdHis"));
           $pessoa->save();
           return response()->json(array("ok" => 1, "token" => $pessoa->remember_token));
         }
@@ -173,8 +205,8 @@ class InscricaoController extends Controller
      *
      *  @param  string cpf => [14] id of Person
      *  @param  string token => token of this session
-     *  @param  integer idPacote => Pacote's Id
-     *  @param  integer idAtividade => Atividade's id (nullable)
+     *  @param  integer package_id => Pacote's Id
+     *  @param  integer activity_id => Atividade's id (nullable)
      */
     public function makeInscricao(Request $request){
       $pessoa = PessoaController::verifyLogin($request->input("cpf"), $request->input("token"));
@@ -238,7 +270,6 @@ class InscricaoController extends Controller
               $pagamento->save();
               $retorno["ok"] = 1;
               $retorno["redirectURL"] = "https://pagseguro.uol.com.br/v2/checkout/payment.html?code=".$result->getCode();
-              // print_r($result->getCode());
               echo json_encode($retorno);
           } catch (Exception $e) {
               die($e->getMessage());

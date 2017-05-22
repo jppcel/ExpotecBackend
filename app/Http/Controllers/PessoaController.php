@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 // Importado o arquivo Util para uso
 use App\Http\Util\Util;
 
-use App\Pessoa;
+use App\Person;
 
 class PessoaController extends Controller
 {
@@ -26,11 +26,12 @@ class PessoaController extends Controller
       $retorno = false;
       if(!$validator->fails()){
         $CPF = Util::CPFNumbers($cpf);
-        $pessoa = Pessoa::where(["Cpf" => $CPF, "remember_token" => $token])->get();
-        foreach($pessoa as $Pessoa){
-          if($Pessoa->remember_token == $token){
-            if($Pessoa->updated_at > date("Y-m-d H:i:s",time()-900)){
-                $retorno = $Pessoa;
+        $person = Person::where("document", $cpf)->first();
+        if($person){
+          $user = $person->user;
+          if($user->remember_token == $token){
+            if($user->updated_at > date("Y-m-d H:i:s",time()-900)){
+                $retorno = $user->person;
             }else{
               LoginController::logout($cpf, $token, 0);
             }

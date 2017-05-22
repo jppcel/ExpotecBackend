@@ -11,29 +11,31 @@ class TrilhaSeeder extends Seeder
      */
     public function run()
     {
-      DB::table('Trilha')->insert([
+      DB::table('Track')->insert([
           'id' => 1,
-          'nome' => 'Expotec',
-          'diaInicio' => '2017-08-09',
-          'diaFim' => '2017-08-11',
+          'name' => 'Expotec',
+          'startDay' => '2017-08-09',
+          'endDay' => '2017-08-11',
+          'selectProduct' => false,
           'created_at' => date("Y-m-d H:i:s"),
           'updated_at' => date("Y-m-d H:i:s"),
       ]);
-      DB::table('Trilha')->insert([
+      DB::table('Track')->insert([
           'id' => 2,
-          'nome' => 'TADS',
-          'diaInicio' => '2017-08-09',
-          'diaFim' => '2017-08-11',
-          'limite' => 200,
-          'vagas' => 200,
+          'name' => 'TADS',
+          'startDay' => '2017-08-09',
+          'endDay' => '2017-08-11',
+          'slots' => 200,
+          'selectProduct' => true,
           'created_at' => date("Y-m-d H:i:s"),
           'updated_at' => date("Y-m-d H:i:s"),
       ]);
-      DB::table('Trilha')->insert([
+      DB::table('Track')->insert([
           'id' => 3,
-          'nome' => 'Almoço',
-          'diaInicio' => '2017-08-12',
-          'diaFim' => '2017-08-12',
+          'name' => 'Almoço',
+          'startDay' => '2017-08-12',
+          'endDay' => '2017-08-12',
+          'selectProduct' => false,
           'created_at' => date("Y-m-d H:i:s"),
           'updated_at' => date("Y-m-d H:i:s"),
       ]);

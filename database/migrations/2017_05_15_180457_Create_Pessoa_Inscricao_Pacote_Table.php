@@ -13,14 +13,12 @@ class CreatePessoaInscricaoPacoteTable extends Migration
      */
     public function up()
     {
-      Schema::create('Pessoa_Inscricao_Pacote', function (Blueprint $table) {
+      Schema::create('Subscription', function (Blueprint $table) {
           $table->increments("id");
-          $table->integer("Pessoa_id")->unsigned();
-          $table->integer("Pacote_id")->unsigned();
-          $table->integer("Atividade_id")->unsigned()->nullable();
-          $table->foreign("Pessoa_id")->references("id")->on("Pessoa");
-          $table->foreign("Pacote_id")->references("id")->on("Pacote");
-          $table->foreign("Atividade_id")->references("id")->on("Atividade");
+          $table->integer("Person_id")->unsigned();
+          $table->integer("Package_id")->unsigned();
+          $table->foreign("Person_id")->references("id")->on("Person");
+          $table->foreign("Package_id")->references("id")->on("Package");
           $table->timestamps();
       });
     }
@@ -32,6 +30,6 @@ class CreatePessoaInscricaoPacoteTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('Pessoa_Inscricao_Pacote');
+        Schema::dropIfExists('Subscription');
     }
 }

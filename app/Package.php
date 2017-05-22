@@ -4,17 +4,17 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Trilha extends Model
+class Package extends Model
 {
     public $timestamps = true;
     protected $primaryKey = 'id';
-    protected $table = 'Trilha';
+    protected $table = 'Package';
 
-    public function atividades(){
-      return $this->hasMany("App\Atividade", "Trilha_id", "id");
+    public function subscriptions(){
+      return $this->hasMany("App\Subscription");
     }
 
-    public function trilha_pacote(){
+    public function tracks_package(){
       return $this->hasMany("App\Trilha_Pacote");
     }
 }
