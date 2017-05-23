@@ -14,7 +14,7 @@ class CreateCEPTable extends Migration
     public function up()
     {
       Schema::create('ZIP', function (Blueprint $table) {
-          $table->integer("id")->unsigned();
+          $table->increments("id");
           $table->integer("TypeStreet_id")->unsigned()->nullable();
           $table->integer("City_Cod_Ibge")->unsigned();
           $table->string("name", 100)->nullable();
@@ -22,7 +22,6 @@ class CreateCEPTable extends Migration
           $table->string("zipcode", 8);
           $table->foreign("City_Cod_Ibge")->references("Cod_Ibge")->on("City");
           $table->foreign("TypeStreet_id")->references("TypeStreet")->on("City");
-          $table->primary("id");
       });
     }
 
