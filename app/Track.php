@@ -15,6 +15,6 @@ class Track extends Model
     }
 
     public function track_package(){
-      return $this->hasMany("App\Track_Package");
+      return $this->hasMany("App\Track_Package", "Track_id");
     }
 }

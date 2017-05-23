@@ -15,6 +15,16 @@ class Person extends Model
       return $this->belongsTo('App\City', 'City_Cod_Ibge');
     }
 
+    public function user()
+    {
+      return $this->hasOne('App\User');
+    }
+
+    public function address()
+    {
+      return $this->hasOne('App\Address');
+    }
+
     public function packages(){
       return $this->hasMany("App\Subscription");
     }

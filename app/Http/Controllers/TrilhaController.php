@@ -15,12 +15,12 @@ class TrilhaController extends Controller
      *
      *  @method: Post
      *
-     *  @param  string  document [14] => CPF of Person
+     *  @param  string  cpf [14] => CPF of Person
      *  @param  string  token => Token of this session
      *
      */
     public function listAll(Request $request){
-      if(PessoaController::verifyLogin($request->input("document"), $request->input("token"))){
+      if(PessoaController::verifyLogin($request->input("cpf"), $request->input("token"))){
         $tracks = Track::all();
         $retorno = NULL;
         foreach($tracks as $track){
@@ -60,12 +60,19 @@ class TrilhaController extends Controller
     public static function verifyLimit($id){
       $track = Track::find($id);
       if($track){
-        $totalSubscriptions = count($track->subscriptions->get());
-        $limite = $track->slots - $totalSubscriptions;
-        if($limite > 0 || $limite == NULL){
-          return true;
+        $totalSubscriptions = 0;
+        foreach($track->track_package->all() as $track_package){
+          $totalSubscriptions += count($track_package->package->subscriptions->all());
+        }
+        if($track->slots){
+          $limite = $track->slots - $totalSubscriptions;
+          if($limite > 0 || $limite == NULL){
+            return true;
+          }else{
+            return false;
+          }
         }else{
-          return false;
+          return true;
         }
       }else{
         return 0;

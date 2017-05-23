@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class State extends Model
 {
     public $timestamps = true;
-    protected $primaryKey = 'Id';
+    protected $primaryKey = 'id';
     protected $table = 'State';
 
     public function country()

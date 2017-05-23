@@ -10,11 +10,11 @@ class Track_Package extends Model
     protected $primaryKey = 'id';
     protected $table = 'Track_Package';
 
-    public function packages(){
-      return $this->belongsTo("App\Package");
+    public function package(){
+      return $this->belongsTo("App\Package", "Package_id");
     }
 
-    public function tracks(){
-      return $this->belongsTo("App\Track");
+    public function track(){
+      return $this->belongsTo("App\Track", "Track_id");
     }
 }

@@ -13,12 +13,12 @@ class PacoteController extends Controller
    *
    *  @method: Post
    *
-   *  @param  string  document [14] => CPF of Person
+   *  @param  string  cpf [14] => CPF of Person
    *  @param  string  token => Token of this session
    *
    */
     public function listAll(Request $request){
-      if(PessoaController::verifyLogin($request->input("document"), $request->input("token"))){
+      if(PessoaController::verifyLogin($request->input("cpf"), $request->input("token"))){
         $packages = Package::all();
         $return = NULL;
         foreach($packages as $package){

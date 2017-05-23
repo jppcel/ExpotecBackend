@@ -10,15 +10,15 @@ class Address extends Model
     protected $primaryKey = 'id';
     protected $table = 'Address';
 
-    public function Person(){
+    public function person(){
       return $this->belongsTo("App\Person");
     }
 
-    public function TypeStreet(){
+    public function typestreet(){
       return $this->belongsTo("App\TypeStreet");
     }
 
-    public function City(){
-      return $this->belongsTo("App\City");
+    public function city(){
+      return $this->belongsTo("App\City", "City_Cod_Ibge");
     }
 }

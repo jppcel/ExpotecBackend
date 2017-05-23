@@ -10,7 +10,7 @@ class User extends Model
     protected $primaryKey = 'id';
     protected $table = 'User';
 
-    public function Person(){
-      return $this->belongsTo("App\Person");
+    public function person(){
+      return $this->belongsTo("App\Person", "Person_id");
     }
 }

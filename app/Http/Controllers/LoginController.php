@@ -30,9 +30,9 @@ class LoginController extends Controller
         return response()->json(array("ok" => 0, "error" => 1, "typeError" => "0.1", "message" => "CPF e/ou senha inválidos."));
       }else{
         $CPF = Util::CPFNumbers($request->input("document"));
-        $pessoa = Pessoa::where(["document" => $CPF])->first();
-        if($pessoa){
-          $user = $pessoa->user;
+        $person = Person::where(["document" => $CPF])->first();
+        if($person){
+          $user = $person->user;
           if($user){
             if($user->password == bcrypt($user->input("password"))){
               $user->remember_token = sha1($user->cpf . date("YmdHis"));
@@ -77,12 +77,12 @@ class LoginController extends Controller
        */
       public static function logout($cpf, $token, $returnType = 1){
         $CPF = Util::CPFNumbers($cpf);
-        $pessoa = Pessoa::where(["document" => $CPF])->first();
-        if($pessoa){
-          $user = $pessoa->user;
+        $person = Person::where(["document" => $CPF])->first();
+        if($person){
+          $user = $person->user;
           if($user){
             if($user->remember_token == $token){
-              $user->remember_token = sha1($user->Cpf . date("YmdHis"));
+              $user->remember_token = sha1($user->person->document . date("YmdHis"));
               $user->save();
               if($returnType == 1){
                 return response()->json(array("ok" => 1, "logout" => 1));
