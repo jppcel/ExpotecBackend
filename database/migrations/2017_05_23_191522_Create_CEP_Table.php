@@ -20,7 +20,7 @@ class CreateCEPTable extends Migration
           $table->string("name", 100)->nullable();
           $table->string("neighborhood", 100)->nullable();
           $table->string("zipcode", 8);
-          $table->foreign("City_Cod_Ibge")->references("Cod_Ibge")->on("City");
+          $table->foreign("City_id")->references("id")->on("City");
           $table->foreign("TypeStreet_id")->references("TypeStreet")->on("City");
       });
     }
