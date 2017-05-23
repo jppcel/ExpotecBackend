@@ -10,16 +10,22 @@
 | contains the 'web' middleware group. Now create something great!
 |
 */
-
-// Route::get('/', function () {
-//     return view('welcome');
-// });
-
 Route::group(['prefix' => 'api'], function(){
   Route::group(['prefix' => 'web'], function(){
     Route::group(['prefix' => 'inscricao'], function(){
       Route::post('/new', 'InscricaoController@postNew');
-      Route::get('/migrate', 'InscricaoController@migrateCEP');
+      Route::get('/pessoa/{id}/{token}', 'InscricaoController@getPessoa');
+      Route::post('/activate', 'InscricaoController@activateInscricao');
+      Route::post('/pacote', 'InscricaoController@makeInscricao');
+      Route::post('/teste', 'InscricaoController@test');
     });
+    Route::group(['prefix' => 'trilha'], function(){
+      Route::post('/list', 'TrilhaController@listAll');
+    });
+    Route::group(['prefix' => 'pacote'], function(){
+      Route::post('/list', 'PacoteController@listAll');
+    });
+    Route::get('/states', 'CityController@listStates');
+    Route::get('/cities/{id}', 'CityController@listCities');
   });
 });

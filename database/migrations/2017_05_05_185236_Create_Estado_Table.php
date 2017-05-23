@@ -13,41 +13,42 @@ class CreateEstadoTable extends Migration
      */
      public function up()
      {
-       Schema::create('Estado', function (Blueprint $table) {
-           $table->integer("Id")->unsigned();
-           $table->integer("Pais_Id")->unsigned();
+       Schema::create('State', function (Blueprint $table) {
+           $table->integer("id")->unsigned();
+           $table->integer("Country_id")->unsigned();
+           $table->string("name", 30);
            $table->string("UF", 2);
-           $table->foreign("Pais_Id")->references("Id")->on("Pais");
-           $table->primary("Id");
+           $table->foreign("Country_id")->references("id")->on("Country");
+           $table->primary("id");
        });
 
-        DB::Table('Estado')->insert(array('Id' => 1, 'Pais_Id' => 1, 'UF' => 'AL' ));
-        DB::Table('Estado')->insert(array('Id' => 2, 'Pais_Id' => 1, 'UF' => 'AC' ));
-        DB::Table('Estado')->insert(array('Id' => 3, 'Pais_Id' => 1, 'UF' => 'AM' ));
-        DB::Table('Estado')->insert(array('Id' => 4, 'Pais_Id' => 1, 'UF' => 'AP' ));
-        DB::Table('Estado')->insert(array('Id' => 5, 'Pais_Id' => 1, 'UF' => 'BA' ));
-        DB::Table('Estado')->insert(array('Id' => 6, 'Pais_Id' => 1, 'UF' => 'CE' ));
-        DB::Table('Estado')->insert(array('Id' => 7, 'Pais_Id' => 1, 'UF' => 'DF' ));
-        DB::Table('Estado')->insert(array('Id' => 8, 'Pais_Id' => 1, 'UF' => 'ES' ));
-        DB::Table('Estado')->insert(array('Id' => 9, 'Pais_Id' => 1, 'UF' => 'GO' ));
-        DB::Table('Estado')->insert(array('Id' => 10, 'Pais_Id' => 1, 'UF' => 'MA' ));
-        DB::Table('Estado')->insert(array('Id' => 11, 'Pais_Id' => 1, 'UF' => 'MG' ));
-        DB::Table('Estado')->insert(array('Id' => 12, 'Pais_Id' => 1, 'UF' => 'MS' ));
-        DB::Table('Estado')->insert(array('Id' => 13, 'Pais_Id' => 1, 'UF' => 'MT' ));
-        DB::Table('Estado')->insert(array('Id' => 14, 'Pais_Id' => 1, 'UF' => 'PA' ));
-        DB::Table('Estado')->insert(array('Id' => 15, 'Pais_Id' => 1, 'UF' => 'PB' ));
-        DB::Table('Estado')->insert(array('Id' => 16, 'Pais_Id' => 1, 'UF' => 'PE' ));
-        DB::Table('Estado')->insert(array('Id' => 17, 'Pais_Id' => 1, 'UF' => 'PI' ));
-        DB::Table('Estado')->insert(array('Id' => 18, 'Pais_Id' => 1, 'UF' => 'PR' ));
-        DB::Table('Estado')->insert(array('Id' => 19, 'Pais_Id' => 1, 'UF' => 'RJ' ));
-        DB::Table('Estado')->insert(array('Id' => 20, 'Pais_Id' => 1, 'UF' => 'RN' ));
-        DB::Table('Estado')->insert(array('Id' => 21, 'Pais_Id' => 1, 'UF' => 'RO' ));
-        DB::Table('Estado')->insert(array('Id' => 22, 'Pais_Id' => 1, 'UF' => 'RR' ));
-        DB::Table('Estado')->insert(array('Id' => 23, 'Pais_Id' => 1, 'UF' => 'RS' ));
-        DB::Table('Estado')->insert(array('Id' => 24, 'Pais_Id' => 1, 'UF' => 'SC' ));
-        DB::Table('Estado')->insert(array('Id' => 25, 'Pais_Id' => 1, 'UF' => 'SE' ));
-        DB::Table('Estado')->insert(array('Id' => 26, 'Pais_Id' => 1, 'UF' => 'SP' ));
-        DB::Table('Estado')->insert(array('Id' => 27, 'Pais_Id' => 1, 'UF' => 'TO' ));
+        DB::Table('State')->insert(array('id' => 1, 'Country_id' => 1, 'name' => 'Alagoas', 'UF' => 'AL' ));
+        DB::Table('State')->insert(array('id' => 2, 'Country_id' => 1, 'name' => 'Acre', 'UF' => 'AC' ));
+        DB::Table('State')->insert(array('id' => 3, 'Country_id' => 1, 'name' => 'Amazonas', 'UF' => 'AM' ));
+        DB::Table('State')->insert(array('id' => 4, 'Country_id' => 1, 'name' => 'Amapá', 'UF' => 'AP' ));
+        DB::Table('State')->insert(array('id' => 5, 'Country_id' => 1, 'name' => 'Bahia', 'UF' => 'BA' ));
+        DB::Table('State')->insert(array('id' => 6, 'Country_id' => 1, 'name' => 'Ceará', 'UF' => 'CE' ));
+        DB::Table('State')->insert(array('id' => 7, 'Country_id' => 1, 'name' => 'Distrito Federal', 'UF' => 'DF' ));
+        DB::Table('State')->insert(array('id' => 8, 'Country_id' => 1, 'name' => 'Espírito Santo', 'UF' => 'ES' ));
+        DB::Table('State')->insert(array('id' => 9, 'Country_id' => 1, 'name' => 'Goiás', 'UF' => 'GO' ));
+        DB::Table('State')->insert(array('id' => 10, 'Country_id' => 1, 'name' => 'Maranhão', 'UF' => 'MA' ));
+        DB::Table('State')->insert(array('id' => 11, 'Country_id' => 1, 'name' => 'Minas Gerais', 'UF' => 'MG' ));
+        DB::Table('State')->insert(array('id' => 12, 'Country_id' => 1, 'name' => 'Mato Grosso do Sul', 'UF' => 'MS' ));
+        DB::Table('State')->insert(array('id' => 13, 'Country_id' => 1, 'name' => 'Mato Grosso', 'UF' => 'MT' ));
+        DB::Table('State')->insert(array('id' => 14, 'Country_id' => 1, 'name' => 'Pará', 'UF' => 'PA' ));
+        DB::Table('State')->insert(array('id' => 15, 'Country_id' => 1, 'name' => 'Paraíba', 'UF' => 'PB' ));
+        DB::Table('State')->insert(array('id' => 16, 'Country_id' => 1, 'name' => 'Pernambuco', 'UF' => 'PE' ));
+        DB::Table('State')->insert(array('id' => 17, 'Country_id' => 1, 'name' => 'Piauí', 'UF' => 'PI' ));
+        DB::Table('State')->insert(array('id' => 18, 'Country_id' => 1, 'name' => 'Paraná', 'UF' => 'PR' ));
+        DB::Table('State')->insert(array('id' => 19, 'Country_id' => 1, 'name' => 'Rio de Janeiro', 'UF' => 'RJ' ));
+        DB::Table('State')->insert(array('id' => 20, 'Country_id' => 1, 'name' => 'Rio Grande do Norte', 'UF' => 'RN' ));
+        DB::Table('State')->insert(array('id' => 21, 'Country_id' => 1, 'name' => 'Rondônia', 'UF' => 'RO' ));
+        DB::Table('State')->insert(array('id' => 22, 'Country_id' => 1, 'name' => 'Roraima', 'UF' => 'RR' ));
+        DB::Table('State')->insert(array('id' => 23, 'Country_id' => 1, 'name' => 'Rio Grande do Sul', 'UF' => 'RS' ));
+        DB::Table('State')->insert(array('id' => 24, 'Country_id' => 1, 'name' => 'Santa Catarina', 'UF' => 'SC' ));
+        DB::Table('State')->insert(array('id' => 25, 'Country_id' => 1, 'name' => 'Sergipe', 'UF' => 'SE' ));
+        DB::Table('State')->insert(array('id' => 26, 'Country_id' => 1, 'name' => 'São Paulo', 'UF' => 'SP' ));
+        DB::Table('State')->insert(array('id' => 27, 'Country_id' => 1, 'name' => 'Tocantins', 'UF' => 'TO' ));
      }
 
      /**
@@ -57,6 +58,6 @@ class CreateEstadoTable extends Migration
       */
      public function down()
      {
-         Schema::dropIfExists('Estado');
+         Schema::dropIfExists('State');
      }
 }
