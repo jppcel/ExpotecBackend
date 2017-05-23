@@ -22,11 +22,11 @@ class CreateEnderecoTable extends Migration
           $table->string("complement", 50)->nullable();
           $table->string("neighborhood", 40)->nullable();
           $table->string("zip", 8);
-          $table->integer("City_Cod_Ibge")->unsigned();
+          $table->integer("City_id")->unsigned();
           $table->timestamps();
           $table->foreign("Person_id")->references("id")->on("Person");
           $table->foreign("TypeStreet_id")->references("id")->on("TypeStreet");
-          $table->foreign("City_Cod_Ibge")->references("Cod_Ibge")->on("City");
+          $table->foreign("City_id")->references("id")->on("City");
       });
     }
 
