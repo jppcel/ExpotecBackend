@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePagamentoTable extends Migration
+class CreateInscricaoAtividadeTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,12 @@ class CreatePagamentoTable extends Migration
      */
     public function up()
     {
-      Schema::create('Payment', function (Blueprint $table) {
+      Schema::create('Subscription_Activity', function (Blueprint $table) {
           $table->increments("id");
           $table->integer("Subscription_id")->unsigned();
-          $table->string("Transaction_id");
-          $table->integer("paymentStatus");
+          $table->integer("Activity_id")->unsigned();
           $table->foreign("Subscription_id")->references("id")->on("Subscription");
+          $table->foreign("Activity_id")->references("id")->on("Activity");
           $table->timestamps();
       });
     }

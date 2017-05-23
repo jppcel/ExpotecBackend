@@ -9,7 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Util\Util;
 
 // Importando os Models que serão utilizados nesse controller
-use App\Pessoa;
+use App\Person;
 
 class LoginController extends Controller
 {
@@ -22,23 +22,30 @@ class LoginController extends Controller
    */
     public static function toLogin(Request $request){
       $validator = \Validator::make($request->all(), [
-        'cpf' => 'required|cpf',
+        'document' => 'required|cpf',
         'password' => 'required|string|min:8|max:60'
       ]);
       // Se a validação falha, retorna um erro
       if($validator->fails()){
         return response()->json(array("ok" => 0, "error" => 1, "typeError" => "0.1", "message" => "CPF e/ou senha inválidos."));
       }else{
-        $CPF = Util::CPFNumbers($request->input("cpf"));
-        $pessoa = Pessoa::where(["Cpf" => $CPF])->get();
-        foreach($pessoa as $Pessoa){
-          if($Pessoa->password == bcrypt($request->input("password"))){
-            $Pessoa->remember_token = sha1($pessoa->Cpf . date("YmdHis"));
-            $Pessoa->save();
-            return response()->json(array("ok" => 1, "login" => 1, "token" => $Pessoa->remember_token));
+        $CPF = Util::CPFNumbers($request->input("document"));
+        $person = Person::where(["document" => $CPF])->first();
+        if($person){
+          $user = $person->user;
+          if($user){
+            if($user->password == bcrypt($user->input("password"))){
+              $user->remember_token = sha1($user->cpf . date("YmdHis"));
+              $user->save();
+              return response()->json(array("ok" => 1, "login" => 1, "token" => $user->remember_token));
+            }else{
+              return response()->json(array("ok" => 0, "error" => 1, "typeError" => "0.2", "message" => "CPF e/ou senha inválidos."));
+            }
           }else{
-            return response()->json(array("ok" => 0, "error" => 1, "typeError" => "0.2", "message" => "CPF e/ou senha inválidos."));
+            return response()->json(array("ok" => 0, "error" => 1, "typeError" => "0.3", "message" => "CPF e/ou senha inválidos."));
           }
+        }else{
+          return response()->json(array("ok" => 0, "error" => 1, "typeError" => "0.4", "message" => "CPF e/ou senha inválidos."));
         }
       }
     }
@@ -46,19 +53,19 @@ class LoginController extends Controller
     /**
      *  @route /api/web/logout
      *  @method Get ou Post
-     *  @param  string  cpf [14] => CPF of Person
+     *  @param  string  document [14] => CPF of Person
      *  @param  string  token => Token of this session
      */
       public static function toLogout(Request $request){
         $validator = \Validator::make($request->all(), [
-          'cpf' => 'required|cpf',
+          'document' => 'required|cpf',
           'token' => 'required|string'
         ]);
         // Se a validação falha, retorna um erro
         if($validator->fails()){
           return response()->json(array("ok" => 0, "error" => 1, "typeError" => "0.1", "message" => "Sessão inválida."));
         }else{
-          self::logout($request->input("cpf"), $request->input("token"));
+          self::logout($request->input("document"), $request->input("token"));
         }
       }
 
@@ -70,21 +77,24 @@ class LoginController extends Controller
        */
       public static function logout($cpf, $token, $returnType = 1){
         $CPF = Util::CPFNumbers($cpf);
-        $pessoa = Pessoa::where(["Cpf" => $CPF])->get();
-        foreach($pessoa as $Pessoa){
-          if($Pessoa->remember_token == $token){
-            $Pessoa->remember_token = sha1($Pessoa->Cpf . date("YmdHis"));
-            $Pessoa->save();
-            if($returnType == 1){
-              return response()->json(array("ok" => 1, "logout" => 1));
+        $person = Person::where(["document" => $CPF])->first();
+        if($person){
+          $user = $person->user;
+          if($user){
+            if($user->remember_token == $token){
+              $user->remember_token = sha1($user->person->document . date("YmdHis"));
+              $user->save();
+              if($returnType == 1){
+                return response()->json(array("ok" => 1, "logout" => 1));
+              }else{
+                return true;
+              }
             }else{
-              return true;
-            }
-          }else{
-            if($returnType == 1){
-              return response()->json(array("ok" => 0, "error" => 1, "typeError" => "0.2", "message" => "Sessão inválida."));
-            }else{
-              return false;
+              if($returnType == 1){
+                return response()->json(array("ok" => 0, "error" => 1, "typeError" => "0.2", "message" => "Sessão inválida."));
+              }else{
+                return false;
+              }
             }
           }
         }

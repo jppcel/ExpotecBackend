@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePagamentoTable extends Migration
+class CreateTelefoneTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,13 @@ class CreatePagamentoTable extends Migration
      */
     public function up()
     {
-      Schema::create('Payment', function (Blueprint $table) {
+      Schema::create('Phone', function (Blueprint $table) {
           $table->increments("id");
-          $table->integer("Subscription_id")->unsigned();
-          $table->string("Transaction_id");
-          $table->integer("paymentStatus");
-          $table->foreign("Subscription_id")->references("id")->on("Subscription");
+          $table->integer("Person_id")->unsigned();
+          $table->string("ddd", 3);
+          $table->string("number", 9);
           $table->timestamps();
+          $table->foreign("Person_id")->references("id")->on("Person");
       });
     }
 
@@ -30,6 +30,6 @@ class CreatePagamentoTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('Payment');
+        Schema::dropIfExists('Phone');
     }
 }

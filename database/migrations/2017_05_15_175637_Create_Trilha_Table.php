@@ -13,14 +13,13 @@ class CreateTrilhaTable extends Migration
      */
     public function up()
     {
-      Schema::create('Trilha', function (Blueprint $table) {
+      Schema::create('Track', function (Blueprint $table) {
           $table->increments("id");
-          $table->string("nome", 50);
-          $table->date("diaInicio");
-          $table->date("diaFim");
-          $table->integer("limite")->nullable();
-          $table->integer("vagas")->nullable();
-          $table->boolean("escolherAtividade");
+          $table->string("name", 50);
+          $table->date("startDay");
+          $table->date("endDay");
+          $table->integer("slots")->nullable();
+          $table->boolean("selectProduct");
           $table->timestamps();
       });
     }
@@ -32,6 +31,6 @@ class CreateTrilhaTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('Trilha');
+        Schema::dropIfExists('Track');
     }
 }

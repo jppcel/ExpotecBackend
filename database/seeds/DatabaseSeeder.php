@@ -14,6 +14,7 @@ class DatabaseSeeder extends Seeder
         $this->call(TrilhaSeeder::class);
         $this->call(PacoteSeeder::class);
         $this->call(TrilhaPacoteSeeder::class);
+        $this->call(SpeakerSeeder::class);
         $this->call(AtividadeSeeder::class);
     }
 }

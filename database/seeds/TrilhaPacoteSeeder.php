@@ -11,45 +11,45 @@ class TrilhaPacoteSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('Trilha_Pacote')->insert([
-            'Trilha_id' => 1,
-            'Pacote_id' => 1,
+        DB::table('Track_Package')->insert([
+            'Track_id' => 1,
+            'Package_id' => 1,
             'created_at' => date("Y-m-d H:i:s"),
             'updated_at' => date("Y-m-d H:i:s"),
         ]);
-        DB::table('Trilha_Pacote')->insert([
-            'Trilha_id' => 1,
-            'Pacote_id' => 2,
+        DB::table('Track_Package')->insert([
+            'Track_id' => 1,
+            'Package_id' => 2,
             'created_at' => date("Y-m-d H:i:s"),
             'updated_at' => date("Y-m-d H:i:s"),
         ]);
-        DB::table('Trilha_Pacote')->insert([
-            'Trilha_id' => 2,
-            'Pacote_id' => 3,
+        DB::table('Track_Package')->insert([
+            'Track_id' => 2,
+            'Package_id' => 3,
             'created_at' => date("Y-m-d H:i:s"),
             'updated_at' => date("Y-m-d H:i:s"),
         ]);
-        DB::table('Trilha_Pacote')->insert([
-            'Trilha_id' => 2,
-            'Pacote_id' => 4,
+        DB::table('Track_Package')->insert([
+            'Track_id' => 2,
+            'Package_id' => 4,
             'created_at' => date("Y-m-d H:i:s"),
             'updated_at' => date("Y-m-d H:i:s"),
         ]);
-        DB::table('Trilha_Pacote')->insert([
-            'Trilha_id' => 3,
-            'Pacote_id' => 2,
+        DB::table('Track_Package')->insert([
+            'Track_id' => 3,
+            'Package_id' => 2,
             'created_at' => date("Y-m-d H:i:s"),
             'updated_at' => date("Y-m-d H:i:s"),
         ]);
-        DB::table('Trilha_Pacote')->insert([
-            'Trilha_id' => 3,
-            'Pacote_id' => 4,
+        DB::table('Track_Package')->insert([
+            'Track_id' => 3,
+            'Package_id' => 4,
             'created_at' => date("Y-m-d H:i:s"),
             'updated_at' => date("Y-m-d H:i:s"),
         ]);
-        DB::table('Trilha_Pacote')->insert([
-            'Trilha_id' => 3,
-            'Pacote_id' => 5,
+        DB::table('Track_Package')->insert([
+            'Track_id' => 3,
+            'Package_id' => 5,
             'created_at' => date("Y-m-d H:i:s"),
             'updated_at' => date("Y-m-d H:i:s"),
         ]);

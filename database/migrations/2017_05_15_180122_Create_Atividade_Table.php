@@ -13,16 +13,16 @@ class CreateAtividadeTable extends Migration
      */
     public function up()
     {
-      Schema::create('Atividade', function (Blueprint $table) {
+      Schema::create('Activity', function (Blueprint $table) {
           $table->increments("id");
-          $table->string("nome", 50);
-          $table->string("palestrante", 70);
-          $table->integer("limite")->nullable();
-          $table->integer("vagas")->nullable();
-          $table->datetime("dataInicio");
-          $table->datetime("dataFim");
-          $table->integer("Trilha_id")->unsigned();
-          $table->foreign("Trilha_id")->references("id")->on("Trilha");
+          $table->string("name", 70);
+          $table->integer("Speaker_id")->unsigned();
+          $table->integer("slots")->nullable();
+          $table->datetime("startDate");
+          $table->datetime("endDate");
+          $table->integer("Track_id")->unsigned();
+          $table->foreign("Track_id")->references("id")->on("Track");
+          $table->foreign("Speaker_id")->references("id")->on("Speaker");
           $table->timestamps();
       });
     }
@@ -34,6 +34,6 @@ class CreateAtividadeTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('Atividade');
+        Schema::dropIfExists('Activity');
     }
 }

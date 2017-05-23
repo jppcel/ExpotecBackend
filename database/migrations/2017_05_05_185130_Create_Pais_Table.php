@@ -13,14 +13,14 @@ class CreatePaisTable extends Migration
      */
     public function up()
     {
-      Schema::create('Pais', function (Blueprint $table) {
-          $table->integer("Id")->unsigned();
-          $table->string("Pais", 50);
-          $table->primary("Id");
+      Schema::create('Country', function (Blueprint $table) {
+          $table->integer("id")->unsigned();
+          $table->string("name", 50);
+          $table->primary("id");
       });
-      DB::Table('Pais')->insert(array( 'Id' => 1, 'Pais' => 'BRASIL'));
-      DB::Table('Pais')->insert(array( 'Id' => 2, 'Pais' => 'PARAGUAI'));
-      DB::Table('Pais')->insert(array( 'Id' => 3, 'Pais' => 'ARGENTINA'));
+      DB::Table('Country')->insert(array( 'id' => 1, 'name' => 'BRASIL'));
+      DB::Table('Country')->insert(array( 'id' => 2, 'name' => 'PARAGUAI'));
+      DB::Table('Country')->insert(array( 'id' => 3, 'name' => 'ARGENTINA'));
 
     }
 

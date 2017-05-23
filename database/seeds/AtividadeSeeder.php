@@ -11,173 +11,173 @@ class AtividadeSeeder extends Seeder
      */
     public function run()
     {
-      DB::table('Atividade')->insert([
+      DB::table('Activity')->insert([
           'id' => 1,
-          'nome' => 'Expotec 1',
-          'palestrante' => 'Palestrante Exemplo',
-          'dataInicio' => '2017-08-09 19:30:00',
-          'dataFim' => '2017-08-09 22:40:00',
-          'Trilha_id' => 1,
+          'name' => 'Expotec 1',
+          'Speaker_id' => 1,
+          'startDate' => '2017-08-09 19:30:00',
+          'endDate' => '2017-08-09 22:40:00',
+          'Track_id' => 1,
           'created_at' => date("Y-m-d H:i:s"),
           'updated_at' => date("Y-m-d H:i:s"),
       ]);
-      DB::table('Atividade')->insert([
+      DB::table('Activity')->insert([
           'id' => 2,
-          'nome' => 'Expotec 2',
-          'palestrante' => 'Palestrante Exemplo',
-          'dataInicio' => '2017-08-10 19:30:00',
-          'dataFim' => '2017-08-10 22:40:00',
-          'Trilha_id' => 1,
+          'name' => 'Expotec 2',
+          'Speaker_id' => 1,
+          'startDate' => '2017-08-10 19:30:00',
+          'endDate' => '2017-08-10 22:40:00',
+          'Track_id' => 1,
           'created_at' => date("Y-m-d H:i:s"),
           'updated_at' => date("Y-m-d H:i:s"),
       ]);
-      DB::table('Atividade')->insert([
+      DB::table('Activity')->insert([
           'id' => 3,
-          'nome' => 'Expotec 3',
-          'palestrante' => 'Palestrante Exemplo',
-          'dataInicio' => '2017-08-11 19:30:00',
-          'dataFim' => '2017-08-11 22:40:00',
-          'Trilha_id' => 1,
+          'name' => 'Expotec 3',
+          'Speaker_id' => 1,
+          'startDate' => '2017-08-11 19:30:00',
+          'endDate' => '2017-08-11 22:40:00',
+          'Track_id' => 1,
           'created_at' => date("Y-m-d H:i:s"),
           'updated_at' => date("Y-m-d H:i:s"),
       ]);
-      DB::table('Atividade')->insert([
+      DB::table('Activity')->insert([
           'id' => 4,
-          'nome' => 'TADS Magna',
-          'palestrante' => 'Palestrante Exemplo',
-          'dataInicio' => '2017-08-09 19:30:00',
-          'dataFim' => '2017-08-09 21:00:00',
-          'Trilha_id' => 2,
+          'name' => 'TADS Magna',
+          'Speaker_id' => 1,
+          'startDate' => '2017-08-09 19:30:00',
+          'endDate' => '2017-08-09 21:00:00',
+          'Track_id' => 2,
           'created_at' => date("Y-m-d H:i:s"),
           'updated_at' => date("Y-m-d H:i:s"),
       ]);
-      DB::table('Atividade')->insert([
+      DB::table('Activity')->insert([
           'id' => 5,
-          'nome' => 'TADS TED 1',
-          'palestrante' => 'Palestrante Exemplo',
-          'dataInicio' => '2017-08-09 21:30:00',
-          'dataFim' => '2017-08-09 22:00:00',
-          'Trilha_id' => 2,
+          'name' => 'TADS TED 1',
+          'Speaker_id' => 1,
+          'startDate' => '2017-08-09 21:30:00',
+          'endDate' => '2017-08-09 22:00:00',
+          'Track_id' => 2,
           'created_at' => date("Y-m-d H:i:s"),
           'updated_at' => date("Y-m-d H:i:s"),
       ]);
-      DB::table('Atividade')->insert([
+      DB::table('Activity')->insert([
           'id' => 6,
-          'nome' => 'TADS TED 2',
-          'palestrante' => 'Palestrante Exemplo',
-          'dataInicio' => '2017-08-09 22:00:00',
-          'dataFim' => '2017-08-09 22:30:00',
-          'Trilha_id' => 2,
+          'name' => 'TADS TED 2',
+          'Speaker_id' => 1,
+          'startDate' => '2017-08-09 22:00:00',
+          'endDate' => '2017-08-09 22:30:00',
+          'Track_id' => 2,
           'created_at' => date("Y-m-d H:i:s"),
           'updated_at' => date("Y-m-d H:i:s"),
       ]);
-      DB::table('Atividade')->insert([
+      DB::table('Activity')->insert([
           'id' => 7,
-          'nome' => 'TADS 2 TED 1',
-          'palestrante' => 'Palestrante Exemplo',
-          'dataInicio' => '2017-08-10 19:30:00',
-          'dataFim' => '2017-08-10 20:00:00',
-          'Trilha_id' => 2,
+          'name' => 'TADS 2 TED 1',
+          'Speaker_id' => 1,
+          'startDate' => '2017-08-10 19:30:00',
+          'endDate' => '2017-08-10 20:00:00',
+          'Track_id' => 2,
           'created_at' => date("Y-m-d H:i:s"),
           'updated_at' => date("Y-m-d H:i:s"),
       ]);
-      DB::table('Atividade')->insert([
+      DB::table('Activity')->insert([
           'id' => 8,
-          'nome' => 'TADS 2 TED 2',
-          'palestrante' => 'Palestrante Exemplo',
-          'dataInicio' => '2017-08-10 20:00:00',
-          'dataFim' => '2017-08-10 20:30:00',
-          'Trilha_id' => 2,
+          'name' => 'TADS 2 TED 2',
+          'Speaker_id' => 1,
+          'startDate' => '2017-08-10 20:00:00',
+          'endDate' => '2017-08-10 20:30:00',
+          'Track_id' => 2,
           'created_at' => date("Y-m-d H:i:s"),
           'updated_at' => date("Y-m-d H:i:s"),
       ]);
-      DB::table('Atividade')->insert([
+      DB::table('Activity')->insert([
           'id' => 9,
-          'nome' => 'TADS 2 TED 3',
-          'palestrante' => 'Palestrante Exemplo',
-          'dataInicio' => '2017-08-10 20:30:00',
-          'dataFim' => '2017-08-10 21:00:00',
-          'Trilha_id' => 2,
+          'name' => 'TADS 2 TED 3',
+          'Speaker_id' => 1,
+          'startDate' => '2017-08-10 20:30:00',
+          'endDate' => '2017-08-10 21:00:00',
+          'Track_id' => 2,
           'created_at' => date("Y-m-d H:i:s"),
           'updated_at' => date("Y-m-d H:i:s"),
       ]);
-      DB::table('Atividade')->insert([
+      DB::table('Activity')->insert([
           'id' => 10,
-          'nome' => 'TADS 2 TED 4',
-          'palestrante' => 'Palestrante Exemplo',
-          'dataInicio' => '2017-08-10 21:15:00',
-          'dataFim' => '2017-08-10 21:45:00',
-          'Trilha_id' => 2,
+          'name' => 'TADS 2 TED 4',
+          'Speaker_id' => 1,
+          'startDate' => '2017-08-10 21:15:00',
+          'endDate' => '2017-08-10 21:45:00',
+          'Track_id' => 2,
           'created_at' => date("Y-m-d H:i:s"),
           'updated_at' => date("Y-m-d H:i:s"),
       ]);
-      DB::table('Atividade')->insert([
+      DB::table('Activity')->insert([
           'id' => 11,
-          'nome' => 'TADS 2 TED 5',
-          'palestrante' => 'Palestrante Exemplo',
-          'dataInicio' => '2017-08-10 21:45:00',
-          'dataFim' => '2017-08-10 22:15:00',
-          'Trilha_id' => 2,
+          'name' => 'TADS 2 TED 5',
+          'Speaker_id' => 1,
+          'startDate' => '2017-08-10 21:45:00',
+          'endDate' => '2017-08-10 22:15:00',
+          'Track_id' => 2,
           'created_at' => date("Y-m-d H:i:s"),
           'updated_at' => date("Y-m-d H:i:s"),
       ]);
-      DB::table('Atividade')->insert([
+      DB::table('Activity')->insert([
           'id' => 12,
-          'nome' => 'TADS Minicurso 1',
-          'palestrante' => 'Palestrante Exemplo',
-          'dataInicio' => '2017-08-11 19:30:00',
-          'dataFim' => '2017-08-11 22:00:00',
-          'Trilha_id' => 2,
+          'name' => 'TADS Minicurso 1',
+          'Speaker_id' => 1,
+          'startDate' => '2017-08-11 19:30:00',
+          'endDate' => '2017-08-11 22:00:00',
+          'Track_id' => 2,
           'created_at' => date("Y-m-d H:i:s"),
           'updated_at' => date("Y-m-d H:i:s"),
       ]);
-      DB::table('Atividade')->insert([
+      DB::table('Activity')->insert([
           'id' => 13,
-          'nome' => 'TADS Minicurso 2',
-          'palestrante' => 'Palestrante Exemplo',
-          'dataInicio' => '2017-08-11 19:30:00',
-          'dataFim' => '2017-08-11 22:00:00',
-          'Trilha_id' => 2,
+          'name' => 'TADS Minicurso 2',
+          'Speaker_id' => 1,
+          'startDate' => '2017-08-11 19:30:00',
+          'endDate' => '2017-08-11 22:00:00',
+          'Track_id' => 2,
           'created_at' => date("Y-m-d H:i:s"),
           'updated_at' => date("Y-m-d H:i:s"),
       ]);
-      DB::table('Atividade')->insert([
+      DB::table('Activity')->insert([
           'id' => 14,
-          'nome' => 'TADS Minicurso 3',
-          'palestrante' => 'Palestrante Exemplo',
-          'dataInicio' => '2017-08-11 19:30:00',
-          'dataFim' => '2017-08-11 22:00:00',
-          'Trilha_id' => 2,
+          'name' => 'TADS Minicurso 3',
+          'Speaker_id' => 1,
+          'startDate' => '2017-08-11 19:30:00',
+          'endDate' => '2017-08-11 22:00:00',
+          'Track_id' => 2,
           'created_at' => date("Y-m-d H:i:s"),
           'updated_at' => date("Y-m-d H:i:s"),
       ]);
-      DB::table('Atividade')->insert([
+      DB::table('Activity')->insert([
           'id' => 15,
-          'nome' => 'TADS Minicurso 4',
-          'palestrante' => 'Palestrante Exemplo',
-          'dataInicio' => '2017-08-11 19:30:00',
-          'dataFim' => '2017-08-11 22:00:00',
-          'Trilha_id' => 2,
+          'name' => 'TADS Minicurso 4',
+          'Speaker_id' => 1,
+          'startDate' => '2017-08-11 19:30:00',
+          'endDate' => '2017-08-11 22:00:00',
+          'Track_id' => 2,
           'created_at' => date("Y-m-d H:i:s"),
           'updated_at' => date("Y-m-d H:i:s"),
       ]);
-      DB::table('Atividade')->insert([
+      DB::table('Activity')->insert([
           'id' => 16,
-          'nome' => 'TADS Encerramento',
-          'palestrante' => 'Palestrante Exemplo',
-          'dataInicio' => '2017-08-11 22:00:00',
-          'dataFim' => '2017-08-11 22:30:00',
-          'Trilha_id' => 2,
+          'name' => 'TADS Encerramento',
+          'Speaker_id' => 1,
+          'startDate' => '2017-08-11 22:00:00',
+          'endDate' => '2017-08-11 22:30:00',
+          'Track_id' => 2,
           'created_at' => date("Y-m-d H:i:s"),
           'updated_at' => date("Y-m-d H:i:s"),
       ]);
-      DB::table('Atividade')->insert([
+      DB::table('Activity')->insert([
           'id' => 17,
-          'nome' => 'Almoço',
-          'palestrante' => 'Palestrante Exemplo',
-          'dataInicio' => '2017-08-12 10:30:00',
-          'dataFim' => '2017-08-12 15:00:00',
-          'Trilha_id' => 3,
+          'name' => 'Almoço',
+          'Speaker_id' => 1,
+          'startDate' => '2017-08-12 10:30:00',
+          'endDate' => '2017-08-12 15:00:00',
+          'Track_id' => 3,
           'created_at' => date("Y-m-d H:i:s"),
           'updated_at' => date("Y-m-d H:i:s"),
       ]);

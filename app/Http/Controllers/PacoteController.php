@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\PessoaController;
-use App\Pacote;
+use App\Package;
 
 class PacoteController extends Controller
 {
@@ -19,17 +19,18 @@ class PacoteController extends Controller
    */
     public function listAll(Request $request){
       if(PessoaController::verifyLogin($request->input("cpf"), $request->input("token"))){
-        $pacotes = Pacote::all();
-        $retorno = NULL;
-        foreach($pacotes as $pacote){
+        $packages = Package::all();
+        $return = NULL;
+        foreach($packages as $package){
           $array = array();
-          $array["nome"] = $pacote->nome;
-          $array["valor"] = $pacote->valor;
-          $array["dataLimite"] = $pacote->dataLimite;
-          $array["aceitaInscricao"] = $this->verifyLimit($pacote->id);
-          $retorno[] = $array;
+          $array["name"] = $package->name;
+          $array["value"] = $package->value;
+          $array["startDate"] = $package->startDate;
+          $array["endDate"] = $package->endDate;
+          $array["acceptSubscription"] = $this->verifyLimit($package->id);
+          $return[] = $array;
         }
-        return response()->json(array("ok" => 1, "return" => $retorno));
+        return response()->json(array("ok" => 1, "return" => $return));
       }else{
         return response()->json(array("ok" => 0, "error" => 1, "typeError" => "0.0", "message" => "Usuário deslogado."));
       }
@@ -38,9 +39,9 @@ class PacoteController extends Controller
 
 
     public static function verifyLimit($id){
-      $pacote = Pacote::find($id);
-      if($pacote){
-        $limite = $pacote->dataLimite;
+      $package = Package::find($id);
+      if($package){
+        $limite = $package->endDate;
         if(strtotime($limite) > time()){
           return true;
         }else{

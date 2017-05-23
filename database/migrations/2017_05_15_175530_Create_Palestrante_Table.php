@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePagamentoTable extends Migration
+class CreatePalestranteTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,12 @@ class CreatePagamentoTable extends Migration
      */
     public function up()
     {
-      Schema::create('Payment', function (Blueprint $table) {
+      Schema::create('Speaker', function (Blueprint $table) {
           $table->increments("id");
-          $table->integer("Subscription_id")->unsigned();
-          $table->string("Transaction_id");
-          $table->integer("paymentStatus");
-          $table->foreign("Subscription_id")->references("id")->on("Subscription");
+          $table->string("name", 50);
+          $table->string("photo")->nullable();
+          $table->string("website", 100)->nullable();
+          $table->string("description", 150);
           $table->timestamps();
       });
     }
@@ -30,6 +30,6 @@ class CreatePagamentoTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('Payment');
+        Schema::dropIfExists('Speaker');
     }
 }
