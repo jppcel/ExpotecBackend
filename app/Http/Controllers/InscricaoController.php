@@ -286,44 +286,55 @@ class InscricaoController extends Controller
       // }
       $f = fopen('C:\Users\Joao Paulo\git\ExpotecBackend\public\ceps.csv', 'r');
       if($f){
-        $list = array();
         $i = 1;
+        $zip = ZIP::orderBy('id', 'desc')->first();
+        for($j = 1; $j <= $zip->line; $j++){
+          fgetcsv($f, 0, ",");
+          $i++;
+        }
         while (!feof($f)) {
           $linha = fgetcsv($f, 0, ",");
-          $retorno = true;
-          foreach($list as $tipo){
-            if($linha[1] == $tipo){
-              $retorno = false;
-            }
-          }
-          if(count(ZIP::where("zipcode", $linha[0])->get()) == 0){
-            print_r($linha); echo "<br>";
-            $UF = State::where("UF", $linha[3])->first();
-            $city = City::where(["State_id" => $UF->id, "name" => $linha[4]])->first();
-            if($city == null){
-              $city = new City;
-              $city->name = $linha[4];
-              $city->State_id = $UF->id;
-              if(count($linha) == 8){
-                if($linha[7]){
-                  $city->Cod_Ibge = $linha[7];
+          if($i > $zip->line){
+            if(count(ZIP::where("zipcode", $linha[0])->get()) == 0){
+              echo $linha[0]."<br>";
+              $UF = State::where("UF", $linha[3])->first();
+              $city = City::where([
+                "State_id" => $UF->id,
+                 "name" => $linha[4]
+                 ])->first();
+              if($city == null){
+                $city = new City;
+                $city->name = $linha[4];
+                $city->State_id = $UF->id;
+                if(count($linha) == 8){
+                  if($linha[7]){
+                    $city->Cod_Ibge = $linha[7];
+                  }
                 }
+                $city->save();
               }
-              $city->save();
+              $typeStreet = TypeStreet::where(["name" => $linha[1]])->first();
+              $zip = new ZIP;
+              $zip->City_id = $city->id;
+              $zip->TypeStreet_id = $typeStreet->id;
+              $zip->zipcode = $linha[0];
+              $zip->neighborhood = $linha[5];
+              $zip->name = $linha[2];
+              $zip->line = $i-1;
+              $zip->save();
             }
-            $typeStreet = TypeStreet::where(["name" => $linha[1]])->first();
-            $zip = new ZIP;
-            $zip->City_id = $city->id;
-            $zip->TypeStreet_id = $typeStreet->id;
-            $zip->zipcode = $linha[0];
-            $zip->neighborhood = $linha[5];
-            $zip->name = $linha[2];
-            $zip->save();
           }
           $i++;
         }
         echo $i;
         print_r($list);
+      }
+    }
+
+    public function listCities(){
+      $cities = City::all();
+      foreach($cities as $city){
+        echo "DB::Table('TypeStreet')->insert(array('id' => ".$city->id.", 'name' => \"".mb_strtoupper($city->name, "utf-8")."\", Cod_Ibge => \"".$city->Cod_Ibge."\", State_id => ".$city->State_id."));<br>";
       }
     }
 }
