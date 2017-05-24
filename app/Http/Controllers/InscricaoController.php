@@ -17,20 +17,21 @@ use App\Person;
 use App\City;
 use App\State;
 use App\Country;
-use App\CEP;
+use App\ZIP;
 use App\Payment;
 use App\Package;
 use App\Address;
 use App\Phone;
 use App\User;
 use App\Activity;
+use App\TypeStreet;
 use App\Subscription;
 use App\Subscription_Activity;
 
 class InscricaoController extends Controller
 {
   /**
-   *  @route: /api/web/inscricao/new
+   *  @route: /api/web/subscription/new
    *
    *  @method: Post
    *  Atribbutes:
@@ -39,19 +40,20 @@ class InscricaoController extends Controller
    *      || => or;
    *      - interval.
    *
-   *  @param  string  nome [5-60] => Name of Person
-   *  @param  string  cpf [14] => CPF of Person
-   *  @param  string  email [5-100] => Email of Person
-   *  @param  string  cep [9] => ZIP Code of Person's Address
-   *  @param  string  logradouro [0-100] => Address of Person's Address
-   *  @param  integer numero [0-5] => number of Person's Address (nullable)
-   *  @param  string  bairro [0-40] => zone of Person's Address (nullable)
-   *  @param  string  cidade [7] => Cod_IBGE of the Person's City
-   *  @param  string  telefone1 [11] => Phone 1 of Person
-   *  @param  string  telefone2 [0 || 11] => Phone 2 of Person (nullable)
-   *  @param  string  instituicao [0-100] => College of Person (nullable)
-   *  @param  string  curso [0-50] => Course of Person (nullable)
-   *  @param  int alunoUnivel [1] => If is AlunoUnivel of Person (nullable)
+   *  @param  string  person.nome [5-60] => Name of Person
+   *  @param  string  person.document [14] => CPF of Person
+   *  @param  string  person.email [5-100] => Email of Person
+   *  @param  string  address.zip [9] => ZIP Code of Person's Address
+   *  @param  integer address.type_street  => Type Address of Person's Address
+   *  @param  string  address.street [0-100] => Address of Person's Address
+   *  @param  integer address.number [0-5] => number of Person's Address (nullable)
+   *  @param  string  address.neighborhood [0-40] => zone of Person's Address (nullable)
+   *  @param  integer address.city [7] => id of the Person's City
+   *  @param  string  phone.ddd [2-3] => Phone 1 of Person
+   *  @param  string  phone.number [8-9] => Phone 2 of Person
+   *  @param  string  university.college [0-100] => College of Person (nullable)
+   *  @param  string  university.course [0-50] => Course of Person (nullable)
+   *  @param  int university.is_from_another_college [1] => If is student of other university of Person (nullable)
    */
   public function postNew(Request $request){
     // Faz a validação dos dados
@@ -64,7 +66,7 @@ class InscricaoController extends Controller
       'address.street' => 'required|string|max:100',
       'address.number' => 'nullable|string|max:5',
       'address.neighborhood' => 'nullable|string|max:40',
-      'address.city' => 'required|integer|min:1000000|max:9999999',
+      'address.city' => 'required|integer',
       'phone.ddd' => 'required|string|min:2|max:3',
       'phone.number' => 'required|string|min:8|max:9'
     ]);
@@ -103,7 +105,7 @@ class InscricaoController extends Controller
             $address->neighborhood = $request->input("address.neighborhood");
             $address->complement = $request->input("address.complement");
             $address->zip = $CEP;
-            $address->City_Cod_Ibge = $request->input("address.city");
+            $address->City_id = $request->input("address.city");
             $address->save();
             if($address->id > 0){
               $phone = new Phone;
@@ -279,6 +281,49 @@ class InscricaoController extends Controller
     }
 
     public function test(Request $request){
-      print_r($request->all());
+      // foreach(TypeStreet::all() as $typeStreet){
+      //   echo "DB::Table('TypeStreet')->insert(array('id' => ".$typeStreet->id.", 'state_id' => '".$typeStreet->name."'));<br/>";
+      // }
+      $f = fopen('C:\Users\Joao Paulo\git\ExpotecBackend\public\ceps.csv', 'r');
+      if($f){
+        $list = array();
+        $i = 1;
+        while (!feof($f)) {
+          $linha = fgetcsv($f, 0, ",");
+          $retorno = true;
+          foreach($list as $tipo){
+            if($linha[1] == $tipo){
+              $retorno = false;
+            }
+          }
+          if(count(ZIP::where("zipcode", $linha[0])->get()) == 0){
+            print_r($linha); echo "<br>";
+            $UF = State::where("UF", $linha[3])->first();
+            $city = City::where(["State_id" => $UF->id, "name" => $linha[4]])->first();
+            if($city == null){
+              $city = new City;
+              $city->name = $linha[4];
+              $city->State_id = $UF->id;
+              if(count($linha) == 8){
+                if($linha[7]){
+                  $city->Cod_Ibge = $linha[7];
+                }
+              }
+              $city->save();
+            }
+            $typeStreet = TypeStreet::where(["name" => $linha[1]])->first();
+            $zip = new ZIP;
+            $zip->City_id = $city->id;
+            $zip->TypeStreet_id = $typeStreet->id;
+            $zip->zipcode = $linha[0];
+            $zip->neighborhood = $linha[5];
+            $zip->name = $linha[2];
+            $zip->save();
+          }
+          $i++;
+        }
+        echo $i;
+        print_r($list);
+      }
     }
 }
