@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class TypeStreet extends Model
 {
-    public $timestamps = true;
+    public $timestamps = false;
     protected $primaryKey = 'id';
     protected $table = 'TypeStreet';
 
