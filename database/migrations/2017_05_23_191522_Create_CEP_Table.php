@@ -16,12 +16,12 @@ class CreateCEPTable extends Migration
       Schema::create('ZIP', function (Blueprint $table) {
           $table->increments("id");
           $table->integer("TypeStreet_id")->unsigned()->nullable();
-          $table->integer("City_Cod_Ibge")->unsigned();
+          $table->integer("City_id")->unsigned();
           $table->string("name", 100)->nullable();
           $table->string("neighborhood", 100)->nullable();
           $table->string("zipcode", 8);
           $table->foreign("City_id")->references("id")->on("City");
-          $table->foreign("TypeStreet_id")->references("TypeStreet")->on("City");
+          $table->foreign("TypeStreet_id")->references("id")->on("TypeStreet");
       });
     }
 
