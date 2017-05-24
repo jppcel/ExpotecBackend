@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "f15545107fdd29f025e9744df8a1d1cd",
+    "content-hash": "32d48311488766e69c42467b70af0374",
     "packages": [
         {
             "name": "barryvdh/laravel-cors",
@@ -1005,6 +1005,44 @@
                 "php"
             ],
             "time": "2017-03-05T18:23:57+00:00"
+        },
+        {
+            "name": "pagseguro/pagseguro-php-sdk",
+            "version": "3.0.8",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/pagseguro/pagseguro-php-sdk.git",
+                "reference": "ac3864724584141eebb892dd11da28d1e5f4b426"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/pagseguro/pagseguro-php-sdk/zipball/ac3864724584141eebb892dd11da28d1e5f4b426",
+                "reference": "ac3864724584141eebb892dd11da28d1e5f4b426",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "lib-curl": "*",
+                "lib-openssl": "*",
+                "php": ">=5.4.27"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "PagSeguro\\": "source/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache License 2.0"
+            ],
+            "authors": [
+                {
+                    "name": "PagSeguro"
+                }
+            ],
+            "description": "Biblioteca de integração com o PagSeguro",
+            "time": "2017-04-12T12:32:25+00:00"
         },
         {
             "name": "paragonie/random_compat",
@@ -2444,44 +2482,6 @@
                 "object graph"
             ],
             "time": "2017-04-12T18:52:22+00:00"
-        },
-        {
-            "name": "pagseguro/pagseguro-php-sdk",
-            "version": "3.0.8",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/pagseguro/pagseguro-php-sdk.git",
-                "reference": "ac3864724584141eebb892dd11da28d1e5f4b426"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/pagseguro/pagseguro-php-sdk/zipball/ac3864724584141eebb892dd11da28d1e5f4b426",
-                "reference": "ac3864724584141eebb892dd11da28d1e5f4b426",
-                "shasum": ""
-            },
-            "require": {
-                "ext-curl": "*",
-                "lib-curl": "*",
-                "lib-openssl": "*",
-                "php": ">=5.4.27"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "PagSeguro\\": "source/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "Apache License 2.0"
-            ],
-            "authors": [
-                {
-                    "name": "PagSeguro"
-                }
-            ],
-            "description": "Biblioteca de integração com o PagSeguro",
-            "time": "2017-04-12T12:32:25+00:00"
         },
         {
             "name": "phpdocumentor/reflection-common",
