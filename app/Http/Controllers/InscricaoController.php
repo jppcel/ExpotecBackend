@@ -209,7 +209,6 @@ class InscricaoController extends Controller
      *  @param  string cpf => [14] id of Person
      *  @param  string token => token of this session
      *  @param  integer package_id => Pacote's Id
-     *  @param  integer activity_id => Atividade's id (nullable)
      */
     public function makeInscricao(Request $request){
       $person = PessoaController::verifyLogin($request->input("cpf"), $request->input("token"));
@@ -229,16 +228,6 @@ class InscricaoController extends Controller
           $subscription->Person_id = $person->id;
           $subscription->Package_id = $request->input("package_id");
           $subscription->save();
-          if($subscription->id > 0){
-            if($request->input("activity_id")){
-              $atividade = Activity::find($request->input("activity_id"));
-              $subscriptionActivity = new Subscription_Activity;
-              $subscriptionActivity->Subscription_id = $subscription->id;
-              $subscriptionActivity->Activity_id = $request->input("activity_id");
-
-              $subscriptionActivity->save();
-            }
-          }
 
           $package = Package::find($subscription->Package_id);
 
