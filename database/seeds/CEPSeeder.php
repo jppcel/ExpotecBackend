@@ -13,20 +13,20 @@ class CEPSeeder extends Seeder
     {
         DB::table('ZIP')->insert([
           'TypeStreet_id' => 2,
-          'City_id' => 1462,
+          'City_id' => 4104808,
           'name' => 'das Gardênias',
           'neighborhood' => 'Guarujá',
           'zipcode' => '85804460'
         ]);
         DB::table('ZIP')->insert([
           'TypeStreet_id' => 4,
-          'City_id' => 1462,
+          'City_id' => 4104808,
           'name' => 'Tito Muffato',
           'neighborhood' => 'Santa Cruz',
           'zipcode' => '85806080'
         ]);
         DB::table('ZIP')->insert([
-          'City_id' => 1462,
+          'City_id' => 4104808,
           'zipcode' => '85800000'
         ]);
     }

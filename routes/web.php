@@ -17,6 +17,7 @@ Route::group(['prefix' => 'api'], function(){
       Route::get('/person/{id}/{token}', 'InscricaoController@getPessoa');
       Route::post('/activate', 'InscricaoController@activateInscricao');
       Route::post('/package', 'InscricaoController@makeInscricao');
+      Route::get('/city', 'InscricaoController@listCities');
     });
     Route::group(['prefix' => 'track'], function(){
       Route::post('/list', 'TrilhaController@listAll');
