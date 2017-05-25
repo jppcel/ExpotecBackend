@@ -16,5 +16,6 @@ class DatabaseSeeder extends Seeder
         $this->call(TrilhaPacoteSeeder::class);
         $this->call(SpeakerSeeder::class);
         $this->call(AtividadeSeeder::class);
+        $this->call(CEPSeeder::class);
     }
 }

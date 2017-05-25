@@ -27,5 +27,9 @@ Route::group(['prefix' => 'api'], function(){
     });
     Route::get('/states', 'CityController@listStates');
     Route::get('/cities/{id}', 'CityController@listCities');
+
+    Route::group(['prefix' => 'zip'], function(){
+      Route::get('/search/{ZIP}', 'ZIPController@search');
+    });
   });
 });

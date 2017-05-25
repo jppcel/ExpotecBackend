@@ -127,7 +127,7 @@ class AtividadeSeeder extends Seeder
           'Speaker_id' => 1,
           'startDate' => '2017-08-11 19:30:00',
           'endDate' => '2017-08-11 22:00:00',
-          'Track_id' => 2,
+          'Track_id' => 3,
           'created_at' => date("Y-m-d H:i:s"),
           'updated_at' => date("Y-m-d H:i:s"),
       ]);
@@ -137,7 +137,7 @@ class AtividadeSeeder extends Seeder
           'Speaker_id' => 1,
           'startDate' => '2017-08-11 19:30:00',
           'endDate' => '2017-08-11 22:00:00',
-          'Track_id' => 2,
+          'Track_id' => 4,
           'created_at' => date("Y-m-d H:i:s"),
           'updated_at' => date("Y-m-d H:i:s"),
       ]);
@@ -147,7 +147,7 @@ class AtividadeSeeder extends Seeder
           'Speaker_id' => 1,
           'startDate' => '2017-08-11 19:30:00',
           'endDate' => '2017-08-11 22:00:00',
-          'Track_id' => 2,
+          'Track_id' => 5,
           'created_at' => date("Y-m-d H:i:s"),
           'updated_at' => date("Y-m-d H:i:s"),
       ]);
@@ -157,7 +157,7 @@ class AtividadeSeeder extends Seeder
           'Speaker_id' => 1,
           'startDate' => '2017-08-11 19:30:00',
           'endDate' => '2017-08-11 22:00:00',
-          'Track_id' => 2,
+          'Track_id' => 6,
           'created_at' => date("Y-m-d H:i:s"),
           'updated_at' => date("Y-m-d H:i:s"),
       ]);
@@ -177,7 +177,7 @@ class AtividadeSeeder extends Seeder
           'Speaker_id' => 1,
           'startDate' => '2017-08-12 10:30:00',
           'endDate' => '2017-08-12 15:00:00',
-          'Track_id' => 3,
+          'Track_id' => 7,
           'created_at' => date("Y-m-d H:i:s"),
           'updated_at' => date("Y-m-d H:i:s"),
       ]);

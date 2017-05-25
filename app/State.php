@@ -12,7 +12,7 @@ class State extends Model
 
     public function country()
     {
-      return $this->belongsTo('App\Country');
+      return $this->belongsTo('App\Country', "Country_id");
     }
 
     public function cities()
