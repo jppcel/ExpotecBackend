@@ -59,10 +59,10 @@ class InscricaoController extends Controller
     // Faz a validação dos dados
     $validator = \Validator::make($request->all(), [
       'person.name' => 'required|string|min:5|max:60',
-      'person.document' => 'required|cpf|min:14|max:14|unique:Person,document',
+      'person.document' => 'required|cpf|min:11|max:14|unique:Person,document',
       'person.email' => 'required|string|min:5|max:100|unique:Person,email',
-      'address.zip' => 'required|string|min:9|max:9',
-      'address.type_street' => 'required|string|max:100',
+      'address.zip' => 'required|string|min:8|max:9',
+      'address.type_street' => 'required|integer',
       'address.street' => 'required|string|max:100',
       'address.number' => 'nullable|string|max:5',
       'address.neighborhood' => 'nullable|string|max:40',
