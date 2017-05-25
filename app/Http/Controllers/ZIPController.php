@@ -35,7 +35,7 @@ class ZIPController extends Controller
           "zip" => $ZIP
         ));
       }else{
-        return response()->json(array("ok" => 0, "error" => 1, "typeError" => "5.0", "message" => "CEP não encontrado."));
+        return response()->json(array("ok" => 0, "error" => 1, "typeError" => "5.0", "message" => "CEP não encontrado."), 404);
       }
     }
 }

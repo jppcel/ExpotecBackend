@@ -27,7 +27,7 @@ class LoginController extends Controller
       ]);
       // Se a validação falha, retorna um erro
       if($validator->fails()){
-        return response()->json(array("ok" => 0, "error" => 1, "typeError" => "0.1", "message" => "CPF e/ou senha inválidos."));
+        return response()->json(array("ok" => 0, "error" => 1, "typeError" => "0.1", "message" => "CPF e/ou senha inválidos."), 422);
       }else{
         $CPF = Util::CPFNumbers($request->input("document"));
         $person = Person::where(["document" => $CPF])->first();
@@ -39,13 +39,13 @@ class LoginController extends Controller
               $user->save();
               return response()->json(array("ok" => 1, "login" => 1, "token" => $user->remember_token));
             }else{
-              return response()->json(array("ok" => 0, "error" => 1, "typeError" => "0.2", "message" => "CPF e/ou senha inválidos."));
+              return response()->json(array("ok" => 0, "error" => 1, "typeError" => "0.2", "message" => "CPF e/ou senha inválidos."), 422);
             }
           }else{
-            return response()->json(array("ok" => 0, "error" => 1, "typeError" => "0.3", "message" => "CPF e/ou senha inválidos."));
+            return response()->json(array("ok" => 0, "error" => 1, "typeError" => "0.3", "message" => "CPF e/ou senha inválidos."), 422);
           }
         }else{
-          return response()->json(array("ok" => 0, "error" => 1, "typeError" => "0.4", "message" => "CPF e/ou senha inválidos."));
+          return response()->json(array("ok" => 0, "error" => 1, "typeError" => "0.4", "message" => "CPF e/ou senha inválidos."), 422);
         }
       }
     }
@@ -63,7 +63,7 @@ class LoginController extends Controller
         ]);
         // Se a validação falha, retorna um erro
         if($validator->fails()){
-          return response()->json(array("ok" => 0, "error" => 1, "typeError" => "0.1", "message" => "Sessão inválida."));
+          return response()->json(array("ok" => 0, "error" => 1, "typeError" => "0.1", "message" => "Sessão inválida."), 422);
         }else{
           self::logout($request->input("document"), $request->input("token"));
         }
@@ -91,7 +91,7 @@ class LoginController extends Controller
               }
             }else{
               if($returnType == 1){
-                return response()->json(array("ok" => 0, "error" => 1, "typeError" => "0.2", "message" => "Sessão inválida."));
+                return response()->json(array("ok" => 0, "error" => 1, "typeError" => "0.2", "message" => "Sessão inválida."), 422);
               }else{
                 return false;
               }

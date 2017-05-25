@@ -137,10 +137,10 @@ class InscricaoController extends Controller
             }
           }
         }else{
-          return response()->json(array("ok" => 0, "error" => 1, "typeError" => "1.1", "message" => "A cidade informada não existe."));
+          return response()->json(array("ok" => 0, "error" => 1, "typeError" => "1.1", "message" => "A cidade informada não existe."), 422);
         }
       }else{
-        return response()->json(array("ok" => 0, "error" => 1, "typeError" => "1.2", "message" => "O CEP não foi informado."));
+        return response()->json(array("ok" => 0, "error" => 1, "typeError" => "1.2", "message" => "O CEP não foi informado."), 422);
       }
     }
   }
@@ -157,10 +157,10 @@ class InscricaoController extends Controller
       if($person->user->remember_token == $token){
         return response()->json(array("ok" => 1, "nome" => $person->name));
       }else{
-        return response()->json(array("ok" => 0, "error" => 1, "typeError" => "2.1", "message" => "O token informado não é válido."));
+        return response()->json(array("ok" => 0, "error" => 1, "typeError" => "2.1", "message" => "O token informado não é válido."), 422);
       }
     }else{
-      return response()->json(array("ok" => 0, "error" => 1, "typeError" => "2.2", "message" => "O usuário informado não existe."));
+      return response()->json(array("ok" => 0, "error" => 1, "typeError" => "2.2", "message" => "O usuário informado não existe."), 404);
     }
   }
 
@@ -193,10 +193,10 @@ class InscricaoController extends Controller
           return response()->json(array("ok" => 1, "token" => $person->user->remember_token));
         }
       }else{
-        return response()->json(array("ok" => 0, "error" => 1, "typeError" => "2.1", "message" => "Um erro inesperado aconteceu."));
+        return response()->json(array("ok" => 0, "error" => 1, "typeError" => "2.1", "message" => "Um erro inesperado aconteceu."), 422);
       }
     }else{
-      return response()->json(array("ok" => 0, "error" => 1, "typeError" => "2.2", "message" => "O usuário informado não existe."));
+      return response()->json(array("ok" => 0, "error" => 1, "typeError" => "2.2", "message" => "O usuário informado não existe."), 404);
     }
   }
 
@@ -216,10 +216,10 @@ class InscricaoController extends Controller
           foreach($person->packages->all() as $package){
             foreach($package->payment->all() as $payment){
               if($payment->paymentStatus == 3){
-                return response()->json(array("ok" => 0, "error" => 1, "typeError" => "3.1", "message" => "Já há uma inscrição confirmada para esse usuário."));
+                return response()->json(array("ok" => 0, "error" => 1, "typeError" => "3.1", "message" => "Já há uma inscrição confirmada para esse usuário."), 422);
                 exit();
               }elseif($payment->paymentStatus == 2){
-                return response()->json(array("ok" => 0, "error" => 1, "typeError" => "3.2", "message" => "Há um pagamento pendente de uma inscrição, caso a mesma seja cancelada, poderá ser feita uma nova inscrição."));
+                return response()->json(array("ok" => 0, "error" => 1, "typeError" => "3.2", "message" => "Há um pagamento pendente de uma inscrição, caso a mesma seja cancelada, poderá ser feita uma nova inscrição."), 422);
               }
             }
           }
@@ -268,7 +268,7 @@ class InscricaoController extends Controller
               die($e->getMessage());
           }
       }else{
-        return response()->json(array("ok" => 0, "error" => 1, "typeError" => "0.0", "message" => "Usuário deslogado."));
+        return response()->json(array("ok" => 0, "error" => 1, "typeError" => "0.0", "message" => "Usuário deslogado."), 422);
       }
     }
 
