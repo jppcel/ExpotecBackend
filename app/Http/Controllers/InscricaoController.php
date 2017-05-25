@@ -147,7 +147,7 @@ class InscricaoController extends Controller
 
 
   /**
-   *  @route: /api/web/inscricao/pessoa/{id}/{token}
+   *  @route: /api/web/subscription/person/{id}/{token}
    *
    *  @method: Get
    */
@@ -166,7 +166,7 @@ class InscricaoController extends Controller
 
 
   /**
-   *  @route: /api/web/inscricao/activate
+   *  @route: /api/web/subscription/activate
    *
    *  @method: Post
    *
@@ -202,7 +202,7 @@ class InscricaoController extends Controller
 
 
     /**
-     *  @route: /api/web/inscricao/pacote
+     *  @route: /api/web/subscription/package
      *
      *  @method: Post
      *
@@ -234,11 +234,14 @@ class InscricaoController extends Controller
           $City = $person->address->city;
           $State = $City->state;
 
+          $reference = env("PAGSEGURO_REFERENCE")."_"md5($subscription->id.$person->id.rand(0,1000));
+
           \PagSeguro\Library::initialize();
           \PagSeguro\Library::cmsVersion()->setName("Nome")->setRelease("1.0.0");
           \PagSeguro\Library::moduleVersion()->setName("Nome")->setRelease("1.0.0");
 
           $payment = new \PagSeguro\Domains\Requests\Payment();
+          $payment->setReference($reference);
           $payment->addItems()->withParameters($package->id, env("APP_NAME").' - Pacote: '.$package->name, 1, $package->value);
           $payment->setCurrency("BRL");
           $payment->setReference($subscription->id);
@@ -255,7 +258,7 @@ class InscricaoController extends Controller
               $result = $payment->register(\PagSeguro\Configuration\Configure::getAccountCredentials(), true);
               $payment = new Payment;
               $payment->Subscription_id = $subscription->id;
-              $payment->Transaction_id = $result->getCode();
+              $payment->Transaction_id = $reference;
               $payment->paymentStatus = 1;
               $payment->save();
               $retorno["ok"] = 1;

@@ -12,17 +12,16 @@
 */
 Route::group(['prefix' => 'api'], function(){
   Route::group(['prefix' => 'web'], function(){
-    Route::group(['prefix' => 'inscricao'], function(){
+    Route::group(['prefix' => 'subscription'], function(){
       Route::post('/new', 'InscricaoController@postNew');
-      Route::get('/pessoa/{id}/{token}', 'InscricaoController@getPessoa');
+      Route::get('/person/{id}/{token}', 'InscricaoController@getPessoa');
       Route::post('/activate', 'InscricaoController@activateInscricao');
-      Route::post('/pacote', 'InscricaoController@makeInscricao');
-      Route::get('/teste', 'InscricaoController@test');
+      Route::post('/package', 'InscricaoController@makeInscricao');
     });
-    Route::group(['prefix' => 'trilha'], function(){
+    Route::group(['prefix' => 'track'], function(){
       Route::post('/list', 'TrilhaController@listAll');
     });
-    Route::group(['prefix' => 'pacote'], function(){
+    Route::group(['prefix' => 'package'], function(){
       Route::post('/list', 'PacoteController@listAll');
     });
     Route::get('/states', 'CityController@listStates');

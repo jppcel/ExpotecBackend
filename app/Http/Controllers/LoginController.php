@@ -52,7 +52,7 @@ class LoginController extends Controller
 
     /**
      *  @route /api/web/logout
-     *  @method Get ou Post
+     *  @method Post
      *  @param  string  document [14] => CPF of Person
      *  @param  string  token => Token of this session
      */
