@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+// use App\Http\Request\NewSubscription;
 use App\Http\Controllers\PessoaController;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
@@ -56,6 +57,30 @@ class InscricaoController extends Controller
    *  @param  int university.is_from_another_college [1] => If is student of other university of Person (nullable)
    */
   public function postNew(Request $request){
+
+    $messages = [
+      'person.name.required' => 'O seu nome é necessário para efetuarmos sua inscrição.',
+      'person.email.required' => 'O seu email é necessário para efetuarmos sua inscrição.',
+      'person.document.required' => 'O seu CPF é necessário para efetuarmos sua inscrição.',
+      'address.zip.required' => 'O CEP de seu endereço é necessário para efetuarmos sua inscrição.',
+      'address.type_street.required' => 'O tipo de endereço de seu endereço é necessário para efetuarmos sua inscrição.',
+      'address.street.required' => 'O logradouro de seu endereço é necessário para efetuarmos sua inscrição.',
+      'address.city.required' => 'A cidade de seu endereço é necessário para efetuarmos sua inscrição.',
+      'phone.ddd.required' => 'O DDD de seu telefone é necessário para efetuarmos sua inscrição.',
+      'phone.number.required' => 'O número de seu telefone é necessário para efetuarmos sua inscrição.',
+
+
+      'person.name.between' => 'O seu nome precisa ter pelo menos 5 até 60 caracteres.',
+      'person.document.between' => 'O seu CPF precisa ter pelo menos 11 caracteres.',
+      'person.document.between' => 'O CEP de seu endereço precisa ter 8 dígitos.',
+      'phone.ddd.between' => 'O DDD de seu telefone precisa ter 2 ou 3 dígitos.',
+      'phone.number.between' => 'O número de seu telefone precisa ter 8 ou 9 dígitos.',
+
+
+      'address.street.between' => 'O logradouro de seu endereço precisa ter até 100 caracteres.',
+      'address.number.between' => 'O número de seu endereço precisa ter até 5 dígitos.',
+      'address.neighborhood.between' => 'O bairro de seu endereço precisa ter até 40 dígitos.'
+    ];
     // Faz a validação dos dados
     $validator = \Validator::make($request->all(), [
       'person.name' => 'required|string|min:5|max:60',
@@ -69,7 +94,7 @@ class InscricaoController extends Controller
       'address.city' => 'required|integer',
       'phone.ddd' => 'required|string|min:2|max:3',
       'phone.number' => 'required|string|min:8|max:9'
-    ]);
+    ], $messages);
     // Se a validação falha, retorna um JSON de erro
     if($validator->fails()){
       return response()->json(array("ok" => 0, "error" => 1, "typeError" => "1.0", "errors" => $validator->errors()), 422);
