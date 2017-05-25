@@ -14,29 +14,25 @@ class ZIPController extends Controller
         $city = $zip->city;
         $state = $city->state;
         $country = $state->country;
+        $ZIP = array();
+        if(count($typeStreet) > 0){
+          $ZIP["typeStreet"] = array(
+            "id" => $typeStreet->id,
+            "name" => $typeStreet->name
+          );
+        }
+        if($zip->name){ $ZIP["street"] = $zip->name; }
+        if($zip->neighborhood) { $ZIP["neighborhood"] = $zip->neighborhood; }
+        $ZIP["city"]["id"] = $city->id;
+        $ZIP["city"]["name"] = $city->name;
+        $ZIP["city"]["state"]["id"] = $state->id;
+        $ZIP["city"]["state"]["name"] = $state->name;
+        $ZIP["city"]["state"]["UF"] = $state->UF;
+        $ZIP["city"]["state"]["country"]["id"] = $country->id;
+        $ZIP["city"]["state"]["country"]["name"] = $country->name;
         return response()->json(array(
           "ok" => 1,
-          "zip" => array(
-            "type_street" => array(
-              "id" => $typeStreet->id,
-              "name" => $typeStreet->name
-            ),
-            "street" => $zip->name,
-            "neighborhood" => $zip->neighborhood,
-            "city" => array(
-              "id" => $city->id,
-              "name" => $city->name,
-              "state" => array(
-                "id" => $state->id,
-                "name" => $state->name,
-                "UF" => $state->UF,
-                "country" => array(
-                  "id" => $country->id,
-                  "name" => $country->name
-                )
-              )
-            )
-          )
+          "zip" => $ZIP
         ));
       }else{
         return response()->json(array("ok" => 0, "error" => 1, "typeError" => "5.0", "message" => "CEP não encontrado."));

@@ -25,5 +25,9 @@ class CEPSeeder extends Seeder
           'neighborhood' => 'Santa Cruz',
           'zipcode' => '85806080'
         ]);
+        DB::table('ZIP')->insert([
+          'City_id' => 1462,
+          'zipcode' => '85800000'
+        ]);
     }
 }
