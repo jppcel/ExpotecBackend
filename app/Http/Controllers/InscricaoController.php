@@ -234,7 +234,7 @@ class InscricaoController extends Controller
           $City = $person->address->city;
           $State = $City->state;
 
-          $reference = env("PAGSEGURO_REFERENCE")."_"md5($subscription->id.$person->id.rand(0,1000));
+          $reference = env("PAGSEGURO_REFERENCE")."_".md5($subscription->id.$person->id.rand(0,1000));
 
           \PagSeguro\Library::initialize();
           \PagSeguro\Library::cmsVersion()->setName("Nome")->setRelease("1.0.0");
