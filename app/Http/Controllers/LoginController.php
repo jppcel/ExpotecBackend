@@ -16,7 +16,7 @@ class LoginController extends Controller
   /**
    *  @route /api/web/login
    *  @method Post
-   *  @param  string  cpf [14] => CPF of Person
+   *  @param  string  document [11 | 14] => CPF of Person
    *  @param  string  password [8-60] => Password of Person
    *
    */
@@ -53,7 +53,7 @@ class LoginController extends Controller
     /**
      *  @route /api/web/logout
      *  @method Post
-     *  @param  string  document [14] => CPF of Person
+     *  @param  string  document [11 | 14] => CPF of Person
      *  @param  string  token => Token of this session
      */
       public static function toLogout(Request $request){

@@ -231,12 +231,12 @@ class InscricaoController extends Controller
      *
      *  @method: Post
      *
-     *  @param  string cpf => [14] id of Person
+     *  @param  string document => [14] id of Person
      *  @param  string token => token of this session
      *  @param  integer package_id => Pacote's Id
      */
     public function makeInscricao(Request $request){
-      $person = PessoaController::verifyLogin($request->input("cpf"), $request->input("token"));
+      $person = PessoaController::verifyLogin($request->input("document"), $request->input("token"));
       if($person){
           foreach($person->packages->all() as $package){
             foreach($package->payment->all() as $payment){

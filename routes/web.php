@@ -31,5 +31,8 @@ Route::group(['prefix' => 'api'], function(){
     Route::group(['prefix' => 'zip'], function(){
       Route::get('/search/{ZIP}', 'ZIPController@search');
     });
+
+    Route::post('/login', 'LoginController@toLogin');
+    Route::post('/logout', 'LoginController@toLogout');
   });
 });
