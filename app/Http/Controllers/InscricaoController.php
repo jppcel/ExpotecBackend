@@ -212,8 +212,8 @@ class InscricaoController extends Controller
         if($validator->fails()){
           return response()->json(array("ok" => 0, "error" => 1, "typeError" => "2.0", "errors" => $validator->errors()), 422);
         }else{
-          $person->user->password = bcrypt($request->input("senha"));
-          $person->user->remember_token = sha1($person->Cpf . date("YmdHis"));
+          $person->user->password = bcrypt($request->input("password"));
+          $person->user->remember_token = sha1($person->document . date("YmdHis"));
           $person->user->save();
           return response()->json(array("ok" => 1, "token" => $person->user->remember_token));
         }
