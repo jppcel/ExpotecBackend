@@ -203,7 +203,7 @@ class InscricaoController extends Controller
   public function activateInscricao(Request $request){
     $person = Person::find($request->input("id"));
     if($person){
-      if($person->user->remember_token == $request->input("token") && $person->user->password == NULL){
+      if($person->user->remember_token == $request->input("token") && $person->user->password == NULL && $person->user->is_active == 0){
         // Faz a validação dos dados
         $validator = \Validator::make($request->all(), [
           'password' => 'required|string|min:8|max:60|confirmed'
@@ -214,6 +214,7 @@ class InscricaoController extends Controller
         }else{
           $person->user->password = bcrypt($request->input("password"));
           $person->user->remember_token = sha1($person->document . date("YmdHis"));
+          $person->user->is_active = 1;
           $person->user->save();
           return response()->json(array("ok" => 1, "token" => $person->user->remember_token));
         }
