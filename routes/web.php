@@ -34,5 +34,9 @@ Route::group(['prefix' => 'api'], function(){
 
     Route::post('/login', 'LoginController@toLogin');
     Route::post('/logout', 'LoginController@toLogout');
+
+    Route::group(['prefix' => 'payment'], function(){
+      Route::post('/searchPayments', 'PaymentController@searchPendingPayments');
+    });
   });
 });
