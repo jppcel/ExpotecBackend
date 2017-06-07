@@ -288,8 +288,8 @@ class InscricaoController extends Controller
               $payment->paymentStatus = 1;
               $payment->save();
               $retorno["ok"] = 1;
-              $retorno["redirectURL"] = "https://pagseguro.uol.com.br/v2/checkout/payment.html?code=".$result->getCode();
-              echo json_encode($retorno);
+              $retorno["code"] = $result->getCode();
+              echo response()->json($retorno);
           } catch (Exception $e) {
               die($e->getMessage());
           }
