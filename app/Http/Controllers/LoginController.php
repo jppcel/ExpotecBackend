@@ -11,6 +11,8 @@ use App\Http\Util\Util;
 // Importando os Models que serão utilizados nesse controller
 use App\Person;
 
+use Hash;
+
 class LoginController extends Controller
 {
   /**
@@ -34,8 +36,8 @@ class LoginController extends Controller
         if($person){
           $user = $person->user;
           if($user){
-            if($user->password == bcrypt($user->input("password"))){
-              $user->remember_token = sha1($user->cpf . date("YmdHis"));
+            if(Hash::check($request->input("password"), $user->password)){
+              $user->remember_token = sha1($person->document . date("YmdHis"));
               $user->save();
               return response()->json(array("ok" => 1, "login" => 1, "token" => $user->remember_token));
             }else{
