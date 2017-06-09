@@ -9,7 +9,7 @@ use App\Package;
 class PacoteController extends Controller
 {
   /**
-   *  @route: /api/web/pacote/list
+   *  @route: /api/web/package/list
    *
    *  @method: Post
    *
@@ -23,6 +23,7 @@ class PacoteController extends Controller
         $return = NULL;
         foreach($packages as $package){
           $array = array();
+          $array["id"] = $package->id;
           $array["name"] = $package->name;
           $array["value"] = $package->value;
           $array["startDate"] = $package->startDate;
