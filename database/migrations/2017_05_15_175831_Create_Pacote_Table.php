@@ -19,6 +19,7 @@ class CreatePacoteTable extends Migration
           $table->float("value");
           $table->date("startDate");
           $table->date("endDate");
+          $table->text("description");
           $table->timestamps();
       });
     }
