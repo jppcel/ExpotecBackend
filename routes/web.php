@@ -18,6 +18,11 @@ Route::group(['prefix' => 'api'], function(){
       Route::post('/activate', 'InscricaoController@activateInscricao');
       Route::post('/package', 'InscricaoController@makeInscricao');
       Route::get('/city', 'InscricaoController@listCities');
+      Route::group(['prefix' => 'cart'], function(){
+        Route::post('/new', 'CartController@new');
+        Route::post('/delete', 'CartController@delete');
+        Route::post('/get', 'CartController@get');
+      });
     });
     Route::group(['prefix' => 'track'], function(){
       Route::post('/list', 'TrilhaController@listAll');
