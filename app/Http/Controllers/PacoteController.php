@@ -28,6 +28,7 @@ class PacoteController extends Controller
           $array["value"] = $package->value;
           $array["startDate"] = $package->startDate;
           $array["endDate"] = $package->endDate;
+          $array["description"] = $package->description;
           $array["acceptSubscription"] = $this->verifyLimit($package->id);
           $return[] = $array;
         }
