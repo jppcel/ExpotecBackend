@@ -37,6 +37,8 @@ Route::group(['prefix' => 'api'], function(){
       Route::get('/search/{ZIP}', 'ZIPController@search');
     });
 
+    Route::get('/typestreet/list', 'AddressController@listTypeStreet');
+
     Route::post('/login', 'LoginController@toLogin');
     Route::post('/logout', 'LoginController@toLogout');
   });
