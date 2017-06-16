@@ -45,7 +45,7 @@ class InscricaoController extends Controller
    *  @param  string  person.document [14] => CPF of Person
    *  @param  string  person.email [5-100] => Email of Person
    *  @param  string  address.zip [9] => ZIP Code of Person's Address
-   *  @param  integer address.type_street  => Type Address of Person's Address
+   *  @param  integer address.typeStreet  => Type Address of Person's Address
    *  @param  string  address.street [0-100] => Address of Person's Address
    *  @param  integer address.number [0-5] => number of Person's Address (nullable)
    *  @param  string  address.neighborhood [0-40] => zone of Person's Address (nullable)
@@ -63,7 +63,7 @@ class InscricaoController extends Controller
       'person.email.required' => 'O seu email é necessário para efetuarmos sua inscrição.',
       'person.document.required' => 'O seu CPF é necessário para efetuarmos sua inscrição.',
       'address.zip.required' => 'O CEP de seu endereço é necessário para efetuarmos sua inscrição.',
-      'address.type_street.required' => 'O tipo de endereço de seu endereço é necessário para efetuarmos sua inscrição.',
+      'address.typeStreet.required' => 'O tipo de endereço de seu endereço é necessário para efetuarmos sua inscrição.',
       'address.street.required' => 'O logradouro de seu endereço é necessário para efetuarmos sua inscrição.',
       'address.city.required' => 'A cidade de seu endereço é necessário para efetuarmos sua inscrição.',
       'phone.ddd.required' => 'O DDD de seu telefone é necessário para efetuarmos sua inscrição.',
@@ -87,7 +87,7 @@ class InscricaoController extends Controller
       'person.document' => 'required|cpf|min:11|max:14|unique:Person,document',
       'person.email' => 'required|string|min:5|max:100|unique:Person,email',
       'address.zip' => 'required|string|min:8|max:9',
-      'address.type_street' => 'required|integer',
+      'address.typeStreet' => 'required|integer',
       'address.street' => 'required|string|max:100',
       'address.number' => 'nullable|string|max:5',
       'address.neighborhood' => 'nullable|string|max:40',
@@ -124,7 +124,7 @@ class InscricaoController extends Controller
           if($person->id > 0){
             $address = new Address;
             $address->Person_id = $person->id;
-            $address->TypeStreet_id = $request->input("address.type_street");
+            $address->TypeStreet_id = $request->input("address.typeStreet");
             $address->street = $request->input("address.street");
             $address->number = $request->input("address.number");
             $address->neighborhood = $request->input("address.neighborhood");
