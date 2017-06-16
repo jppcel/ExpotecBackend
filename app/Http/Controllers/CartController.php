@@ -15,7 +15,7 @@ class CartController extends Controller
  *
  *  @method: Post
  *
- *  @param  string document => [14] id of Person
+ *  @param  string document => [14] CPF of Person
  *  @param  string token => token of this session
  *  @param  integer package_id => Pacote's Id
  */
@@ -43,7 +43,7 @@ class CartController extends Controller
    *
    *  @method: Post
    *
-   *  @param  string document => [14] id of Person
+   *  @param  string document => [14] CPF of Person
    *  @param  string token => token of this session
    */
     public function delete(Request $request){
@@ -66,7 +66,7 @@ class CartController extends Controller
      *
      *  @method: Post
      *
-     *  @param  string document => [14] id of Person
+     *  @param  string document => [14] CPF of Person
      *  @param  string token => token of this session
      */
       public function get(Request $request){
