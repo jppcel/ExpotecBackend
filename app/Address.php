@@ -19,6 +19,6 @@ class Address extends Model
     }
 
     public function city(){
-      return $this->belongsTo("App\City", "City_Cod_Ibge");
+      return $this->belongsTo("App\City", "City_id");
     }
 }
