@@ -19,7 +19,7 @@ Route::group(['prefix' => 'api'], function(){
       Route::post('/package', 'InscricaoController@makeInscricao');
       Route::get('/city', 'InscricaoController@listCities');
       Route::group(['prefix' => 'cart'], function(){
-        Route::post('/new', 'CartController@new');
+        Route::post('/add', 'CartController@new');
         Route::post('/delete', 'CartController@delete');
         Route::post('/get', 'CartController@get');
       });

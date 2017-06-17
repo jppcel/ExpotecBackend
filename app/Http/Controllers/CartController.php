@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\PessoaController;
 use App\Person;
+use App\Cart;
 
 class CartController extends Controller
 {
@@ -26,11 +27,17 @@ class CartController extends Controller
         $cart = Cart::where(["Person_id" => $person->id])->first();
         if($cart){
           $cart->delete();
-          $cart = new Cart;
-          $cart->Package_id = $request->input("package_id");
-          $cart->Person_id = $person->id;
-          $cart->save();
         }
+        $cart = new Cart;
+        $cart->Package_id = $request->input("package_id");
+        $cart->Person_id = $person->id;
+        $cart->save();
+        if($cart->id > 0){
+          return response()->json(array("ok" => 1));
+        }
+      }else{
+        return response()->json(array("ok" => 0, "error" => 1, "typeError" => "6.0", "message" => "O pacote não foi informado para ser adicionado ao carrinho."), 422);
+
       }
     }else{
       return response()->json(array("ok" => 0, "error" => 1, "typeError" => "0.0", "message" => "Usuário deslogado."), 422);
@@ -49,12 +56,11 @@ class CartController extends Controller
     public function delete(Request $request){
       $person = PessoaController::verifyLogin($request->input("document"), $request->input("token"));
       if($person){
-        if($request->input("package_id")){
-          $cart = Cart::where(["Person_id" => $person->id])->first();
-          if($cart){
-            $cart->delete();
-          }
+        $cart = Cart::where(["Person_id" => $person->id])->first();
+        if($cart){
+          $cart->delete();
         }
+        return response()->json(array("ok" => 1));
       }else{
         return response()->json(array("ok" => 0, "error" => 1, "typeError" => "0.0", "message" => "Usuário deslogado."), 422);
       }
@@ -72,17 +78,15 @@ class CartController extends Controller
       public function get(Request $request){
         $person = PessoaController::verifyLogin($request->input("document"), $request->input("token"));
         if($person){
-          if($request->input("package_id")){
-            $cart = Cart::where(["Person_id" => $person->id])->first();
-            if($cart){
-              $retorno["id"] = $cart->id;
-              $retorno["Package"]["id"] = $cart->Package_id;
-              $retorno["Package"]["nome"] = $cart->Package->name;
-              $retorno["Package"]["description"] = $cart->Package->description;
-              return rensponse()->json($retorno);
-            }else{
-              return response()->json(array("ok" => 0, "error" => 1, "typeError" => "5.1", "message" => "Não há carrinho."), 404);
-            }
+          $cart = Cart::where(["Person_id" => $person->id])->first();
+          if($cart){
+            $retorno["id"] = $cart->id;
+            $retorno["Package"]["id"] = $cart->Package_id;
+            $retorno["Package"]["nome"] = $cart->Package->name;
+            $retorno["Package"]["description"] = $cart->Package->description;
+            return response()->json($retorno);
+          }else{
+            return response()->json(array("ok" => 0, "error" => 1, "typeError" => "5.1", "message" => "Não há carrinho."), 404);
           }
         }else{
           return response()->json(array("ok" => 0, "error" => 1, "typeError" => "0.0", "message" => "Usuário deslogado."), 422);
