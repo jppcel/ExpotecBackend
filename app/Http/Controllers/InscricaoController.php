@@ -282,14 +282,18 @@ class InscricaoController extends Controller
           $payment->setNotificationUrl(env("APP_NOTIFICATION_PAGSEGURO"));
           try {
               $result = $payment->register(\PagSeguro\Configuration\Configure::getAccountCredentials(), true);
+              // $result = $payment->register(\PagSeguro\Configuration\Configure::getAccountCredentials());
+              // print_r($result);
               $payment = new Payment;
               $payment->Subscription_id = $subscription->id;
               $payment->Transaction_id = $reference;
+              $payment->code = $result->getCode();
               $payment->paymentStatus = 1;
               $payment->save();
               $retorno["ok"] = 1;
               $retorno["code"] = $result->getCode();
               echo response()->json($retorno);
+
           } catch (Exception $e) {
               die($e->getMessage());
           }
