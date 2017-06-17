@@ -43,7 +43,9 @@ Route::group(['prefix' => 'api'], function(){
     Route::post('/logout', 'LoginController@toLogout');
 
     Route::group(['prefix' => 'payment'], function(){
+      Route::get('/getPagseguroPayments', 'PaymentController@getAllPagseguroPayments');
       Route::post('/searchPayments', 'PaymentController@searchPendingPayments');
+      Route::post('/getReturn', 'PaymentController@getReturnPayment');
     });
   });
 });

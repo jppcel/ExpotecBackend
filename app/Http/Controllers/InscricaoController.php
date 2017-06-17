@@ -270,7 +270,6 @@ class InscricaoController extends Controller
           $payment->setReference($reference);
           $payment->addItems()->withParameters($package->id, env("APP_NAME").' - Pacote: '.$package->name, 1, $package->value);
           $payment->setCurrency("BRL");
-          $payment->setReference($subscription->id);
           $payment->setSender()->setName($person->Nome);
           $payment->setSender()->setEmail($person->Email);
           $payment->setSender()->setDocument()->withParameters(
@@ -292,6 +291,7 @@ class InscricaoController extends Controller
               $payment->save();
               $retorno["ok"] = 1;
               $retorno["code"] = $result->getCode();
+              $retorno["payment_id"] = $payment->id;
               echo response()->json($retorno);
 
           } catch (Exception $e) {
