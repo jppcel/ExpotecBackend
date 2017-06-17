@@ -81,9 +81,10 @@ class CartController extends Controller
           $cart = Cart::where(["Person_id" => $person->id])->first();
           if($cart){
             $retorno["id"] = $cart->id;
-            $retorno["Package"]["id"] = $cart->Package_id;
-            $retorno["Package"]["nome"] = $cart->Package->name;
-            $retorno["Package"]["description"] = $cart->Package->description;
+            $retorno["package"]["id"] = $cart->Package_id;
+            $retorno["package"]["nome"] = $cart->Package->name;
+            $retorno["package"]["description"] = $cart->Package->description;
+            $retorno["package"]["price"] = $cart->Package->value;
             return response()->json($retorno);
           }else{
             return response()->json(array("ok" => 0, "error" => 1, "typeError" => "5.1", "message" => "Não há carrinho."), 404);
