@@ -148,7 +148,7 @@ class InscricaoController extends Controller
                 $user->save();
                 if($user->id > 0){
                   Mail::send('mail.ActivationLink', ["link" => env("APP_URL")."/token/".$person->id."/".$user->remember_token], function($message) use ($person){
-                    $message->to($person->email, $person->nome)->subject('Cadastro realizado na ".env("APP_NAME")." - Necessita ativação.');
+                    $message->to($person->email, $person->nome)->subject('Cadastro realizado na '.env("APP_NAME").' - Necessita ativação.');
                   });
                   return response()->json(array("ok" => 1));
                 }else{
