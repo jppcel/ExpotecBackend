@@ -10,23 +10,12 @@ class PaymentController extends Controller
 
 
 
-	public function getAllPagseguroPayments(){
-		\PagSeguro\Library::initialize();
-		$options = [
-			 'initial_date' => date('c', strtotime(env("PAGSEGURO_INITIAL_DATE")))
-		];
-		print_r($options);
-		try {
-			 $response = \PagSeguro\Services\Transactions\Search\Date::search(
-					 \PagSeguro\Configuration\Configure::getAccountCredentials(),
-					 $options
-			 );
-			 echo "<pre>";
-			 print_r($response);
-		} catch (Exception $e) {
-			 die($e->getMessage());
-		}
-	}
+		/**
+		 *  @route: /api/web/payment/searchPayments
+		 *
+		 *  @method: Get
+		 *
+		 */
 
 	public function searchPendingPayments(){
 		 $payments = Payment::where(["paymentStatus" => 1])->orWhere(["paymentStatus" => 2])->get();
