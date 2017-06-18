@@ -32,6 +32,7 @@ class PessoaController extends Controller
           if($user->remember_token == $token){
             if($user->updated_at > date("Y-m-d H:i:s",time()-900)){
               $retorno = $user->person;
+              $user->save();
             }else{
               LoginController::logout($cpf, $token, 0);
             }
