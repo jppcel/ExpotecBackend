@@ -292,8 +292,7 @@ class InscricaoController extends Controller
               $retorno["ok"] = 1;
               $retorno["code"] = $result->getCode();
               $retorno["payment_id"] = $payment->id;
-              echo response()->json($retorno);
-
+              return response()->json($retorno);
           } catch (Exception $e) {
               die($e->getMessage());
           }

@@ -18,11 +18,19 @@ class PaymentController extends Controller
 		 */
 
 	public function searchPendingPayments(){
-		 $payments = Payment::where(["paymentStatus" => 1])->orWhere(["paymentStatus" => 2])->get();
+		 $payments = Payment::where([
+			 ["paymentStatus", "=", 1],
+			 ["updated_at", "<", date("Y-m-d")." 00:00:00"]
+		 ])->orWhere([
+			 ["paymentStatus", "=", 2],
+			 ["updated_at", "<", date("Y-m-d")." 00:00:00"]
+		 ])->get();
 
 		 foreach($payments as $payment){
 		 		$response = $this->searchByReference($payment);
-		 		$payment->status = $this->getStatus($response->status);
+				if($response){
+			 		$payment->status = $this->getStatus($response->status);
+				}
 				$payment->save();
 		 }
 	}
