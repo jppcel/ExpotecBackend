@@ -99,13 +99,33 @@ class PaymentController extends Controller
 				foreach($transactions as $transaction){
 					$payment->paymentStatus = $this->getStatus($transaction->getStatus());
 					$payment->save();
-					$retorno = array();
 				}
-			}else{
+				$retorno = array();
 
+
+				$subscription = $payment->Subscription;
+				$package = $subscription->package;
+				$person = $subscription->person;
+				$phones = $person->phones->all();
+
+				$address = $person->address;
+				$city = $address->city;
+				$state = $city->state;
+				$country = $state->country;
+
+
+
+
+				$retorno["payment"] = $payment;
+				foreach($package->tracks_package as $track_package){
+					$retorno["tracks"][] = $track_package->track;
+				}
+				return response()->json($retorno);
+			}else{
+				return response()->json(array("ok" => 0, "error" => 1, "typeError" => "7.1", "message" => "A finalização da seleção da forma de pagamento ainda não foi efetuada no pagseguro."), 422);
 			}
     }else{
-			echo 1;
+			return response()->json(array("ok" => 0, "error" => 1, "typeError" => "7.2", "message" => "Não existe um pagamento com o id informado."), 404);
 		}
   }
 

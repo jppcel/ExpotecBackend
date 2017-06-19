@@ -11,6 +11,6 @@ class Payment extends Model
     protected $table = 'Payment';
 
     public function Subscription(){
-      return $this->belongsTo("App\Subscription");
+      return $this->belongsTo("App\Subscription", "Subscription_id");
     }
 }

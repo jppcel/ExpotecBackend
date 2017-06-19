@@ -15,7 +15,7 @@ class Address extends Model
     }
 
     public function typestreet(){
-      return $this->belongsTo("App\TypeStreet");
+      return $this->belongsTo("App\TypeStreet", "TypeStreet_id");
     }
 
     public function city(){

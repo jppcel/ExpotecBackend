@@ -10,12 +10,12 @@ class Subscription extends Model
     protected $primaryKey = 'id';
     protected $table = 'Subscription';
 
-    public function people(){
-      return $this->belongsTo("App\Person");
+    public function person(){
+      return $this->belongsTo("App\Person", "Person_id");
     }
 
-    public function packages(){
-      return $this->belongsTo("App\Package");
+    public function package(){
+      return $this->belongsTo("App\Package", "Package_id");
     }
 
     public function payment(){
