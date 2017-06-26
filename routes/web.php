@@ -29,6 +29,7 @@ Route::group(['prefix' => 'api'], function(){
     });
     Route::group(['prefix' => 'package'], function(){
       Route::post('/list', 'PacoteController@listAll');
+      Route::post('/listByEvent', 'EventController@listEvents');
     });
     Route::get('/states', 'CityController@listStates');
     Route::get('/cities/{id}', 'CityController@listCities');

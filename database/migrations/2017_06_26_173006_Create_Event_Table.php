@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateCartTable extends Migration
+class CreateEventTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,10 @@ class CreateCartTable extends Migration
      */
     public function up()
     {
-      Schema::create('Cart', function (Blueprint $table) {
+      Schema::create('Event', function (Blueprint $table) {
           $table->increments("id");
-          $table->integer("Person_id")->unsigned();
-          $table->integer("Package_id")->unsigned();
-          $table->foreign("Person_id")->references("id")->on("Person");
-          $table->foreign("Package_id")->references("id")->on("Package");
+          $table->string("name",100);
+          $table->string("attr",100);
           $table->timestamps();
       });
     }
@@ -30,6 +28,6 @@ class CreateCartTable extends Migration
      */
     public function down()
     {
-      Schema::dropIfExists('Cart');
+      Schema::dropIfExists('Event');
     }
 }

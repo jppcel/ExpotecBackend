@@ -20,6 +20,7 @@ class PacoteSeeder extends Seeder
             'created_at' => date("Y-m-d H:i:s"),
             'updated_at' => date("Y-m-d H:i:s"),
             'description' => "Trilha das palestras da Expotec",
+            'Event_id' => 1,
         ]);
         DB::table('Package')->insert([
             'id' => 2,
@@ -30,6 +31,7 @@ class PacoteSeeder extends Seeder
             'created_at' => date("Y-m-d H:i:s"),
             'updated_at' => date("Y-m-d H:i:s"),
             'description' => "Trilha das palestras da Expotec + Almoço no Sábado",
+            'Event_id' => 1,
         ]);
         DB::table('Package')->insert([
             'id' => 3,
@@ -40,6 +42,7 @@ class PacoteSeeder extends Seeder
             'created_at' => date("Y-m-d H:i:s"),
             'updated_at' => date("Y-m-d H:i:s"),
             'description' => "Trilha das palestras da Univel Insights + o Minicurso 1",
+            'Event_id' => 2,
         ]);
         DB::table('Package')->insert([
             'id' => 4,
@@ -50,6 +53,7 @@ class PacoteSeeder extends Seeder
             'created_at' => date("Y-m-d H:i:s"),
             'updated_at' => date("Y-m-d H:i:s"),
             'description' => "Trilha das palestras da Univel Insights + o Minicurso 2",
+            'Event_id' => 2,
         ]);
         DB::table('Package')->insert([
             'id' => 5,
@@ -60,6 +64,7 @@ class PacoteSeeder extends Seeder
             'created_at' => date("Y-m-d H:i:s"),
             'updated_at' => date("Y-m-d H:i:s"),
             'description' => "Trilha das palestras da Univel Insights + o Minicurso 3",
+            'Event_id' => 2,
         ]);
         DB::table('Package')->insert([
             'id' => 6,
@@ -70,6 +75,7 @@ class PacoteSeeder extends Seeder
             'created_at' => date("Y-m-d H:i:s"),
             'updated_at' => date("Y-m-d H:i:s"),
             'description' => "Trilha das palestras da Univel Insights + o Minicurso 4",
+            'Event_id' => 2,
         ]);
         DB::table('Package')->insert([
             'id' => 7,
@@ -80,6 +86,7 @@ class PacoteSeeder extends Seeder
             'created_at' => date("Y-m-d H:i:s"),
             'updated_at' => date("Y-m-d H:i:s"),
             'description' => "Trilha das palestras da Univel Insights + o Minicurso 1 + Almoço do Sábado",
+            'Event_id' => 2,
         ]);
         DB::table('Package')->insert([
             'id' => 8,
@@ -90,6 +97,7 @@ class PacoteSeeder extends Seeder
             'created_at' => date("Y-m-d H:i:s"),
             'updated_at' => date("Y-m-d H:i:s"),
             'description' => "Trilha das palestras da Univel Insights + o Minicurso 2 + Almoço do Sábado",
+            'Event_id' => 2,
         ]);
         DB::table('Package')->insert([
             'id' => 9,
@@ -100,6 +108,7 @@ class PacoteSeeder extends Seeder
             'created_at' => date("Y-m-d H:i:s"),
             'updated_at' => date("Y-m-d H:i:s"),
             'description' => "Trilha das palestras da Univel Insights + o Minicurso 3 + Almoço do Sábado",
+            'Event_id' => 2,
         ]);
         DB::table('Package')->insert([
             'id' => 10,
@@ -110,6 +119,7 @@ class PacoteSeeder extends Seeder
             'created_at' => date("Y-m-d H:i:s"),
             'updated_at' => date("Y-m-d H:i:s"),
             'description' => "Trilha das palestras da Univel Insights + o Minicurso 4 + Almoço do Sábado",
+            'Event_id' => 2,
         ]);
         DB::table('Package')->insert([
             'id' => 11,
@@ -120,6 +130,7 @@ class PacoteSeeder extends Seeder
             'created_at' => date("Y-m-d H:i:s"),
             'updated_at' => date("Y-m-d H:i:s"),
             'description' => "Almoço do Sábado",
+            'Event_id' => 1,
         ]);
     }
 }
