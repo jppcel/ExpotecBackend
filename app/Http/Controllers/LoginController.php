@@ -37,17 +37,21 @@ class LoginController extends Controller
           $user = $person->user;
           if($user){
             if(Hash::check($request->input("password"), $user->password)){
-              $user->remember_token = sha1($person->document . date("YmdHis"));
-              $user->save();
-              return response()->json(array("ok" => 1, "login" => 1, "token" => $user->remember_token));
+              if($user->is_active == 1){
+                $user->remember_token = sha1($person->document . date("YmdHis"));
+                $user->save();
+                return response()->json(array("ok" => 1, "login" => 1, "token" => $user->remember_token));
+              }else{
+                return response()->json(array("ok" => 0, "error" => 1, "typeError" => "0.2", "message" => "O usuário não está ativo."), 422);
+              }
             }else{
-              return response()->json(array("ok" => 0, "error" => 1, "typeError" => "0.2", "message" => "CPF e/ou senha inválidos."), 422);
+              return response()->json(array("ok" => 0, "error" => 1, "typeError" => "0.3", "message" => "CPF e/ou senha inválidos."), 422);
             }
           }else{
-            return response()->json(array("ok" => 0, "error" => 1, "typeError" => "0.3", "message" => "CPF e/ou senha inválidos."), 422);
+            return response()->json(array("ok" => 0, "error" => 1, "typeError" => "0.4", "message" => "CPF e/ou senha inválidos."), 422);
           }
         }else{
-          return response()->json(array("ok" => 0, "error" => 1, "typeError" => "0.4", "message" => "CPF e/ou senha inválidos."), 422);
+          return response()->json(array("ok" => 0, "error" => 1, "typeError" => "0.5", "message" => "CPF e/ou senha inválidos."), 422);
         }
       }
     }

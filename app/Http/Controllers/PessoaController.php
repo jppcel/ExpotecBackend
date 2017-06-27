@@ -26,15 +26,17 @@ class PessoaController extends Controller
       $retorno = false;
       if(!$validator->fails()){
         $CPF = Util::CPFNumbers($cpf);
-        $person = Person::where("document", $CPF)->first();
+        $person = Person::where(["document" => $CPF])->first();
         if($person){
           $user = $person->user;
           if($user->remember_token == $token){
-            if($user->updated_at > date("Y-m-d H:i:s",time()-900)){
-              $retorno = $user->person;
-              $user->save();
-            }else{
-              LoginController::logout($cpf, $token, 0);
+            if($user->is_active == 1){
+              if($user->updated_at > date("Y-m-d H:i:s",time()-900)){
+                $retorno = $user->person;
+                $user->save();
+              }else{
+                LoginController::logout($cpf, $token, 0);
+              }
             }
           }
         }
