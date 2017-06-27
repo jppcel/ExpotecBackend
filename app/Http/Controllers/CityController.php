@@ -18,9 +18,9 @@ class CityController extends Controller
     public function listStates(){
       $states = State::all();
       if(count($states) > 0){
-
+        return response()->json($states);
       }
-      return response()->json();
+      return response()->json(array("ok" => 0), 404);
     }
 
       /**
@@ -33,7 +33,7 @@ class CityController extends Controller
     public function listCities($state_id){
       $cities = City::where("State_id", $state_id)->get();
       if(count($cities) > 0){
-        return response()->json();
+        return response()->json($cities);
       }else{
         return response()->json(array("ok" => 0), 404);
       }
