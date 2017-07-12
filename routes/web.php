@@ -42,6 +42,8 @@ Route::group(['prefix' => 'api'], function(){
 
     Route::post('/login', 'LoginController@toLogin');
     Route::post('/logout', 'LoginController@toLogout');
+    Route::post('/request_reset_password', 'LoginController@askNewPassword');
+    Route::post('/reset_password', 'LoginController@setNewPassword');
 
     Route::group(['prefix' => 'payment'], function(){
       Route::get('/getPagseguroPayments', 'PaymentController@getAllPagseguroPayments');

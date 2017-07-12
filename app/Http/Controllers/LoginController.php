@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Mail;
 
 // Importado o arquivo Util para uso
 use App\Http\Util\Util;
 
 // Importando os Models que serão utilizados nesse controller
 use App\Person;
+use App\ResetPassword;
 
 use Hash;
 
@@ -103,6 +105,72 @@ class LoginController extends Controller
               }
             }
           }
+        }
+      }
+
+
+      /**
+       *  @route /api/web/request_reset_password
+       *  @method Post
+       *  @param  string  document [11 | 14] => CPF of Person
+       */
+      public function askNewPassword(Request $request){
+        $CPF = Util::CPFNumbers($request->input("document"));
+        $person = Person::where(["document" => $CPF])->first();
+        if($person){
+          $resetPassword = new ResetPassword;
+          $resetPassword->Person_id = $person->id;
+          $resetPassword->token = sha1($person->document . date("YmdHis"));
+          $resetPassword->save();
+          Mail::send('mail.ResetPassword', ["link" => env("APP_URL")."/reset_password/".$person->id."/".$resetPassword->token], function($message) use ($person){
+            $message->to($person->email, $person->nome)->subject(env("APP_NAME").' - Solicitação de nova senha');
+          });
+          return response()->json(array("ok" => 1));
+        }else{
+          return response()->json(array("ok" => 0, "error" => 1, "typeError" => "7.1", "message" => "Usuário não encontrado."), 422);
+        }
+      }
+
+
+      /**
+       *  @route /api/web/reset_password
+       *  @method Post
+       *  @param  string  id => id of Person
+       *  @param  string  token => token of Request
+       *  @param  string  password  [8-60] => new password
+       *  @param  string  password_confirmation  [8-60] => new password confirmation
+       */
+      public function setNewPassword(Request $request){
+        $person = Person::find($request->input("id"));
+        if($person){
+          $resetPassword = ResetPassword::where([["Person_id", "=", $person->id],["token", "=", $request->input("token")]])->first();
+          if($resetPassword && $person->user->is_active == 1){
+            if(strtotime($resetPassword->created_at)+(60*60*24) > time() && $resetPassword->is_used == 0){
+              // Faz a validação dos dados
+              $validator = \Validator::make($request->all(), [
+                'password' => 'required|string|min:8|max:60|confirmed'
+              ]);
+              // Se a validação falha, retorna um json de erro
+              if($validator->fails()){
+                return response()->json(array("ok" => 0, "error" => 1, "typeError" => "2.0", "errors" => $validator->errors()), 422);
+              }else{
+                $person->user->password = bcrypt($request->input("password"));
+                $person->user->remember_token = sha1($person->document . date("YmdHis"));
+                $person->user->is_active = 1;
+                $person->user->save();
+
+                $resetPassword->is_used = 1;
+                $resetPassword->save();
+                return response()->json(array("ok" => 1));
+              }
+            }else{
+              return response()->json(array("ok" => 0, "error" => 1, "typeError" => "2.1", "message" => "O link está expirado ou é inválido."), 422);
+            }
+          }else{
+            return response()->json(array("ok" => 0, "error" => 1, "typeError" => "2.2", "message" => "O link está expirado ou é inválido."), 422);
+          }
+        }else{
+          return response()->json(array("ok" => 0, "error" => 1, "typeError" => "2.3", "message" => "O usuário não existe."), 404);
         }
       }
 }
