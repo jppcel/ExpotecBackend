@@ -27,9 +27,9 @@ class PaymentController extends Controller
 		 ])->get();
 
 		 foreach($payments as $payment){
-		 		$response = $this->searchByReference($payment);
+		 		$response = $this->searchByReference($payment)[0];
 				if($response){
-			 		$payment->status = $this->getStatus($response->status);
+			 		$payment->paymentStatus = $this->getStatus($response->getStatus());
 				}
 				$payment->save();
 		 }
