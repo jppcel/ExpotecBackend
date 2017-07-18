@@ -5586,6 +5586,7 @@ class CreateCidadeTable extends Migration
       DB::Table('City')->insert(array('id' => 5562, 'name' => "VILA BOA", 'Cod_Ibge' => "5222203", "State_id" => 9));
       DB::Table('City')->insert(array('id' => 5563, 'name' => "VILA PROPÍCIO", 'Cod_Ibge' => "5222302", "State_id" => 9));
       DB::Table('City')->insert(array('id' => 5564, 'name' => "BRASÍLIA", 'Cod_Ibge' => "5300108", "State_id" => 7));
+      DB::Table('City')->insert(array('id' => 5565, 'name' => "PARAÍSO DAS ÁGUAS", 'Cod_Ibge' => "5006275", "State_id" => 12));
 
      }
 
