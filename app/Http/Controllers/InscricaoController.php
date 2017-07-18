@@ -110,16 +110,10 @@ class InscricaoController extends Controller
           $person->document = $CPF;
           $person->email = $request->input("person.email");
           if(count($request->input("university")) > 0){
-            if($request->input("university.is_from_another_college") == 0){
-              $person->college = $request->input("university.college");
-              $person->course = $request->input("university.course");
-              $person->univelStudent = 0;
-            }else{
-              $person->univelStudent = 1;
-            }
-          }else{
-            $person->univelStudent = 0;
+            $person->college = $request->input("university.college");
+            $person->course = $request->input("university.course");
           }
+          $person->univelStudent = 0;
           $person->save();
           if($person->id > 0){
             $address = new Address;
