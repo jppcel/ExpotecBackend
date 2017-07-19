@@ -286,6 +286,16 @@ class InscricaoController extends Controller
               $retorno["ok"] = 1;
               $retorno["code"] = $result->getCode();
               $retorno["payment_id"] = $payment->id;
+              Mail::send('mail.PaymentNew',
+  						[
+  							"subscription_id" => $payment->subscription->id,
+  							"person_name" => $payment->subscription->person->name,
+  							"package_name" => $payment->subscription->package->name,
+  							"package_price" => $payment->subscription->package->value
+  						], function($message) use ($payment){
+  	            $message->to($payment->subscription->person->email, $payment->subscription->person->name)->subject(env("APP_NAME").' - Nova Inscrição - #'.$payment->subscription->id);
+  	          });
+
               return response()->json($retorno);
           } catch (Exception $e) {
               die($e->getMessage());
