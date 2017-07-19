@@ -44,7 +44,18 @@ class PaymentController extends Controller
 							"package_name" => $payment->subscription->package->name,
 							"package_price" => $payment->subscription->package->value
 						], function($message) use ($payment){
-	            $message->to($payment->subscription->person->email, $payment->subscription->person->name)->subject(env("APP_NAME").' - Pagamento Confirmado - Inscrição #'.$payment->subscription->id);
+	            $message->to($payment->subscription->person->email, $payment->subscription->person->name)->subject(env("APP_NAME").' - Pagamento Confirmado - Inscrição #'.$payment->subscription->id.' confirmada');
+	          });
+					}
+					if($payment->paymentStatus ==  0){
+	          Mail::send('mail.PaymentCanceled',
+						[
+							"subscription_id" => $payment->subscription->id,
+							"person_name" => $payment->subscription->person->name,
+							"package_name" => $payment->subscription->package->name,
+							"package_price" => $payment->subscription->package->value
+						], function($message) use ($payment){
+	            $message->to($payment->subscription->person->email, $payment->subscription->person->name)->subject(env("APP_NAME").' - Pagamento Cancelado - Inscrição #'.$payment->subscription->id.' cancelada');
 	          });
 					}
 				}else{
