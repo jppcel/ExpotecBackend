@@ -25,11 +25,20 @@ class PaymentController extends Controller
 			 ["paymentStatus", "=", 2],
 			 ["updated_at", "<", date("Y-m-d")." 00:00:00"]
 		 ])->get();
-
+		 $i = 1;
 		 foreach($payments as $payment){
 		 		$response = $this->searchByReference($payment)[0];
+				echo $i++.": ".$payment->id." - strtotime(".$payment->created_at.") < ".(time()-(60*60*24))."\n";
 				if($response){
-			 		$payment->paymentStatus = $this->getStatus($response->getStatus());
+					if(strtotime($payment->created_at) < time()-(60*60*24)){
+			 			$payment->paymentStatus = $this->getStatus($response->getStatus(), true);
+					}else{
+			 			$payment->paymentStatus = $this->getStatus($response->getStatus(), false);
+					}
+				}else{
+					if(strtotime($payment->created_at) < time()-(60*60*24)){
+			 			$payment->paymentStatus = 0;
+					}
 				}
 				$payment->save();
 		 }
@@ -43,8 +52,11 @@ class PaymentController extends Controller
 		* 5	Em disputa: o comprador, dentro do prazo de liberação da transação, abriu uma disputa.
 		* 6	Devolvida: o valor da transação foi devolvido para o comprador.
 		* 7	Cancelada: a transação foi cancelada sem ter sido finalizada.
+		*
+		*
+		* Se $force == true, se o status do pagseguro retornar nada, ele cancela a solicitação de pagamento.
 	**/
-	private function getStatus($status){
+	private function getStatus($status, $force = false){
 		switch ($status) {
 		 	case 1:
 		 	case 2:
@@ -57,6 +69,9 @@ class PaymentController extends Controller
 		 	case 7:
 		 	 	return 0;
 		 	default:
+				if($force){
+			 		return 0;
+				}
 		 		return 1;
 		 }
 	}
