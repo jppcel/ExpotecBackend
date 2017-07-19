@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use App\Payment;
 
 class PaymentController extends Controller
@@ -34,6 +35,17 @@ class PaymentController extends Controller
 			 			$payment->paymentStatus = $this->getStatus($response->getStatus(), true);
 					}else{
 			 			$payment->paymentStatus = $this->getStatus($response->getStatus(), false);
+					}
+					if($payment->paymentStatus ==  3){
+	          Mail::send('mail.PaymentConfirmed',
+						[
+							"subscription_id" => $payment->subscription->id,
+							"person_name" => $payment->subscription->person->name,
+							"package_name" => $payment->subscription->package->name,
+							"package_price" => $payment->subscription->package->value
+						], function($message) use ($payment){
+	            $message->to($payment->subscription->person->email, $payment->subscription->person->name)->subject(env("APP_NAME").' - Pagamento Confirmado - Inscrição #'.$payment->subscription->id);
+	          });
 					}
 				}else{
 					if(strtotime($payment->created_at) < time()-(60*60*24)){
