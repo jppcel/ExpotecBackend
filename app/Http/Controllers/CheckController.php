@@ -72,7 +72,7 @@ class CheckController extends Controller
              $subscriptionController = new SubscriptionController;
              if($subscriptionController->isPaid($request->input("Subscription_id"))){
                if($subscriptionController->havePermission($request->input("Subscription_id"), $request->input("Activity_id"))){
-                 if($request->input("type")){
+                 if(isset($request->input("type"))){
                    $check = new Check;
                    $check->type = $this->typeCheck[$request->input("type")];
                    $check->User_id = 1;
