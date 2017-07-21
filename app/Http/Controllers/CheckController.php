@@ -188,7 +188,7 @@ class CheckController extends Controller
               $error[] = $newError;
               $count["errors"]++;
             }
-            $count++;
+            $count["all"]++;
           }
           if($count["errors"] > 0){
             $httpCode = 422;
