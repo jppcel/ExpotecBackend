@@ -104,9 +104,11 @@ class CheckController extends Controller
         *
         *  @method: Post
         *
-        *  @param: integer Activity_id => Activity id
-        *  @param: integer Subscription_id => Subscription id
-        *  @param: integer type => Type of check: 1 for in, 2 for out
+        *  @param: array checks => Array of checks. The params of this array:
+        *     @param: integer Activity_id => Activity id
+        *     @param: integer Subscription_id => Subscription id
+        *     @param: integer type => Type of check: 1 for in, 2 for out
+        *     @param: integer checked_at => Date in format yyyy-mm-dd hh:ii:ss
         */
         public function listCheck(Request $request){
           $count["all"] = 0;
