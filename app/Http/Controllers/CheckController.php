@@ -72,7 +72,7 @@ class CheckController extends Controller
              $subscriptionController = new SubscriptionController;
              if($subscriptionController->isPaid($request->input("Subscription_id"))){
                if($subscriptionController->havePermission($request->input("Subscription_id"), $request->input("Activity_id"))){
-                 if(isset($request->input("type"))){
+                 if(!empty($request->input("type"))){
                    $check = new Check;
                    $check->type = $this->typeCheck[$request->input("type")];
                    $check->User_id = 1;
@@ -123,7 +123,7 @@ class CheckController extends Controller
                 $subscriptionController = new SubscriptionController;
                 if($subscriptionController->isPaid($Check["Subscription_id"])){
                   if($subscriptionController->havePermission($Check["Subscription_id"], $Check["Activity_id"])){
-                    if(isset($Check["type"])){
+                    if(!empty($Check["type"])){
                       $check = new Check;
                       $check->type = $this->typeCheck[$Check["type"]];
                       $check->User_id = 1;
@@ -137,9 +137,8 @@ class CheckController extends Controller
                         "Subscription_id" => $Check["Subscription_id"],
                         "Activity_id" => $Check["Activity_id"],
                         "checked_at" => $Check["checked_at"],
-                        "type" => $Check["type"],
                         "typeError" => "10.1",
-                        "message" => "É necessário selecionar qual é o tipo de registro que deseja realizar: check-in ou check-out."
+                        "message" => "É necessário informar qual é o tipo de registro que deseja realizar: check-in ou check-out."
                       );
                       $error[] = $newError;
                       $count["errors"]++;
