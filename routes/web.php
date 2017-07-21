@@ -51,4 +51,16 @@ Route::group(['prefix' => 'api'], function(){
       Route::post('/getReturn', 'PaymentController@getReturnPayment');
     });
   });
+  Route::group(['prefix' => 'mobile'], function(){
+    Route::group(['prefix' => 'events'], function(){
+      Route::get("/", "CheckController@getEvents");
+      Route::post("/subscriptions", "CheckController@getSubscriptions");
+    });
+    Route::group(['prefix' => 'check'], function(){
+      Route::group(['prefix' => 'new'], function(){
+        Route::post("/", "CheckController@newCheck");
+        Route::post("/list", "CheckController@listCheck");
+      });
+    });
+  });
 });

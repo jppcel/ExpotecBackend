@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Activity extends Model
+class ActivityPrivate extends Model
 {
     public $timestamps = true;
     protected $primaryKey = 'id';
@@ -15,6 +15,6 @@ class Activity extends Model
     }
 
     public function track(){
-      return $this->belongsTo("App\Track", "Track_id");
+      return $this->belongsTo("App\Track");
     }
 }
