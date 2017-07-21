@@ -123,7 +123,7 @@ class CheckController extends Controller
                 $subscriptionController = new SubscriptionController;
                 if($subscriptionController->isPaid($Check["Subscription_id"])){
                   if($subscriptionController->havePermission($Check["Subscription_id"], $Check["Activity_id"])){
-                    if($Check["type"]){
+                    if(isset($Check["type"])){
                       $check = new Check;
                       $check->type = $this->typeCheck[$Check["type"]];
                       $check->User_id = 1;
