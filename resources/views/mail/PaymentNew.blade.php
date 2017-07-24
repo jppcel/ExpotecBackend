@@ -4,5 +4,5 @@
 <p>Dados do pacote selecionado:</p>
 <ul>
   <li>Nome do Pacote: {{$package_name}}</li>
-  <li>Preço do Pacote: {{$package_price}}</li>
+  <li>Preço do Pacote: {{number_format($package_price,2)}}</li>
 </ul>
