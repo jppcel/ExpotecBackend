@@ -108,6 +108,31 @@ class LoginController extends Controller
         }
       }
 
+      public function login($document, $password){
+        $CPF = Util::CPFNumbers($document);
+        $person = Person::where(["document" => $CPF])->first();
+        if($person){
+          $user = $person->user;
+          if($user){
+            if(Hash::check($password, $user->password)){
+              if($user->is_active == 1){
+                $user->remember_token = sha1($person->document . date("YmdHis"));
+                $user->save();
+                return array("ok" => 1, "login" => 1, "token" => $user->remember_token);
+              }else{
+                return array("ok" => 0, "error" => 1, "typeError" => "0.2", "message" => "O usuário não está ativo.");
+              }
+            }else{
+              return array("ok" => 0, "error" => 1, "typeError" => "0.3", "message" => "CPF e/ou senha inválidos.");
+            }
+          }else{
+            return array("ok" => 0, "error" => 1, "typeError" => "0.4", "message" => "CPF e/ou senha inválidos.");
+          }
+        }else{
+          return array("ok" => 0, "error" => 1, "typeError" => "0.5", "message" => "CPF e/ou senha inválidos.");
+        }
+      }
+
 
       /**
        *  @route /api/web/request_reset_password
@@ -173,4 +198,44 @@ class LoginController extends Controller
           return response()->json(array("ok" => 0, "error" => 1, "typeError" => "2.3", "message" => "O usuário não existe."), 404);
         }
       }
+
+      /**
+       *  Method Util: Verify login | Don't have route!
+       *  @param  string  cpf [14] => CPF of Person
+       *  @param  string  token => Token of this session
+       *
+       */
+        public static function verifyLogin($cpf, $token, $type = 1){
+          $validator = \Validator::make(["cpf" => $cpf, "token" => $token], [
+            'cpf' => 'required|cpf',
+            'token' => 'required',
+          ]);
+          // Se a validação falha, retorna falso
+
+          if($type == 1){
+            $limitTime = 900;
+          }else{
+            $limitTime = 60*60*24;
+          }
+
+          $retorno = false;
+          if(!$validator->fails()){
+            $CPF = Util::CPFNumbers($cpf);
+            $person = Person::where(["document" => $CPF])->first();
+            if($person){
+              $user = $person->user;
+              if($user->remember_token == $token){
+                if($user->is_active == 1){
+                  if($user->updated_at > date("Y-m-d H:i:s",time()-$limitTime)){
+                    $retorno = $user->person;
+                    $user->save();
+                  }else{
+                    LoginController::logout($cpf, $token, 0);
+                  }
+                }
+              }
+            }
+          }
+          return $retorno;
+        }
 }

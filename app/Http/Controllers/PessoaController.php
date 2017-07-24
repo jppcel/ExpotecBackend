@@ -43,4 +43,9 @@ class PessoaController extends Controller
       }
       return $retorno;
     }
+
+    public function registerCount(){
+      $person = Person::all();
+      return count($person);
+    }
 }
