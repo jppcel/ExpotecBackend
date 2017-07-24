@@ -133,7 +133,7 @@
             <span>Pessoas</span>
           </a>
           <ul class="treeview-menu">
-            <li><a href="{{url("/person/new")}}"><i class="fa fa-user-plus"></i> Nova Pessoa</a></li>
+            <!-- <li><a href="{{url("/person/new")}}"><i class="fa fa-user-plus"></i> Nova Pessoa</a></li> -->
             <li><a href="{{url("/person/list")}}"><i class="fa fa-users"></i> Listar Pessoas</a></li>
           </ul>
         </li>
