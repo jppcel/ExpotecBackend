@@ -122,7 +122,7 @@ class LoginController extends Controller
           $resetPassword->Person_id = $person->id;
           $resetPassword->token = sha1($person->document . date("YmdHis"));
           $resetPassword->save();
-          Mail::send('mail.ResetPassword', ["link" => env("APP_URL")."/reset_password/".$person->id."/".$resetPassword->token], function($message) use ($person){
+          Mail::send('mail.ResetPassword', ["link" => env("APP_URL_FRONT")."/reset_password/".$person->id."/".$resetPassword->token], function($message) use ($person){
             $message->to($person->email, $person->name)->subject(env("APP_NAME").' - Solicitação de nova senha');
           });
           return response()->json(array("ok" => 1));

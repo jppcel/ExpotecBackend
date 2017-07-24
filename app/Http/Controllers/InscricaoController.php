@@ -141,7 +141,7 @@ class InscricaoController extends Controller
                 $user->remember_token = sha1($request->input("person.document") . date("YmdHis"));
                 $user->save();
                 if($user->id > 0){
-                  Mail::send('mail.ActivationLink', ["link" => env("APP_URL")."/token/".$person->id."/".$user->remember_token], function($message) use ($person){
+                  Mail::send('mail.ActivationLink', ["link" => env("APP_URL_FRONT")."/token/".$person->id."/".$user->remember_token], function($message) use ($person){
                     $message->to($person->email, $person->nome)->subject('Cadastro realizado na '.env("APP_NAME").' - Necessita ativação.');
                   });
                   return response()->json(array("ok" => 1));
@@ -293,7 +293,7 @@ class InscricaoController extends Controller
   							"package_name" => $payment->subscription->package->name,
   							"package_price" => $payment->subscription->package->value
   						], function($message) use ($payment){
-  	            $message->to($payment->subscription->person->email, $payment->subscription->person->name)->subject(env("APP_NAME").' - Nova Inscrição - #'.$payment->subscription->id);
+  	            $message->to($payment->subscription->person->email, $payment->subscription->person->name)->subject(env("APP_NAME").' - Novo Pedido - #'.$payment->subscription->id);
   	          });
 
               return response()->json($retorno);
@@ -305,61 +305,57 @@ class InscricaoController extends Controller
       }
     }
 
-    public function test(Request $request){
-      // foreach(TypeStreet::all() as $typeStreet){
-      //   echo "DB::Table('TypeStreet')->insert(array('id' => ".$typeStreet->id.", 'state_id' => '".$typeStreet->name."'));<br/>";
-      // }
-      $f = fopen('C:\Users\Joao Paulo\git\ExpotecBackend\public\ceps.csv', 'r');
-      if($f){
-        $i = 1;
-        $zip = ZIP::orderBy('id', 'desc')->first();
-        for($j = 1; $j <= $zip->line; $j++){
-          fgetcsv($f, 0, ",");
-          $i++;
-        }
-        while (!feof($f)) {
-          $linha = fgetcsv($f, 0, ",");
-          if($i > $zip->line){
-            if(count(ZIP::where("zipcode", $linha[0])->get()) == 0){
-              echo $linha[0]."<br>";
-              $UF = State::where("UF", $linha[3])->first();
-              $city = City::where([
-                "State_id" => $UF->id,
-                 "name" => $linha[4]
-                 ])->first();
-              if($city == null){
-                $city = new City;
-                $city->name = $linha[4];
-                $city->State_id = $UF->id;
-                if(count($linha) == 8){
-                  if($linha[7]){
-                    $city->Cod_Ibge = $linha[7];
-                  }
-                }
-                $city->save();
-              }
-              $typeStreet = TypeStreet::where(["name" => $linha[1]])->first();
-              $zip = new ZIP;
-              $zip->City_id = $city->id;
-              $zip->TypeStreet_id = $typeStreet->id;
-              $zip->zipcode = $linha[0];
-              $zip->neighborhood = $linha[5];
-              $zip->name = $linha[2];
-              $zip->line = $i-1;
-              $zip->save();
-            }
-          }
-          $i++;
-        }
-        echo $i;
-        print_r($list);
-      }
-    }
-
     public function listCities(){
       $cities = City::all();
       foreach($cities as $city){
         echo "DB::Table('City')->insert(array('id' => ".$city->id.", 'name' => \"".mb_strtoupper($city->name, "utf-8")."\", Cod_Ibge => \"".$city->Cod_Ibge."\", State_id => ".$city->State_id."));<br>";
       }
+    }
+
+    public function listSubscriptionsConfirmed(){
+      $array = array();
+      $subscriptions = Subscription::all();
+      foreach($subscriptions as $subscription){
+        foreach($subscription->payment->all() as $payment){
+          if($payment->paymentStatus == 3){
+            $array[] = $subscription;
+          }
+        }
+      }
+      return $array;
+    }
+
+    public function subscriptionsConfirmed(){
+      return count($this->listSubscriptionsConfirmed());
+    }
+
+    public function subscriptionsRate(){
+      $count = 0;
+      $subscriptions = Subscription::all();
+      $subscriptionsConfirmed = $this->subscriptionsConfirmed();
+      return number_format($subscriptionsConfirmed/count($subscriptions)*100, 2);
+    }
+
+    public function subscriptionsListCount(){
+      $array = array();
+      $subscriptions = $this->listSubscriptionsConfirmed();
+      foreach($subscriptions as $subscription){
+        if(isset($array[$subscription->package->id])){
+          $array[$subscription->package->id]['value']++;
+        }else{
+          $array[$subscription->package->id]['label'] = $subscription->package->name;
+          $array[$subscription->package->id]['value'] = 1;
+        }
+      }
+      return $array;
+    }
+
+    public function subscriptionsTotalPrice(){
+      $count = 0.00;
+      $subscriptions = $this->listSubscriptionsConfirmed();
+      foreach($subscriptions as $subscription){
+        $count += $subscription->package->value;
+      }
+      return $count;
     }
 }
