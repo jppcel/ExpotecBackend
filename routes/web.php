@@ -18,5 +18,7 @@ Route::post("/login", "AdminController@logar");
 
 Route::group(['prefix' => "person"], function(){
   Route::get("/new", "ControlPanelController@person_new");
+  Route::post("/new", "ControlPanelController@person_new_post");
   Route::get("/list", "ControlPanelController@person_list");
+  Route::get("/dashboard/{id}", "ControlPanelController@person_dashboard");
 });

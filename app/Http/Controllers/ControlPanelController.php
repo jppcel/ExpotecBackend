@@ -6,8 +6,13 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\InscricaoController;
 use App\Http\Controllers\PessoaController;
 use App\Http\Controllers\AdminController;
+use Illuminate\Support\Facades\Validator;
+
+// Importado o arquivo Util para uso
+use App\Http\Util\Util;
 use App\Subscription;
 use App\Person;
+use App\User;
 
 class ControlPanelController extends Controller
 {
@@ -38,6 +43,66 @@ class ControlPanelController extends Controller
       $args["person"] = AdminController::getPerson();
       $args["person_gravatar"] = $this->get_gravatar($args["person"]->email, 160);
       return view("painel.person.new", compact("args"));
+    }
+
+    public function person_new_post(Request $request){
+
+
+        $messages = [
+          'name.required' => 'O seu nome é necessário para efetuarmos sua inscrição.',
+          'email.required' => 'O seu email é necessário para efetuarmos sua inscrição.',
+          'email.unique' => 'O email informado já está vinculado a outro cadastro.',
+          'document.required' => 'O seu CPF é necessário para efetuarmos sua inscrição.',
+          'document.unique' => 'O CPF informado já está vinculado a outro cadastro.',
+
+          'name.between' => 'O seu nome precisa ter pelo menos 5 até 60 caracteres.',
+          'document.between' => 'O seu CPF precisa ter pelo menos 11 caracteres.'
+        ];
+        // Faz a validação dos dados
+        $requisicao = $request->all();
+        $requisicao["document"] = Util::CPFNumbers($requisicao["document"]);
+        $validator = \Validator::make($requisicao, [
+          'name' => 'required|string|min:5|max:60',
+          'document' => 'required|cpf|min:11|max:14|unique:Person,document',
+          'email' => 'required|string|min:5|max:100|unique:Person,email',
+          'password' => 'required|string|min:8|max:60|confirmed'
+        ], $messages);
+        if($validator->fails()){
+            return redirect()->back()->withErrors($validator->errors());
+        }else{
+          $person = new Person;
+          $person->name = $request->input("name");
+          $person->document = $requisicao["document"];
+          $person->email = $request->input("email");
+          if(count($request->input("isStudent")) > 0){
+            $person->college = $request->input("college");
+            $person->course = $request->input("course");
+          }
+          $person->univelStudent = 0;
+          $person->save();
+
+
+          $user = new User;
+          $user->is_admin = false;
+          $user->is_active = false;
+          $user->Person_id = $person->id;
+          $user->last_update = date("Y-m-d H:i:s");
+          $user->password = bcrypt($request->input("password"));
+          $user->remember_token = sha1($person->document . date("YmdHis"));
+          $user->save();
+          return redirect(url("/person/dashboard/".$person->id));
+        }
+    }
+
+
+
+    public function person_dashboard($id){
+      $args["person_dashboard"] = Person::find($id);
+      $inscricaoController = new InscricaoController;
+      $personController = new PessoaController;
+      $args["person"] = AdminController::getPerson();
+      $args["person_gravatar"] = $this->get_gravatar($args["person"]->email, 160);
+      return view("painel.person.dashboard", compact("args"));
     }
 
     public function person_list(){

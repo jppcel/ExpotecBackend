@@ -19,36 +19,77 @@
     <!-- general form elements -->
     <div class="box box-primary">
       <!-- form start -->
-      <form role="form">
+      <form role="form" method="post">
         <div class="box-body">
-          <div class="form-group">
+          <input type="hidden" name="_token" value="{{ csrf_token() }}">
+          <div class="form-group @if ($errors->has('name')) has-error @endif">
             <label for="name">Nome</label>
-            <input type="text" name="name" class="form-control" id="name" placeholder="Insira o nome da pessoa">
+            <input type="text" name="name" class="form-control" id="name" placeholder="Insira o nome da pessoa" value="{{ old('name') }}" required="required">
+            @if ($errors->has('name'))
+              <label class="control-label" for="name"><i class="fa fa-times-circle-o"></i> {{ $errors->first('name') }}</label><br>
+            @endif
           </div>
-          <div class="form-group">
+          <div class="form-group @if ($errors->has('email')) has-error @endif">
             <label for="email">E-mail</label>
-            <input type="email" class="form-control" id="email" name="email" placeholder="fulano@sicrano.com">
+            <input type="email" class="form-control" id="email" name="email" placeholder="fulano@sicrano.com"  value="{{ old('email') }}" required="required">
+            @if ($errors->has('email'))
+              <label class="control-label" for="email"><i class="fa fa-times-circle-o"></i> {{ $errors->first('email') }}</label><br>
+            @endif
+            <small><strong>IMPORTANTE!</strong> Essa informação é única, ou seja, não é permitido multiplos cadastros com o mesmo endereço de email!</small>
           </div>
-          <div class="form-group">
+          <div class="form-group @if ($errors->has('document')) has-error @endif">
             <label for="cpf">Documento(CPF)</label>
-            <input type="text" class="form-control" id="cpf" name="cpf" placeholder="xxx.xxx.xxx-xx">
+            <input type="text" class="form-control" id="cpf" name="document" placeholder="xxx.xxx.xxx-xx" value="{{ old('document') }}" required="required">
+            @if ($errors->has('document'))
+              <label class="control-label" for="cpf"><i class="fa fa-times-circle-o"></i> {{ $errors->first('document') }}</label><br>
+            @endif
+            <small><strong>IMPORTANTE!</strong> Essa informação também é única!</small>
           </div>
-          <div class="form-group">
-            <label for="password">Password</label>
-            <input type="password" class="form-control" id="password" placeholder="Password">
+          <div class="form-group @if ($errors->has('password')) has-error @endif">
+            <label for="password">Senha</label>
+            <input type="password" class="form-control" id="password" name="password" placeholder="Senha" required="required">
+            @if ($errors->has('password'))
+              <label class="control-label" for="password"><i class="fa fa-times-circle-o"></i> {{ $errors->first('password') }}</label><br>
+            @endif
+            <small><strong>Obs:</strong> A senha deve ter no mínimo 8 caracteres e no máximo 60.</small>
           </div>
-          <div class="checkbox">
+          <div class="form-group @if ($errors->has('password_confirmation')) has-error @endif">
+            <label for="password_confirmation">Confirmação de Senha</label>
+            <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" placeholder="Confirmação da senha" required="required">
+            @if ($errors->has('password_confirmation'))
+              <label class="control-label" for="password_confirmation"><i class="fa fa-times-circle-o"></i> {{ $errors->first('password_confirmation') }}</label><br>
+            @endif
+          </div>
+          <div class="form-group checkbox">
             <label>
-              <input type="checkbox" id="isStudent" name="isStudent"> É aluno de alguma instituição?
+              <!-- <input type="checkbox" id="isStudent" name="isStudent"> É aluno de alguma instituição? -->
+              @php
+                if(old('isStudent'))
+
+              @endphp
+              @if(old('isStudent'))
+                @php($isStudent = old('isStudent'))
+              @else
+                @php($isStudent = false)
+              @endif
+
+              {!! Form::checkbox('isStudent', 'isStudent', $isStudent) !!} É aluno de alguma instituição?
             </label>
           </div>
-          <div class="form-group isStudentOnly" style="display:none">
-            <label for="college">Instituição</label>
-            <input type="text" class="form-control" id="college" name="college" placeholder="Nome da IES">
           </div>
-          <div class="form-group isStudentOnly" style="display:none">
+          <div class="form-group isStudentOnly @if ($errors->has('college')) has-error @endif"@if(!$isStudent) style="display:none"@endif>
+            <label for="college">Instituição</label>
+            <input type="text" class="form-control" id="college" name="college" placeholder="Nome da IES" value="{{ old('college') }}">
+            @if ($errors->has('college'))
+              <label class="control-label" for="college"><i class="fa fa-times-circle-o"></i> {{ $errors->first('college') }}</label><br>
+            @endif
+          </div>
+          <div class="form-group isStudentOnly @if ($errors->has('course')) has-error @endif"@if(!$isStudent) style="display:none"@endif>
             <label for="course">Curso</label>
-            <input type="text" class="form-control" id="course" name="course" placeholder="Nome do Curso">
+            <input type="text" class="form-control" id="course" name="course" placeholder="Nome do Curso" value="{{ old('course') }}">
+            @if ($errors->has('course'))
+              <label class="control-label" for="course"><i class="fa fa-times-circle-o"></i> {{ $errors->first('course') }}</label><br>
+            @endif
           </div>
         </div>
         <!-- /.box-body -->

@@ -55,7 +55,9 @@
                     @endforeach
                   @endforeach
                 </td>
-                <td>X</td>
+                <td>
+                  <a href="{{url("/person/dashboard/".$person->id)}}">Dashboard</a>
+                </td>
               </tr>
             @endforeach
           </tbody>
