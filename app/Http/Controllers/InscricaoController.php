@@ -60,8 +60,10 @@ class InscricaoController extends Controller
 
     $messages = [
       'person.name.required' => 'O seu nome é necessário para efetuarmos sua inscrição.',
-      'person.email.required' => 'O seu email é necessário para efetuarmos sua inscrição.',
+      'person.email.required' => 'O seu e-mail é necessário para efetuarmos sua inscrição.',
       'person.document.required' => 'O seu CPF é necessário para efetuarmos sua inscrição.',
+      'person.document.unique' => 'O CPF informado já está em uso.',
+      'person.email.unique' => 'O e-mail informado já está em uso.',
       'address.zip.required' => 'O CEP de seu endereço é necessário para efetuarmos sua inscrição.',
       'address.typeStreet.required' => 'O tipo de endereço de seu endereço é necessário para efetuarmos sua inscrição.',
       'address.street.required' => 'O logradouro de seu endereço é necessário para efetuarmos sua inscrição.',

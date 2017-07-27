@@ -76,7 +76,6 @@
               {!! Form::checkbox('isStudent', 'isStudent', $isStudent) !!} É aluno de alguma instituição?
             </label>
           </div>
-          </div>
           <div class="form-group isStudentOnly @if ($errors->has('college')) has-error @endif"@if(!$isStudent) style="display:none"@endif>
             <label for="college">Instituição</label>
             <input type="text" class="form-control" id="college" name="college" placeholder="Nome da IES" value="{{ old('college') }}">
@@ -90,6 +89,7 @@
             @if ($errors->has('course'))
               <label class="control-label" for="course"><i class="fa fa-times-circle-o"></i> {{ $errors->first('course') }}</label><br>
             @endif
+          </div>
           </div>
         </div>
         <!-- /.box-body -->
@@ -139,7 +139,7 @@
 
 <script>
   $(document).ready(function(){
-    $("#isStudent").on("click", function(){
+    $("input[name='isStudent']").on("click", function(){
       if($(this).is(":checked")){
         $(".isStudentOnly").show(300);
       }else{

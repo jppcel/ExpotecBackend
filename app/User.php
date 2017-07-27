@@ -13,4 +13,8 @@ class User extends Model
     public function person(){
       return $this->belongsTo("App\Person", "Person_id");
     }
+
+    public function permissions(){
+      return $this->hasMany("App\UserPermission");
+    }
 }

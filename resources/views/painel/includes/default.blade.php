@@ -29,6 +29,7 @@
   <link rel="stylesheet" href="{{url("/plugins/daterangepicker/daterangepicker.css")}}">
   <!-- bootstrap wysihtml5 - text editor -->
   <link rel="stylesheet" href="{{url("/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css")}}">
+  @yield("css")
 
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -189,7 +190,7 @@
 <!-- jQuery 2.2.3 -->
 <script src="{{url("plugins/jQuery/jquery-2.2.3.min.js")}}"></script>
 <!-- jQuery UI 1.11.4 -->
-<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+<script src="{{url("plugins/jQueryUI/jquery-ui.min.js")}}"></script>
 <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
 <script>
   $.widget.bridge('uibutton', $.ui.button);

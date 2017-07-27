@@ -22,7 +22,7 @@ class Person extends Model
 
     public function phones()
     {
-      return $this->hasMany('App\Phone');
+      return $this->hasOne('App\Phone');
     }
 
     public function packages(){

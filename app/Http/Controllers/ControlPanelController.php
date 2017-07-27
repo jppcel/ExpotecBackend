@@ -13,6 +13,8 @@ use App\Http\Util\Util;
 use App\Subscription;
 use App\Person;
 use App\User;
+use App\TypeStreet;
+use App\Permission;
 
 class ControlPanelController extends Controller
 {
@@ -101,6 +103,8 @@ class ControlPanelController extends Controller
       $inscricaoController = new InscricaoController;
       $personController = new PessoaController;
       $args["person"] = AdminController::getPerson();
+      $args["typestreet"] = TypeStreet::all();
+      $args["permission"] = Permission::all();
       $args["person_gravatar"] = $this->get_gravatar($args["person"]->email, 160);
       return view("painel.person.dashboard", compact("args"));
     }
