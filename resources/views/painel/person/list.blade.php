@@ -56,7 +56,7 @@
                   @endforeach
                 </td>
                 <td>
-                  <a href="{{url("/person/dashboard/".$person->id)}}">Dashboard</a>
+                  <a href="{{url("/person/dashboard/".$person->id)}}" name="Dashboard"><i class="fa fa-dashboard"></i></a>
                 </td>
               </tr>
             @endforeach
