@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\PessoaController;
+use App\Http\Controllers\PacoteController;
 use App\Event;
 
 class EventController extends Controller
@@ -14,7 +15,19 @@ class EventController extends Controller
         $events = Event::all();
         $retorno = array();
         foreach($events as $event){
-          $retorno[$event->attr] = $event->packages->all();
+          foreach($event->packages->all() as $package){
+            if($package->coupon == NULL){
+              $array = array();
+              $array["id"] = $package->id;
+              $array["name"] = $package->name;
+              $array["value"] = $package->value;
+              $array["startDate"] = $package->startDate;
+              $array["endDate"] = $package->endDate;
+              $array["description"] = $package->description;
+              $array["acceptSubscription"] = PacoteController::verifyLimit($package->id);
+              $retorno[$event->attr][] = $array;
+            }
+          }
         }
         return response()->json($retorno);
       }else{

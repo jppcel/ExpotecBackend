@@ -22,21 +22,48 @@ class PacoteController extends Controller
         $packages = Package::all();
         $return = NULL;
         foreach($packages as $package){
-          $array = array();
-          $array["id"] = $package->id;
-          $array["name"] = $package->name;
-          $array["value"] = $package->value;
-          $array["startDate"] = $package->startDate;
-          $array["endDate"] = $package->endDate;
-          $array["description"] = $package->description;
-          $array["acceptSubscription"] = $this->verifyLimit($package->id);
-          $return[] = $array;
+          if($package->coupon == NULL){
+            $array = array();
+            $array["id"] = $package->id;
+            $array["name"] = $package->name;
+            $array["value"] = $package->value;
+            $array["startDate"] = $package->startDate;
+            $array["endDate"] = $package->endDate;
+            $array["description"] = $package->description;
+            $array["acceptSubscription"] = $this->verifyLimit($package->id);
+            $return[] = $array;
+          }
         }
         return response()->json(array("ok" => 1, "return" => $return));
       }else{
         return response()->json(array("ok" => 0, "error" => 1, "typeError" => "0.0", "message" => "Usuário deslogado."), 422);
       }
     }
+
+
+   public function getPackageByCoupon(Request $request){
+     if(PessoaController::verifyLogin($request->input("document"), $request->input("token"))){
+       if($request->input("coupon")){
+         $package = Package::where("coupon",$request->input("coupon"))->first();
+         if($package){
+           $return["id"] = $package->id;
+           $return["name"] = $package->name;
+           $return["value"] = $package->value;
+           $return["startDate"] = $package->startDate;
+           $return["endDate"] = $package->endDate;
+           $return["description"] = $package->description;
+           $return["acceptSubscription"] = $this->verifyLimit($package->id);
+           return response()->json(array("ok" => 1, "return" => $return));
+         }else{
+           return response()->json(array("ok" => 0, "error" => 1, "typeError" => "11.1", "message" => "Pacote não encontrado."), 422);
+         }
+       }else{
+         return response()->json(array("ok" => 0, "error" => 1, "typeError" => "11.2", "message" => "O código de cupom não foi informado."), 422);
+       }
+     }else{
+       return response()->json(array("ok" => 0, "error" => 1, "typeError" => "0.0", "message" => "Usuário deslogado."), 422);
+     }
+   }
 
 
 
