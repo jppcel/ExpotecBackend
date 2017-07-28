@@ -40,7 +40,16 @@ class PacoteController extends Controller
       }
     }
 
-
+    /**
+     *  @route: /api/web/package/byCoupon
+     *
+     *  @method: Post
+     *
+     *  @param  string  document [11 | 14] => CPF of Person
+     *  @param  string  token => Token of this session
+     *  @param  string  coupon => coupon of package
+     *
+     */
    public function getPackageByCoupon(Request $request){
      if(PessoaController::verifyLogin($request->input("document"), $request->input("token"))){
        if($request->input("coupon")){
@@ -70,8 +79,22 @@ class PacoteController extends Controller
     public static function verifyLimit($id){
       $package = Package::find($id);
       if($package){
-        $limite = $package->endDate;
-        if(strtotime($limite) > time()){
+        if(strtotime($package->endDate) > time()){
+          $countSubs = 0;
+          if($package->limit){
+            foreach($package->subscriptions->all() as $subscription){
+              if($subscription->payment){
+                foreach($subscription->payment->all() as $payment){
+                  if($payment->paymentStatus == 2 || $payment->paymentStatus == 3){
+                    $countSubs++;
+                  }
+                }
+              }
+            }
+            if($package->limit <= $countSubs){
+              return false;
+            }
+          }
           return true;
         }else{
           return false;

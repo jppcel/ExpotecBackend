@@ -76,7 +76,7 @@
                 <img src="{{$args["person_gravatar"]}}" class="img-circle" alt="Imagem do Usuário no Gravatar">
 
                 <p>
-                  {{$args["person"]->name}} - Administrador
+                  {{$args["person"]->name}}
                 </p>
               </li>
               <!-- Menu Body -->

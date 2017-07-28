@@ -139,7 +139,11 @@
                         @if($payment->paymentStatus == 2)
                           <span class="badge bg-blue">2 - Pagamento Pendente</span>
                         @else
-                          <span class="badge bg-green">3 - Pagamento Confirmado</span>
+                          @if($payment->isFree)
+                            <span class="badge bg-green">3 - Ingresso Gratuito</span>
+                          @else
+                            <span class="badge bg-green">3 - Pagamento Confirmado</span>
+                          @endif
                         @endif
                       @endif
                     @endif<br/>{{date("d/m/Y H:i",strtotime($payment->created_at))}}

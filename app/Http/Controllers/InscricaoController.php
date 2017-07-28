@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 // use App\Http\Request\NewSubscription;
 use App\Http\Controllers\PessoaController;
+use App\Http\Controllers\PacoteController;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
@@ -20,6 +21,7 @@ use App\State;
 use App\Country;
 use App\ZIP;
 use App\Payment;
+use App\PaymentMethod;
 use App\Package;
 use App\Address;
 use App\Phone;
@@ -246,12 +248,24 @@ class InscricaoController extends Controller
             }
           }
 
+          $package = Package::find($request->input("package_id"));
+          if($package){
+            if($package->coupon != NULL){
+              if($package->coupon != $request->input("coupon")){
+                return response()->json(array("ok" => 0, "error" => 1, "typeError" => "3.3", "message" => "O pacote selecionado é privado e é necessário de código de cupom para a aquisição dele."), 422);
+              }
+            }
+            if(!PacoteController::verifyLimit($package->id)){
+              return response()->json(array("ok" => 0, "error" => 1, "typeError" => "3.5", "message" => "O pacote selecionado não está aceitando mais inscrições."), 422);
+            }
+          }else{
+            return response()->json(array("ok" => 0, "error" => 1, "typeError" => "3.4", "message" => "O pacote informado não existe."), 422);
+          }
+
           $subscription = new Subscription;
           $subscription->Person_id = $person->id;
           $subscription->Package_id = $request->input("package_id");
           $subscription->save();
-
-          $package = Package::find($subscription->Package_id);
 
           $City = $person->address->city;
           $State = $City->state;
@@ -273,30 +287,62 @@ class InscricaoController extends Controller
               $person->document
           );
           $payment->setShipping()->setType()->withParameters(\PagSeguro\Enum\Shipping\Type::NOT_SPECIFIED);
+
+          foreach(PaymentMethod::all() as $paymentMethod){
+            if(strtotime($paymentMethod->endDate) > time()){
+              $payment->acceptPaymentMethod()->group($paymentMethod->tag);
+            }else{
+              $payment->excludePaymentMethod()->group($paymentMethod->tag);
+            }
+          }
+
           $payment->setRedirectUrl(env("APP_REDIRECT_PAGSEGURO"));
           $payment->setNotificationUrl(env("APP_NOTIFICATION_PAGSEGURO"));
           try {
-              $result = $payment->register(\PagSeguro\Configuration\Configure::getAccountCredentials(), true);
+              if($package->value > 0.00){
+                $result = $payment->register(\PagSeguro\Configuration\Configure::getAccountCredentials(), true);
+              }
               // $result = $payment->register(\PagSeguro\Configuration\Configure::getAccountCredentials());
               // print_r($result);
               $payment = new Payment;
               $payment->Subscription_id = $subscription->id;
-              $payment->Transaction_id = $reference;
-              $payment->code = $result->getCode();
-              $payment->paymentStatus = 1;
-              $payment->save();
+              // $payment->code = $result;
               $retorno["ok"] = 1;
-              $retorno["code"] = $result->getCode();
+              if($package->value == 0.00){
+                $payment->paymentStatus = 3;
+                $payment->isFree = true;
+                $retorno["paid"] = true;
+              }else{
+                $payment->code = $result->getCode();
+                $payment->Transaction_id = $reference;
+                $payment->paymentStatus = 1;
+                $retorno["paid"] = false;
+                $retorno["code"] = $result->getCode();
+              }
+              $payment->save();
+              // $retorno["code"] = $result;
               $retorno["payment_id"] = $payment->id;
-              Mail::send('mail.PaymentNew',
-  						[
-  							"subscription_id" => $payment->subscription->id,
-  							"person_name" => $payment->subscription->person->name,
-  							"package_name" => $payment->subscription->package->name,
-  							"package_price" => $payment->subscription->package->value
-  						], function($message) use ($payment){
-  	            $message->to($payment->subscription->person->email, $payment->subscription->person->name)->subject(env("APP_NAME").' - Novo Pedido - #'.$payment->subscription->id);
-  	          });
+              if($package->value == 0.00){
+                Mail::send('mail.PaymentNewFree',
+    						[
+    							"subscription_id" => $payment->subscription->id,
+    							"person_name" => $payment->subscription->person->name,
+    							"package_name" => $payment->subscription->package->name,
+    							"package_price" => $payment->subscription->package->value
+    						], function($message) use ($payment){
+    	            $message->to($payment->subscription->person->email, $payment->subscription->person->name)->subject(env("APP_NAME").' - Inscrição Confirmada - #'.$payment->subscription->id);
+    	          });
+              }else{
+                Mail::send('mail.PaymentNew',
+    						[
+    							"subscription_id" => $payment->subscription->id,
+    							"person_name" => $payment->subscription->person->name,
+    							"package_name" => $payment->subscription->package->name,
+    							"package_price" => $payment->subscription->package->value
+    						], function($message) use ($payment){
+    	            $message->to($payment->subscription->person->email, $payment->subscription->person->name)->subject(env("APP_NAME").' - Novo Pedido - #'.$payment->subscription->id);
+    	          });
+              }
 
               return response()->json($retorno);
           } catch (Exception $e) {
