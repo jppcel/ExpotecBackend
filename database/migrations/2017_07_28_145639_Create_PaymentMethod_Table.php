@@ -13,14 +13,16 @@ class CreatePaymentMethodTable extends Migration
      */
     public function up()
     {
-      Schema::create('PaymentMethod', function (Blueprint $table) {
-          $table->increments("id");
-          $table->string("name");
-          $table->string("tag");
-          $table->dateTime("startDate");
-          $table->dateTime("endDate");
-          $table->timestamps();
-      });
+      if (!Schema::hasTable('PaymentMethod')){
+        Schema::create('PaymentMethod', function (Blueprint $table) {
+            $table->increments("id");
+            $table->string("name");
+            $table->string("tag");
+            $table->dateTime("startDate");
+            $table->dateTime("endDate");
+            $table->timestamps();
+        });
+      }
     }
 
     /**
