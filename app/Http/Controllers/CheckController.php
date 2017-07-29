@@ -115,30 +115,42 @@ class CheckController extends Controller
           $count["ok"] = 0;
           $count["errors"] = 0;
           $error = array();
-          foreach($request->input("checks") as $Check){
-            $activity = Activity::find($Check["Activity_id"]);
-            if($activity){
-              $subscription = Subscription::find($Check["Subscription_id"]);
-              if($subscription){
-                $subscriptionController = new SubscriptionController;
-                if($subscriptionController->isPaid($Check["Subscription_id"])){
-                  if($subscriptionController->havePermission($Check["Subscription_id"], $Check["Activity_id"])){
-                    if(!empty($Check["type"])){
-                      $check = new Check;
-                      $check->type = $this->typeCheck[$Check["type"]];
-                      $check->User_id = 1;
-                      $check->Subscription_id = $Check["Subscription_id"];
-                      $check->Activity_id = $Check["Activity_id"];
-                      $check->checked_at = $Check["checked_at"];
-                      $check->save();
-                      $count["ok"]++;
+          if($request->input("checks")){
+            foreach($request->input("checks") as $Check){
+              $activity = Activity::find($Check["Activity_id"]);
+              if($activity){
+                $subscription = Subscription::find($Check["Subscription_id"]);
+                if($subscription){
+                  $subscriptionController = new SubscriptionController;
+                  if($subscriptionController->isPaid($Check["Subscription_id"])){
+                    if($subscriptionController->havePermission($Check["Subscription_id"], $Check["Activity_id"])){
+                      if(!empty($Check["type"])){
+                        $check = new Check;
+                        $check->type = $this->typeCheck[$Check["type"]];
+                        $check->User_id = 1;
+                        $check->Subscription_id = $Check["Subscription_id"];
+                        $check->Activity_id = $Check["Activity_id"];
+                        $check->checked_at = $Check["checked_at"];
+                        $check->save();
+                        $count["ok"]++;
+                      }else{
+                        $newError = array(
+                          "Subscription_id" => $Check["Subscription_id"],
+                          "Activity_id" => $Check["Activity_id"],
+                          "checked_at" => $Check["checked_at"],
+                          "typeError" => "10.1",
+                          "message" => "É necessário informar qual é o tipo de registro que deseja realizar: check-in ou check-out."
+                        );
+                        $error[] = $newError;
+                        $count["errors"]++;
+                      }
                     }else{
                       $newError = array(
                         "Subscription_id" => $Check["Subscription_id"],
                         "Activity_id" => $Check["Activity_id"],
                         "checked_at" => $Check["checked_at"],
-                        "typeError" => "10.1",
-                        "message" => "É necessário informar qual é o tipo de registro que deseja realizar: check-in ou check-out."
+                        "typeError" => "10.2",
+                        "message" => "A inscrição informada não tem acesso a essa atividade."
                       );
                       $error[] = $newError;
                       $count["errors"]++;
@@ -148,8 +160,8 @@ class CheckController extends Controller
                       "Subscription_id" => $Check["Subscription_id"],
                       "Activity_id" => $Check["Activity_id"],
                       "checked_at" => $Check["checked_at"],
-                      "typeError" => "10.2",
-                      "message" => "A inscrição informada não tem acesso a essa atividade."
+                      "typeError" => "10.3",
+                      "message" => "A inscrição informada não está confirmada."
                     );
                     $error[] = $newError;
                     $count["errors"]++;
@@ -159,8 +171,8 @@ class CheckController extends Controller
                     "Subscription_id" => $Check["Subscription_id"],
                     "Activity_id" => $Check["Activity_id"],
                     "checked_at" => $Check["checked_at"],
-                    "typeError" => "10.3",
-                    "message" => "A inscrição informada não está confirmada."
+                    "typeError" => "10.4",
+                    "message" => "A inscrição informada não existe."
                   );
                   $error[] = $newError;
                   $count["errors"]++;
@@ -170,24 +182,14 @@ class CheckController extends Controller
                   "Subscription_id" => $Check["Subscription_id"],
                   "Activity_id" => $Check["Activity_id"],
                   "checked_at" => $Check["checked_at"],
-                  "typeError" => "10.4",
-                  "message" => "A inscrição informada não existe."
+                  "typeError" => "10.5",
+                  "message" => "A atividade informada não existe."
                 );
                 $error[] = $newError;
                 $count["errors"]++;
               }
-            }else{
-              $newError = array(
-                "Subscription_id" => $Check["Subscription_id"],
-                "Activity_id" => $Check["Activity_id"],
-                "checked_at" => $Check["checked_at"],
-                "typeError" => "10.5",
-                "message" => "A atividade informada não existe."
-              );
-              $error[] = $newError;
-              $count["errors"]++;
+              $count["all"]++;
             }
-            $count["all"]++;
           }
           if($count["errors"] > 0){
             $httpCode = 422;
