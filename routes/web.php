@@ -22,3 +22,9 @@ Route::group(['prefix' => "person"], function(){
   Route::get("/list", "ControlPanelController@person_list");
   Route::get("/dashboard/{id}", "ControlPanelController@person_dashboard");
 });
+
+Route::group(['prefix' => "label"], function(){
+  Route::get("/qrcode/{qrcode}", "ControlPanelController@qrcode");
+  Route::get("/intern_generate", "ControlPanelController@label_intern_generate");
+  Route::get("/generate", "ControlPanelController@label_generate");
+});

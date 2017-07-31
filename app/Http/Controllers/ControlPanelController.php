@@ -7,6 +7,7 @@ use App\Http\Controllers\InscricaoController;
 use App\Http\Controllers\PessoaController;
 use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Validator;
+use Barryvdh\Snappy\Facades\SnappyPdf as PDF;
 
 // Importado o arquivo Util para uso
 use App\Http\Util\Util;
@@ -116,6 +117,23 @@ class ControlPanelController extends Controller
       $args["persons"] = Person::all();
       $args["person_gravatar"] = $this->get_gravatar($args["person"]->email, 160);
       return view("painel.person.list", compact("args"));
+    }
+
+
+    public function label_intern_generate(){
+      $inscricaoController = new InscricaoController;
+      $subscriptions = $inscricaoController->listSubscriptionsConfirmed();
+      return view("painel.providers.label",compact("subscriptions"));
+    }
+
+    public function label_generate(){
+      $pdf = PDF::loadFile(env("APP_URL").'/label/intern_generate');
+      return $pdf->stream();
+    }
+
+    public function qrcode($qrcode){
+      $view = view("painel.providers.qrcode")->with("qrcode", $qrcode);
+      return response($view)->header('Content-Type', 'image/png');
     }
 
 
