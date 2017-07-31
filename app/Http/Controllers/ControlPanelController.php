@@ -124,11 +124,6 @@ class ControlPanelController extends Controller
       return $pdf->stream();
     }
 
-    public function qrcode($qrcode){
-      $view = view("painel.providers.qrcode")->with("qrcode", $qrcode);
-      return response($view)->header('Content-Type', 'image/png');
-    }
-
 
 
     public function get_gravatar( $email, $s = 80, $d = 'mm', $r = 'g', $img = false, $atts = array() ) {

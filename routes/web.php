@@ -24,7 +24,7 @@ Route::group(['prefix' => "person"], function(){
 });
 
 Route::group(['prefix' => "label"], function(){
-  Route::get("/qrcode/{qrcode}", "ControlPanelController@qrcode");
+  Route::get("/qrcode/{qrcode}", "InscricaoController@qrcode");
   Route::get("/intern_generate", "InscricaoController@label_intern_generate");
   Route::get("/generate", "ControlPanelController@label_generate");
 });
