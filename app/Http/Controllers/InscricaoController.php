@@ -414,4 +414,11 @@ class InscricaoController extends Controller
       $subscriptions = $inscricaoController->listSubscriptionsConfirmed();
       return view("painel.providers.label",compact("subscriptions"));
     }
+
+
+
+    public function qrcode($qrcode){
+      $view = view("painel.providers.qrcode")->with("qrcode", $qrcode);
+      return response($view)->header('Content-Type', 'image/png');
+    }
 }
