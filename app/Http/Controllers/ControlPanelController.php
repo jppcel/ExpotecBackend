@@ -119,13 +119,6 @@ class ControlPanelController extends Controller
       return view("painel.person.list", compact("args"));
     }
 
-
-    public function label_intern_generate(){
-      $inscricaoController = new InscricaoController;
-      $subscriptions = $inscricaoController->listSubscriptionsConfirmed();
-      return view("painel.providers.label",compact("subscriptions"));
-    }
-
     public function label_generate(){
       $pdf = PDF::loadFile(env("APP_URL").'/label/intern_generate');
       return $pdf->stream();

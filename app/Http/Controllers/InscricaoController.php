@@ -406,4 +406,12 @@ class InscricaoController extends Controller
       }
       return $count;
     }
+
+
+
+    public function label_intern_generate(){
+      $inscricaoController = new InscricaoController;
+      $subscriptions = $inscricaoController->listSubscriptionsConfirmed();
+      return view("painel.providers.label",compact("subscriptions"));
+    }
 }
