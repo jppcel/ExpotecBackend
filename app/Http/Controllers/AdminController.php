@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\LoginController;
 use App\Permission;
 use App\UserPermission;
@@ -25,6 +26,8 @@ class AdminController extends Controller
         if($login["ok"] == 1){
           $_SESSION["document"] = $request->input("document");
           $_SESSION["token"] = $login["token"];
+          Log::useFiles(base_path('storage/logs/admin-info.log'), 'info');
+          Log::info('['.date("d/m/Y H:i:s").']');
           return redirect("/");
         }else{
           return redirect("/login");
@@ -67,12 +70,14 @@ class AdminController extends Controller
       return redirect("/");
     }
 
-    public function hasPermission($Permission_id){
-      $permission = Permission::find($Permission_id);
-      if($permission){
-        $userPermission = UserPermission::where(["User_id" => $this->getPerson()->user->id, "Permission_id" => $Permission_id])->first();
-        if($userPermission){
-          return true;
+    public function hasPermission($Permissions_id){
+      foreach($Permissions_id as $Permission_id){
+        $permission = Permission::find($Permission_id);
+        if($permission){
+          $userPermission = UserPermission::where(["User_id" => $this->getPerson()->user->id, "Permission_id" => $Permission_id])->first();
+          if($userPermission){
+            return true;
+          }
         }
       }
       return false;

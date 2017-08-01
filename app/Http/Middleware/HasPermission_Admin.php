@@ -1,11 +1,10 @@
 <?php
 
 namespace App\Http\Middleware;
-use App\Http\Controllers\AdminController;
 
 use Closure;
 
-class HasPermission_Person
+class HasPermission_Admin
 {
     /**
      * Handle an incoming request.
@@ -17,7 +16,7 @@ class HasPermission_Person
     public function handle($request, Closure $next)
     {
         $adminController = new AdminController;
-        if(!$adminController->hasPermission([1,4])){
+        if(!$adminController->hasPermission([3,4])){
           return redirect("/");
         }
         return $next($request);
