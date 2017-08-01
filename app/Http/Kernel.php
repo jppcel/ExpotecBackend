@@ -62,5 +62,6 @@ class Kernel extends HttpKernel
 
 
         'HasPermission_Person' => \App\Http\Middleware\HasPermission_Person::class,
+        'HasPermission_Admin' => \App\Http\Middleware\HasPermission_Admin::class,
     ];
 }
