@@ -21,10 +21,10 @@ class PaymentController extends Controller
 	public function searchPendingPayments(){
 		 $payments = Payment::where([
 			 ["paymentStatus", "=", 1],
-			 ["updated_at", "<", date("Y-m-d")." 00:00:00"]
+			 ["updated_at", "<", date("Y-m-d H:i:s", (time()-(60*60*2)))]
 		 ])->orWhere([
 			 ["paymentStatus", "=", 2],
-			 ["updated_at", "<", date("Y-m-d")." 00:00:00"]
+			 ["updated_at", "<", date("Y-m-d H:i:s", (time()-(60*60*2)))]
 		 ])->get();
 		 $i = 1;
 		 foreach($payments as $payment){
