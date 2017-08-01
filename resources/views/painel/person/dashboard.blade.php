@@ -13,6 +13,10 @@
       background: red !important;
       color: #fff !important;
     }
+
+    .modal{
+      text-align: center;
+    }
   </style>
 @endsection
 
@@ -135,9 +139,93 @@
                     @else
                       @if($payment->paymentStatus == 1)
                         <span class="badge">1 - Aguardando Pagamento</span>
+                        <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#modalCancel_{{$payment->id}}" title="Efetuar Cancelamento do Pagamento"><i class="fa fa-times-circle"></i></button>
+                        <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#modalConfirm_{{$payment->id}}" title="Efetuar Confirmação do Pagamento"><i class="fa fa-check-circle"></i></button>
+                        <!-- Modal Cancelamento -->
+                        <div class="modal fade modal-danger" id="modalCancel_{{$payment->id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                          <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="myModalLabel">Efetuar Cancelamento - Pagamento #{{$payment->id}}</h4>
+                              </div>
+                              <div class="modal-body">
+                                <h2>Você tem certeza que pretende fazer isso?</h2><br>
+                                Ao efetuar um cancelamento manual, o sistema não irá mais verificar com o sistema de pagamento se o pagamento foi efetuado ou não, e assim, caso o pagamento seja efetuado, não será possível inserir no sistema.<br>
+                                <h4>Você deseja ainda assim efetuar o cancelamento?</h4>
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-success" data-dismiss="modal">Não cancelar</button>
+                                <a class="btn btn-danger" href="{{url("/person/payment/cancel/".$args["person_dashboard"]->id."/".$payment->id)}}">Efetuar o cancelamento</a>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <!-- Modal Confirmação -->
+                        <div class="modal fade modal-warning" id="modalConfirm_{{$payment->id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                          <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="myModalLabel">Efetuar Confirmação - Pagamento #{{$payment->id}}</h4>
+                              </div>
+                              <div class="modal-body">
+                                <h2>Você tem certeza que pretende fazer isso?</h2><br>
+                                Ao efetuar a confirmação da inscrição manual, o sistema não irá mais validar se o pagamento foi efetuado, e assim não poderá verificar se o pagamento dessa inscrição foi realmente feito.
+                                <h4>Você deseja ainda assim efetuar o cancelamento?</h4>
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-success" data-dismiss="modal">Não cancelar</button>
+                                <a class="btn btn-danger" href="{{url("/person/payment/cancel/".$args["person_dashboard"]->id."/".$payment->id)}}">Efetuar a confirmação</a>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                       @else
                         @if($payment->paymentStatus == 2)
                           <span class="badge bg-blue">2 - Pagamento Pendente</span>
+                          <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#modalCancel_{{$payment->id}}" title="Efetuar Cancelamento do Pagamento"><i class="fa fa-times-circle"></i></button>
+                          <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#modalConfirm_{{$payment->id}}" title="Efetuar Confirmação do Pagamento"><i class="fa fa-check-circle"></i></button>
+                          <!-- Modal Cancelamento -->
+                          <div class="modal fade modal-danger" id="modalCancel_{{$payment->id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                            <div class="modal-dialog" role="document">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                  <h4 class="modal-title" id="myModalLabel">Efetuar Cancelamento - Pagamento #{{$payment->id}}</h4>
+                                </div>
+                                <div class="modal-body">
+                                  <h2>Você tem certeza que pretende fazer isso?</h2><br>
+                                  Ao efetuar um cancelamento manual, o sistema não irá mais verificar com o sistema de pagamento se o pagamento foi efetuado ou não, e assim, caso o pagamento seja efetuado, não será possível inserir no sistema.<br>
+                                  <h4>Você deseja ainda assim efetuar o cancelamento?</h4>
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-success" data-dismiss="modal">Não cancelar</button>
+                                  <a class="btn btn-danger" href="{{url("/person/payment/confirm/".$args["person_dashboard"]->id."/".$payment->id)}}">Efetuar o cancelamento</a>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <!-- Modal Confirmação -->
+                          <div class="modal fade modal-warning" id="modalConfirm_{{$payment->id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                            <div class="modal-dialog" role="document">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                  <h4 class="modal-title" id="myModalLabel">Efetuar Confirmação - Pagamento #{{$payment->id}}</h4>
+                                </div>
+                                <div class="modal-body">
+                                  <h2>Você tem certeza que pretende fazer isso?</h2><br>
+                                  Ao efetuar a confirmação da inscrição manual, o sistema não irá mais validar se o pagamento foi efetuado, e assim não poderá verificar se o pagamento dessa inscrição foi realmente feito.
+                                  <h4>Você deseja ainda assim efetuar o cancelamento?</h4>
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-success" data-dismiss="modal">Não cancelar</button>
+                                  <a class="btn btn-danger" href="{{url("/person/payment/confirm/".$args["person_dashboard"]->id."/".$payment->id)}}">Efetuar a confirmação</a>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
                         @else
                           @if($payment->isFree)
                             <span class="badge bg-green">3 - Ingresso Gratuito</span>
@@ -147,6 +235,15 @@
                         @endif
                       @endif
                     @endif<br/>{{date("d/m/Y H:i",strtotime($payment->created_at))}}
+                    @if($payment->log)
+                      <ul>
+                      @foreach($payment->log->all() as $log)
+                        <li>
+                          {{$log->user->person->name}}: {{$log->from}} -> {{$log->to}}
+                        </li>
+                      @endforeach
+                      </ul>
+                    @endif
                   @endforeach
                 </td>
               </tr>

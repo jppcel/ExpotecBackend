@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use App\Http\Controllers\AdminController;
 use App\Payment;
+use App\Subscription;
+use App\PaymentUpdateLog;
 
 class PaymentController extends Controller
 {
@@ -196,6 +199,51 @@ class PaymentController extends Controller
 			return response()->json(array("ok" => 0, "error" => 1, "typeError" => "7.2", "message" => "Não existe um pagamento com o id informado."), 404);
 		}
   }
+
+
+
+	/*
+	 * Private functions - Admin
+	 */
+
+ 	 public function confirmSubscription($Person_id, $Payment_id){
+ 		 $adminController = new AdminController;
+ 		 $person_user = $adminController->getPerson();
+ 		 $payment = Payment::find($Payment_id);
+ 		 if($payment){
+ 			 if($payment->paymentStatus == 2 || $payment->paymentStatus == 1){
+ 				 $paymentLog = new PaymentUpdateLog;
+ 				 $paymentLog->User_id = $person_user->user->id;
+ 				 $paymentLog->Payment_id = $Person_id;
+ 				 $paymentLog->from = $Payment_id;
+ 				 $paymentLog->to = 3;
+ 				 $paymentLog->save();
+ 				 $payment->paymentStatus = 3;
+ 				 $payment->save();
+ 				 return redirect()->back();
+ 			 }
+ 		 }
+ 		 return redirect()->back();
+ 	 }
+ 	 public function cancelSubscription($Person_id, $Payment_id){
+ 		 $adminController = new AdminController;
+ 		 $person_user = $adminController->getPerson();
+ 		 $payment = Payment::find($Payment_id);
+ 		 if($payment){
+ 			 if($payment->paymentStatus == 2 || $payment->paymentStatus == 1){
+ 				 $paymentLog = new PaymentUpdateLog;
+ 				 $paymentLog->User_id = $person_user->user->id;
+ 				 $paymentLog->Payment_id = $Person_id;
+ 				 $paymentLog->from = $Payment_id;
+ 				 $paymentLog->to = 0;
+ 				 $paymentLog->save();
+ 				 $payment->paymentStatus = 0;
+ 				 $payment->save();
+ 				 return redirect()->back();
+ 			 }
+ 		 }
+ 		 return redirect()->back();
+ 	 }
 
 
 }

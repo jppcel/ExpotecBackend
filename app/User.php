@@ -17,4 +17,8 @@ class User extends Model
     public function permissions(){
       return $this->hasMany("App\UserPermission");
     }
+
+    public function paymentUpdate(){
+      return $this->hasMany("App\PaymentUpdateLog");
+    }
 }

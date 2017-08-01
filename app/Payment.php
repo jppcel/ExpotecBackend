@@ -13,4 +13,8 @@ class Payment extends Model
     public function Subscription(){
       return $this->belongsTo("App\Subscription", "Subscription_id");
     }
+
+    public function log(){
+      return $this->hasMany("App\PaymentUpdateLog");
+    }
 }

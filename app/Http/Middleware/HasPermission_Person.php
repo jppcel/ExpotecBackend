@@ -18,7 +18,7 @@ class HasPermission_Person
     {
         $adminController = new AdminController;
         if(!$adminController->hasPermission([1,4])){
-          return redirect("/");
+          return redirect()->back();
         }
         return $next($request);
     }

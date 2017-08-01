@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Middleware;
+use App\Http\Controllers\AdminController;
 
 use Closure;
 
@@ -17,7 +18,7 @@ class HasPermission_Admin
     {
         $adminController = new AdminController;
         if(!$adminController->hasPermission([3,4])){
-          return redirect("/");
+          return redirect()->back();
         }
         return $next($request);
     }
