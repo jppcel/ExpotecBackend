@@ -4,11 +4,15 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\LoginController;
+use App\Permission;
+use App\UserPermission;
 
 class AdminController extends Controller
 {
     public function __construct(){
-      session_start();
+      if(session_status() == PHP_SESSION_NONE){
+        session_start();
+      }
     }
     public function login(){
       return view("painel.login");
@@ -66,7 +70,7 @@ class AdminController extends Controller
     public function hasPermission($Permission_id){
       $permission = Permission::find($Permission_id);
       if($permission){
-        $userPermission = UserPermission::where(["User_id" => $this->getPessoa()->id, "Permission_id" => $Permission_id])->first();
+        $userPermission = UserPermission::where(["User_id" => $this->getPerson()->user->id, "Permission_id" => $Permission_id])->first();
         if($userPermission){
           return true;
         }
