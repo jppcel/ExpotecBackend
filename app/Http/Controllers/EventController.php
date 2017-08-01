@@ -17,15 +17,17 @@ class EventController extends Controller
         foreach($events as $event){
           foreach($event->packages->all() as $package){
             if($package->coupon == NULL){
-              $array = array();
-              $array["id"] = $package->id;
-              $array["name"] = $package->name;
-              $array["value"] = $package->value;
-              $array["startDate"] = $package->startDate;
-              $array["endDate"] = $package->endDate;
-              $array["description"] = $package->description;
-              $array["acceptSubscription"] = PacoteController::verifyLimit($package->id);
-              $retorno[$event->attr][] = $array;
+              if(strtotime($package->endDate."23:59:59") >= time() && strtotime($package->startDate."00:00:00") <= time()){
+                $array = array();
+                $array["id"] = $package->id;
+                $array["name"] = $package->name;
+                $array["value"] = $package->value;
+                $array["startDate"] = $package->startDate;
+                $array["endDate"] = $package->endDate;
+                $array["description"] = $package->description;
+                $array["acceptSubscription"] = PacoteController::verifyLimit($package->id);
+                $retorno[$event->attr][] = $array;
+              }
             }
           }
         }
