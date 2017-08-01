@@ -71,12 +71,14 @@ class AdminController extends Controller
     }
 
     public function hasPermission($Permissions_id){
-      foreach($Permissions_id as $Permission_id){
-        $permission = Permission::find($Permission_id);
-        if($permission){
-          $userPermission = UserPermission::where(["User_id" => $this->getPerson()->user->id, "Permission_id" => $Permission_id])->first();
-          if($userPermission){
-            return true;
+      if($this->verifyLogin()){
+        foreach($Permissions_id as $Permission_id){
+          $permission = Permission::find($Permission_id);
+          if($permission){
+            $userPermission = UserPermission::where(["User_id" => $this->getPerson()->user->id, "Permission_id" => $Permission_id])->first();
+            if($userPermission){
+              return true;
+            }
           }
         }
       }
