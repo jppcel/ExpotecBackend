@@ -7,7 +7,6 @@ use App\Http\Controllers\LoginController;
 
 class AdminController extends Controller
 {
-
     public function __construct(){
       session_start();
     }
@@ -62,5 +61,16 @@ class AdminController extends Controller
       unset($_SESSION["token"]);
       session_destroy();
       return redirect("/");
+    }
+
+    public function hasPermission($Permission_id){
+      $permission = Permission::find($Permission_id);
+      if($permission){
+        $userPermission = UserPermission::where(["User_id" => $this->getPessoa()->id, "Permission_id" => $Permission_id])->first();
+        if($userPermission){
+          return true;
+        }
+      }
+      return false;
     }
 }
