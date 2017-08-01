@@ -114,6 +114,7 @@ class CheckController extends Controller
           $count["all"] = 0;
           $count["ok"] = 0;
           $count["errors"] = 0;
+          $httpCode = NULL;
           $error = array();
           if($request->input("checks")){
             foreach($request->input("checks") as $Check){
