@@ -190,11 +190,15 @@ class CheckController extends Controller
               }
               $count["all"]++;
             }
-          }
-          if($count["errors"] > 0){
-            $httpCode = 422;
           }else{
-            $httpCode = 200;
+            $httpCode = 204;
+          }
+          if(!$httpCode){
+            if($count["errors"] > 0){
+              $httpCode = 422;
+            }else{
+              $httpCode = 200;
+            }
           }
           return response()->json(array(
             "count" => $count,
