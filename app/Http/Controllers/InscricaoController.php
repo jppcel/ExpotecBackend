@@ -217,7 +217,7 @@ class InscricaoController extends Controller
           return response()->json(array("ok" => 1, "token" => $person->user->remember_token));
         }
       }else{
-        return response()->json(array("ok" => 0, "error" => 1, "typeError" => "2.1", "message" => "Um erro inesperado aconteceu."), 422);
+        return response()->json(array("ok" => 0, "error" => 1, "typeError" => "2.1", "message" => "Um erro inesperado aconteceu. É possível que você já tenha setado a senha."), 422);
       }
     }else{
       return response()->json(array("ok" => 0, "error" => 1, "typeError" => "2.2", "message" => "O usuário informado não existe."), 404);
