@@ -233,7 +233,7 @@ class PaymentController extends Controller
  			 if($payment->paymentStatus == 2 || $payment->paymentStatus == 1){
  				 $paymentLog = new PaymentUpdateLog;
  				 $paymentLog->User_id = $person_user->user->id;
- 				 $paymentLog->Payment_id = $Person_id;
+ 				 $paymentLog->Payment_id = $payment->id;
  				 $paymentLog->from = $payment->paymentStatus;
  				 $paymentLog->to = 0;
  				 $paymentLog->save();
