@@ -234,7 +234,7 @@ class PaymentController extends Controller
  				 $paymentLog = new PaymentUpdateLog;
  				 $paymentLog->User_id = $person_user->user->id;
  				 $paymentLog->Payment_id = $Person_id;
- 				 $paymentLog->from = $Payment_id;
+ 				 $paymentLog->from = $payment->paymentStatus;
  				 $paymentLog->to = 0;
  				 $paymentLog->save();
  				 $payment->paymentStatus = 0;
