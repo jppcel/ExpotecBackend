@@ -10,6 +10,10 @@
       color: #000 !important;
     }
     .select2-selection__choice[title="Admin"]{
+      background: orange !important;
+      color: #fff !important;
+    }
+    .select2-selection__choice[title="Super-Admin"]{
       background: red !important;
       color: #fff !important;
     }
@@ -263,9 +267,10 @@
       </div>
       <!-- /.box-header -->
       <!-- form start -->
-      <form role="form">
+      <form role="form" action="{{url("/person/update/register")}}" method="post">
         <div class="box-body">
           <input type="hidden" name="_token" value="{{ csrf_token() }}">
+          <input type="hidden" name="Person_id" value="{{ $args["person_dashboard"]->id }}">
           <div class="form-group @if ($errors->has('name')) has-error @endif">
             <label for="name">Nome</label>
             <input type="text" name="name" class="form-control" id="name" placeholder="Insira o nome da pessoa" value="{{ $args["person_dashboard"]->name }}" required="required">
@@ -295,8 +300,8 @@
                 if(old('isStudent'))
 
               @endphp
-              @if(old('isStudent'))
-                @php($isStudent = old('isStudent'))
+              @if($args["person_dashboard"]->college || $args["person_dashboard"]->course)
+                @php($isStudent = true)
               @else
                 @php($isStudent = false)
               @endif
@@ -306,14 +311,14 @@
           </div>
           <div class="form-group isStudentOnly @if ($errors->has('college')) has-error @endif"@if(!$isStudent) style="display:none"@endif>
             <label for="college">Instituição</label>
-            <input type="text" class="form-control" id="college" name="college" placeholder="Nome da IES" value="{{ old('college') }}">
+            <input type="text" class="form-control" id="college" name="college" placeholder="Nome da IES" value="{{ $args["person_dashboard"]->college }}">
             @if ($errors->has('college'))
               <label class="control-label" for="college"><i class="fa fa-times-circle-o"></i> {{ $errors->first('college') }}</label><br>
             @endif
           </div>
           <div class="form-group isStudentOnly @if ($errors->has('course')) has-error @endif"@if(!$isStudent) style="display:none"@endif>
             <label for="course">Curso</label>
-            <input type="text" class="form-control" id="course" name="course" placeholder="Nome do Curso" value="{{ old('course') }}">
+            <input type="text" class="form-control" id="course" name="course" placeholder="Nome do Curso" value="{{ $args["person_dashboard"]->course }}">
             @if ($errors->has('course'))
               <label class="control-label" for="course"><i class="fa fa-times-circle-o"></i> {{ $errors->first('course') }}</label><br>
             @endif
@@ -337,13 +342,15 @@
       </div>
       <!-- /.box-header -->
       <!-- form start -->
-      <form role="form">
+      <form role="form" action="{{url("/person/update/address")}}" method="post">
         <div class="box-body">
           <input type="hidden" name="_token" value="{{ csrf_token() }}">
+          <input type="hidden" name="Person_id" value="{{ $args["person_dashboard"]->id }}">
           <input type="hidden" id="City_id" name="City_id" @if($args["person_dashboard"]->address) value="{{ $args["person_dashboard"]->address->city->id}}"@endif>
+          <input type="hidden" id="TypeStreet_id" name="TypeStreet_id" @if($args["person_dashboard"]->address) value="{{ $args["person_dashboard"]->address->typestreet->id}}"@endif>
           <div class="form-group @if ($errors->has('zipcode')) has-error @endif">
             <label for="name">CEP</label>
-            <input type="text" name="zipcode" class="form-control" id="zipcode" placeholder="xxxxx-xxx"@if($args["person_dashboard"]->address) value="{{ $args["person_dashboard"]->address->zip}}"@endif required="required">
+            <input type="text" name="zip" class="form-control" id="zipcode" placeholder="xxxxx-xxx"@if($args["person_dashboard"]->address) value="{{ $args["person_dashboard"]->address->zip}}"@endif required="required">
             @if ($errors->has('zipcode'))
               <label class="control-label" for="name"><i class="fa fa-times-circle-o"></i> {{ $errors->first('zipcode') }}</label><br>
             @endif
@@ -395,7 +402,7 @@
             <input type="text" id="city" class="form-control" placeholder="Cidade"@if($args["person_dashboard"]->address) value="{{ $args["person_dashboard"]->address->city->name}}/{{ $args["person_dashboard"]->address->city->state->UF}}"@endif  readonly="readonly">
           </div>
           <div class="box-footer">
-            <a href="{{env("APP_URL")}}" class="btn btn-default">Cancelar</a>
+            <a href="" class="btn btn-default">Cancelar</a>
             <button type="submit" class="btn btn-info pull-right">Atualizar</button>
           </div>
         </div>
@@ -415,9 +422,10 @@
       </div>
       <!-- /.box-header -->
       <!-- form start -->
-      <form role="form">
+      <form role="form" action="{{url("/person/update/password")}}" method="post">
         <div class="box-body">
           <input type="hidden" name="_token" value="{{ csrf_token() }}">
+          <input type="hidden" name="Person_id" value="{{ $args["person_dashboard"]->id }}">
           <div class="form-group @if ($errors->has('password')) has-error @endif">
             <label for="password">Senha</label>
             <input type="password" class="form-control" id="password" name="password" placeholder="Senha" required="required">
@@ -452,9 +460,10 @@
       </div>
       <!-- /.box-header -->
       <!-- form start -->
-      <form role="form">
+      <form role="form" action="{{url("/person/update/phone")}}" method="post">
         <div class="box-body">
           <input type="hidden" name="_token" value="{{ csrf_token() }}">
+          <input type="hidden" name="Person_id" value="{{ $args["person_dashboard"]->id }}">
           <div class="form-group @if ($errors->has('phone')) has-error @endif">
             <label for="name">Telefone</label>
             <input type="text" id="phone" class="form-control" name="phone" placeholder="(xx) xxxxxxxxx"@if($args["person_dashboard"]->address) value="{{ $args["person_dashboard"]->phones->ddd . $args["person_dashboard"]->phones->number }}"@endif >
@@ -470,6 +479,7 @@
         <!-- /.box-body -->
       </form>
     </div>
+    @if($args["is_super_admin"])
     <!-- Admin -->
     <div class="box box-primary collapsed-box">
       <div class="box-header with-border">
@@ -481,9 +491,10 @@
       </div>
       <!-- /.box-header -->
       <!-- form start -->
-      <form role="form">
+      <form role="form" action="{{url("/person/update/admin")}}" method="post">
         <div class="box-body">
           <input type="hidden" name="_token" value="{{ csrf_token() }}">
+          <input type="hidden" name="Person_id" value="{{ $args["person_dashboard"]->id }}">
           <div class="form-group">
             <label>
               <input type="checkbox" id="is_admin" name="is_admin" @if($args["person_dashboard"]->user->is_admin == 1) checked="checked" @endif/> Acesso Admin?
@@ -491,7 +502,7 @@
           </div>
           <div class="form-group @if ($errors->has('password_confirmation')) has-error @endif" @if($args["person_dashboard"]->user->is_admin == 0) display="none" @endif>
             <label for="password_confirmation">Permissões</label>
-            <select name="permissions" id="permissions" multiple="multiple" style="width: 100%">
+            <select name="permissions[]" id="permissions" multiple="multiple" style="width: 100%">
               @foreach($args["permission"] as $permission)
                 <option value="{{$permission->id}}">{{$permission->name}}</option>
               @endforeach
@@ -509,6 +520,7 @@
         <!-- /.box-body -->
       </form>
     </div>
+    @endif
   </section>
 </div>
 <!-- /.row (main row) -->
@@ -546,6 +558,10 @@
   $permissions = $("#permissions").select2({
       placeholder: "Selecione uma ou várias permissões"
   });
+  $typestreet.on("select2:select", function (e) {
+    // console.log("select2:select", e);
+    $("#TypeStreet_id").val(e.params.data.id);
+  });
   @if($args["person_dashboard"]->address)
     $typestreet.val({{$args["person_dashboard"]->address->TypeStreet_id}}).trigger("change");
   @endif
@@ -578,6 +594,7 @@
       if(data.ok == 1){
         if(data.has.typestreet == 1){
           $("#typestreet").attr("disabled", "disabled");
+          $("#TypeStreet_id").val(data.zip.typeStreet.id);
         }else{
           $("#typestreet").removeAttr("disabled");
         }
@@ -610,6 +627,7 @@
             $("#typestreet").attr("disabled", "disabled");
           }
           $typestreet.val(data.zip.typeStreet.id).trigger("change");
+          $("#TypeStreet_id").val(data.zip.typeStreet.id);
         }else{
           $("#typestreet").removeAttr("disabled");
           $("#typestreet").val("");

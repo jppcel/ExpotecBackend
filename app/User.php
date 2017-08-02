@@ -21,4 +21,8 @@ class User extends Model
     public function paymentUpdate(){
       return $this->hasMany("App\PaymentUpdateLog");
     }
+
+    public function log(){
+      return $this->hasMany("App\Log");
+    }
 }

@@ -18,7 +18,7 @@ Route::group(['prefix' => 'web'], function(){
     Route::get('/person/{id}/{token}', 'InscricaoController@getPessoa');
     Route::post('/activate', 'InscricaoController@activateInscricao');
     Route::post('/package', 'InscricaoController@makeInscricao');
-    Route::get('/city', 'InscricaoController@listCities');
+    Route::get('/zip', 'InscricaoController@listZips');
     Route::group(['prefix' => 'cart'], function(){
       Route::post('/add', 'CartController@new');
       Route::post('/delete', 'CartController@delete');

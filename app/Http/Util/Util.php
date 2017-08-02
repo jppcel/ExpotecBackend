@@ -38,4 +38,15 @@ class Util
       }
     }
   }
+
+  public static function PhoneNumbers($phone, $thePhone = false){
+    $Phone = explode(" ", $phone);
+    if($thePhone){
+      $return = implode("", explode("-", $Phone[1]));
+    }else{
+      $ddd = explode("(", $Phone[0]);
+      $return = explode(")", $ddd[1])[0];
+    }
+    return $return;
+  }
 }

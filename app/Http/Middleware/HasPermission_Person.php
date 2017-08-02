@@ -17,8 +17,24 @@ class HasPermission_Person
     public function handle($request, Closure $next)
     {
         $adminController = new AdminController;
-        if(!$adminController->hasPermission([1,4])){
-          return redirect()->back();
+        if($adminController->verifylogin()){
+          if(!$adminController->hasPermission([1,4])){
+            if(isset($_SESSION["redirectLoopPrevent"])){
+              if($_SESSION["redirectLoopPrevent"] == 0){
+                $_SESSION["redirectLoopPrevent"] = 1;
+                return redirect()->back();
+              }else{
+                $_SESSION["redirectLoopPrevent"] = 0;
+                return redirect("/");
+              }
+            }else{
+              $_SESSION["redirectLoopPrevent"] = 1;
+              return redirect()->back();
+            }
+          }
+        }else{
+          $_SESSION["redirectLoopPrevent"] = 0;
+          return redirect("/");
         }
         return $next($request);
     }
