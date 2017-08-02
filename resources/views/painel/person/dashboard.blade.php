@@ -155,7 +155,7 @@
                                 <h4>Você deseja ainda assim efetuar o cancelamento?</h4>
                               </div>
                               <div class="modal-footer">
-                                <button type="button" class="btn btn-success" data-dismiss="modal">Não cancelar</button>
+                                <button type="button" class="btn btn-success" data-dismiss="modal">Não quero mais</button>
                                 <a class="btn btn-danger" href="{{url("/person/payment/cancel/".$args["person_dashboard"]->id."/".$payment->id)}}">Efetuar o cancelamento</a>
                               </div>
                             </div>
@@ -175,7 +175,7 @@
                                 <h4>Você deseja ainda assim efetuar o cancelamento?</h4>
                               </div>
                               <div class="modal-footer">
-                                <button type="button" class="btn btn-success" data-dismiss="modal">Não cancelar</button>
+                                <button type="button" class="btn btn-success" data-dismiss="modal">Não quero mais</button>
                                 <a class="btn btn-danger" href="{{url("/person/payment/cancel/".$args["person_dashboard"]->id."/".$payment->id)}}">Efetuar a confirmação</a>
                               </div>
                             </div>
@@ -200,7 +200,7 @@
                                   <h4>Você deseja ainda assim efetuar o cancelamento?</h4>
                                 </div>
                                 <div class="modal-footer">
-                                  <button type="button" class="btn btn-success" data-dismiss="modal">Não cancelar</button>
+                                  <button type="button" class="btn btn-success" data-dismiss="modal">Não quero mais</button>
                                   <a class="btn btn-danger" href="{{url("/person/payment/confirm/".$args["person_dashboard"]->id."/".$payment->id)}}">Efetuar o cancelamento</a>
                                 </div>
                               </div>
@@ -220,7 +220,7 @@
                                   <h4>Você deseja ainda assim efetuar o cancelamento?</h4>
                                 </div>
                                 <div class="modal-footer">
-                                  <button type="button" class="btn btn-success" data-dismiss="modal">Não cancelar</button>
+                                  <button type="button" class="btn btn-success" data-dismiss="modal">Não quero mais</button>
                                   <a class="btn btn-danger" href="{{url("/person/payment/confirm/".$args["person_dashboard"]->id."/".$payment->id)}}">Efetuar a confirmação</a>
                                 </div>
                               </div>
