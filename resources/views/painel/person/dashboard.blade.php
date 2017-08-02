@@ -139,7 +139,7 @@
                     @else
                       @if($payment->paymentStatus == 1)
                         <span class="badge">1 - Aguardando Pagamento</span>
-                        <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#modalCancel_{{$payment->id}}" title="Efetuar Cancelamento do Pagamento"><i class="fa fa-times-circle"></i></button>
+                        @if($args["is_admin"])<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#modalCancel_{{$payment->id}}" title="Efetuar Cancelamento do Pagamento"><i class="fa fa-times-circle"></i></button>
                         <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#modalConfirm_{{$payment->id}}" title="Efetuar Confirmação do Pagamento"><i class="fa fa-check-circle"></i></button>
                         <!-- Modal Cancelamento -->
                         <div class="modal fade modal-danger" id="modalCancel_{{$payment->id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -180,11 +180,11 @@
                               </div>
                             </div>
                           </div>
-                        </div>
+                        </div>@endif
                       @else
                         @if($payment->paymentStatus == 2)
                           <span class="badge bg-blue">2 - Pagamento Pendente</span>
-                          <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#modalCancel_{{$payment->id}}" title="Efetuar Cancelamento do Pagamento"><i class="fa fa-times-circle"></i></button>
+                          @if($args["is_admin"])<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#modalCancel_{{$payment->id}}" title="Efetuar Cancelamento do Pagamento"><i class="fa fa-times-circle"></i></button>
                           <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#modalConfirm_{{$payment->id}}" title="Efetuar Confirmação do Pagamento"><i class="fa fa-check-circle"></i></button>
                           <!-- Modal Cancelamento -->
                           <div class="modal fade modal-danger" id="modalCancel_{{$payment->id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -225,7 +225,7 @@
                                 </div>
                               </div>
                             </div>
-                          </div>
+                          </div>@endif
                         @else
                           @if($payment->isFree)
                             <span class="badge bg-green">3 - Ingresso Gratuito</span>

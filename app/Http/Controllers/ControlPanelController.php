@@ -103,10 +103,12 @@ class ControlPanelController extends Controller
       $args["person_dashboard"] = Person::find($id);
       $inscricaoController = new InscricaoController;
       $personController = new PessoaController;
+      $adminController = new AdminController;
       $args["person"] = AdminController::getPerson();
       $args["typestreet"] = TypeStreet::all();
       $args["permission"] = Permission::all();
       $args["person_gravatar"] = $this->get_gravatar($args["person"]->email, 160);
+      $args["is_admin"] = $adminController->hasPermission([3,4]);
       return view("painel.person.dashboard", compact("args"));
     }
 
