@@ -353,13 +353,6 @@ class InscricaoController extends Controller
       }
     }
 
-    public function listCities(){
-      $cities = City::all();
-      foreach($cities as $city){
-        echo "DB::Table('City')->insert(array('id' => ".$city->id.", 'name' => \"".mb_strtoupper($city->name, "utf-8")."\", Cod_Ibge => \"".$city->Cod_Ibge."\", State_id => ".$city->State_id."));<br>";
-      }
-    }
-
     public function listSubscriptionsConfirmed(){
       $array = array();
       $subscriptions = Subscription::all();
