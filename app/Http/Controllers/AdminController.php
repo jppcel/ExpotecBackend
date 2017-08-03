@@ -86,7 +86,7 @@ class AdminController extends Controller
       return redirect("/");
     }
 
-    public function hasPermission($Permissions_id, $document, $token){
+    public function hasPermission($Permissions_id){
       if($this->verifyLogin()){
         foreach($Permissions_id as $Permission_id){
           $permission = Permission::find($Permission_id);
