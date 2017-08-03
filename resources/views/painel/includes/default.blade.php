@@ -128,6 +128,7 @@
             <i class="fa fa-dashboard"></i> <span>Dashboard</span>
           </a>
         </li>
+        @if($args["adminController"]->hasPermission([1,4]))
         <li class="treeview">
           <a href="#">
             <i class="fa fa-user"></i>
@@ -138,6 +139,7 @@
             <li><a href="{{url("/person/list")}}"><i class="fa fa-users"></i> Listar Pessoas</a></li>
           </ul>
         </li>
+        @endif
       </ul>
     </section>
     <!-- /.sidebar -->

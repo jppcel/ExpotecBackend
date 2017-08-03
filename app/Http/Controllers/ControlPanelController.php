@@ -40,6 +40,7 @@ class ControlPanelController extends Controller
       $args["subscription_priceTotal"] = $inscricaoController->subscriptionsTotalPrice();
       $args["person_count"] = $personController->registerCount();
       $args["person"] = AdminController::getPerson();
+      $args["adminController"] = new AdminController;
       $args["person_gravatar"] = $this->get_gravatar($args["person"]->email, 160);
       return view("painel.index", compact("args"));
     }
@@ -49,6 +50,7 @@ class ControlPanelController extends Controller
       $inscricaoController = new InscricaoController;
       $personController = new PessoaController;
       $args["person"] = AdminController::getPerson();
+      $args["adminController"] = new AdminController;
       $args["person_gravatar"] = $this->get_gravatar($args["person"]->email, 160);
       return view("painel.person.new", compact("args"));
     }
@@ -112,6 +114,7 @@ class ControlPanelController extends Controller
       $args["person"] = AdminController::getPerson();
       $args["typestreet"] = TypeStreet::all();
       $args["permission"] = Permission::all();
+      $args["adminController"] = new AdminController;
       $args["person_gravatar"] = $this->get_gravatar($args["person"]->email, 160);
       $args["is_admin"] = $adminController->hasPermission([3,4]);
       $args["is_super_admin"] = $adminController->hasPermission([4]);
@@ -359,6 +362,7 @@ class ControlPanelController extends Controller
       $personController = new PessoaController;
       $args["person"] = AdminController::getPerson();
       $args["persons"] = Person::all();
+      $args["adminController"] = new AdminController;
       $args["person_gravatar"] = $this->get_gravatar($args["person"]->email, 160);
       return view("painel.person.list", compact("args"));
     }
