@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\LoginController;
 use App\Permission;
 use App\UserPermission;
+use App\Person;
 
 class AdminController extends Controller
 {
@@ -50,6 +51,21 @@ class AdminController extends Controller
       }
     }
 
+    public static function verifyLoginMobile($document, $token){
+      if(isset($document) && isset($token)){
+        $loginController = new LoginController;
+        $login = $loginController->verifyLogin($document, $token, 2);
+        if(!$login){
+          return false;
+        }
+        if($login->user->is_admin){
+          return true;
+        }else{
+          return false;
+        }
+      }
+    }
+
     public static function getPerson(){
       if($_SESSION["document"] && $_SESSION["token"]){
         $loginController = new LoginController;
@@ -70,12 +86,27 @@ class AdminController extends Controller
       return redirect("/");
     }
 
-    public function hasPermission($Permissions_id){
+    public function hasPermission($Permissions_id, $document, $token){
       if($this->verifyLogin()){
         foreach($Permissions_id as $Permission_id){
           $permission = Permission::find($Permission_id);
           if($permission){
             $userPermission = UserPermission::where(["User_id" => $this->getPerson()->user->id, "Permission_id" => $Permission_id])->first();
+            if($userPermission){
+              return true;
+            }
+          }
+        }
+      }
+      return false;
+    }
+
+    public static function hasPermissionMobile($Permissions_id, Person $person, $document, $token){
+      if(AdminController::verifyLoginMobile($document, $token)){
+        foreach($Permissions_id as $Permission_id){
+          $permission = Permission::find($Permission_id);
+          if($permission){
+            $userPermission = UserPermission::where(["User_id" => $person->user->id, "Permission_id" => $Permission_id])->first();
             if($userPermission){
               return true;
             }

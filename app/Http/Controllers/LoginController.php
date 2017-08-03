@@ -108,7 +108,7 @@ class LoginController extends Controller
         }
       }
 
-      public function login($document, $password){
+      public static function login($document, $password){
         $CPF = Util::CPFNumbers($document);
         $person = Person::where(["document" => $CPF])->first();
         if($person){
@@ -132,6 +132,48 @@ class LoginController extends Controller
           return array("ok" => 0, "error" => 1, "typeError" => "0.5", "message" => "CPF e/ou senha inválidos.");
         }
       }
+
+
+    /**
+     *  @route /api/mobile/login
+     *  @method Post
+     *  @param  string  document [11 | 14] => CPF of Person
+     *  @param  string  password [8-60] => Password of Person
+     *
+     */
+      public static function toLoginMobile(Request $request){
+        $validator = \Validator::make($request->all(), [
+          'document' => 'required|cpf',
+          'password' => 'required|string|min:8|max:60'
+        ]);
+        // Se a validação falha, retorna um erro
+        $CPF = Util::CPFNumbers($request->input("document"));
+        if($validator->fails()){
+          return response()->json(array("ok" => 0, "error" => 1, "typeError" => "0.1", "message" => "CPF e/ou senha inválidos."), 422);
+        }else{
+          return response()->json(LoginController::login($CPF, $request->input("password")));
+        }
+      }
+
+
+      /**
+       *  @route /api/mobile/logout
+       *  @method Post
+       *  @param  string  document [11 | 14] => CPF of Person
+       *  @param  string  token => Token of this session
+       */
+        public static function toLogoutMobile(Request $request){
+          $validator = \Validator::make($request->all(), [
+            'document' => 'required|cpf',
+            'token' => 'required|string'
+          ]);
+          // Se a validação falha, retorna um erro
+          if($validator->fails()){
+            return response()->json(array("ok" => 0, "error" => 1, "typeError" => "0.1", "message" => "Sessão inválida."), 422);
+          }else{
+            self::logout($request->input("document"), $request->input("token"));
+          }
+        }
 
 
       /**

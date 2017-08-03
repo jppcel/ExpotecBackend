@@ -54,8 +54,10 @@ Route::group(['prefix' => 'web'], function(){
   });
 });
 Route::group(['prefix' => 'mobile'], function(){
+  Route::post("/login", "LoginController@toLoginMobile");
+  Route::post("/logout", "LoginController@toLogoutMobile");
   Route::group(['prefix' => 'events'], function(){
-    Route::get("/", "CheckController@getEvents");
+    Route::post("/", "CheckController@getEvents");
     Route::post("/subscriptions", "CheckController@getSubscriptions");
   });
   Route::group(['prefix' => 'check'], function(){
