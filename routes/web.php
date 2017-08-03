@@ -31,6 +31,9 @@ Route::group(['prefix' => "person", 'middleware' => ['HasPermission_Person']], f
     Route::post("/register", "ControlPanelController@person_register_save")->middleware(["HasPermission_Person"]);
     Route::post("/address", "ControlPanelController@person_address_save")->middleware(["HasPermission_Person"]);
     Route::post("/admin", "ControlPanelController@person_admin_save")->middleware(["HasPermission_Person", "HasPermission_Admin"]);
+    Route::get("/activate/{Person_id}", "ControlPanelController@person_activate_save")->middleware(["HasPermission_Person", "HasPermission_Admin"]);
+    Route::get("/disable/{Person_id}", "ControlPanelController@person_disable_save")->middleware(["HasPermission_Person", "HasPermission_Admin"]);
+    Route::get("/sendConfirmation/{Person_id}", "ControlPanelController@person_sendConfirmation_save")->middleware(["HasPermission_Person"]);
   });
 });
 

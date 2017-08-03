@@ -176,7 +176,7 @@
                               <div class="modal-body">
                                 <h2>Você tem certeza que pretende fazer isso?</h2><br>
                                 Ao efetuar a confirmação da inscrição manual, o sistema não irá mais validar se o pagamento foi efetuado, e assim não poderá verificar se o pagamento dessa inscrição foi realmente feito.
-                                <h4>Você deseja ainda assim efetuar o cancelamento?</h4>
+                                <h4>Você deseja ainda assim efetuar a confirmação?</h4>
                               </div>
                               <div class="modal-footer">
                                 <button type="button" class="btn btn-success" data-dismiss="modal">Não quero mais</button>
@@ -221,7 +221,7 @@
                                 <div class="modal-body">
                                   <h2>Você tem certeza que pretende fazer isso?</h2><br>
                                   Ao efetuar a confirmação da inscrição manual, o sistema não irá mais validar se o pagamento foi efetuado, e assim não poderá verificar se o pagamento dessa inscrição foi realmente feito.
-                                  <h4>Você deseja ainda assim efetuar o cancelamento?</h4>
+                                  <h4>Você deseja ainda assim efetuar a confirmação?</h4>
                                 </div>
                                 <div class="modal-footer">
                                   <button type="button" class="btn btn-success" data-dismiss="modal">Não quero mais</button>
@@ -519,6 +519,70 @@
         </div>
         <!-- /.box-body -->
       </form>
+    </div>
+    @endif
+
+    @if(!$args["person_dashboard"]->user->is_active || $args["is_admin"])
+    <!-- Enviar o email de confirmação -->
+    <div class="box box-primary collapsed-box">
+      <div class="box-header with-border">
+        <h3 class="box-title">Ativação de Usuário</h3>
+        <div class="pull-right box-tools">
+          <button type="button" class="btn btn-primary btn-sm pull-right" data-widget="collapse" data-toggle="tooltip" title="" style="margin-right: 5px;" data-original-title="Collapse">
+            <i class="fa fa-plus"></i></button>
+        </div>
+      </div>
+      <!-- /.box-header -->
+      <div class="box-body">
+        <div class="box-footer">
+          @if(!$args["person_dashboard"]->user->is_active && $args["is_admin"])
+          <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalUserActivate" title="Efetuar a Ativação do Usuário">Ativar usuário</button>
+          <!-- Modal Ativação -->
+          <div class="modal fade modal-danger" id="modalUserActivate" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                  <h4 class="modal-title" id="myModalLabel">Efetuar Ativação do Usuário</h4>
+                </div>
+                <div class="modal-body">
+                  <h2>Você tem certeza que pretende fazer isso?</h2><br>
+                  O usuário pode não ter tido a senha gerada, e com isso, não é possível gerar ela caso não tinha sido feita.
+                  <h4>Você deseja ainda assim efetuar a ativação?</h4>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-success" data-dismiss="modal">Não quero mais</button>
+                  <a class="btn btn-danger" href="{{url("/person/update/activate/".$args["person_dashboard"]->id)}}">Efetuar a ativação</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          @endif
+          @if($args["person_dashboard"]->user->is_active && $args["is_admin"])
+          <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalUserDisable" title="Efetuar a Ativação do Usuário">Desativar usuário</button>
+          <!-- Modal Desativação -->
+          <div class="modal fade modal-danger" id="modalUserDisable" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                  <h4 class="modal-title" id="myModalLabel">Efetuar Desativação do Usuário</h4>
+                </div>
+                <div class="modal-body">
+                  <h2>Você tem certeza que pretende fazer isso?</h2><br>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-success" data-dismiss="modal">Não quero mais</button>
+                  <a class="btn btn-danger" href="{{url("/person/update/disable/".$args["person_dashboard"]->id)}}">Efetuar a ativação</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          @endif
+          @if(!$args["person_dashboard"]->user->is_active && !$args["person_dashboard"]->user->password)<a href="{{url("/person/update/sendConfirmation/".$args["person_dashboard"]->id)}}" class="btn btn-success">Enviar email de confirmação novamente</a>@endif
+        </div>
+      </div>
+        <!-- /.box-body -->
     </div>
     @endif
   </section>

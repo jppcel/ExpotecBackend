@@ -8,6 +8,7 @@ use App\Http\Controllers\PessoaController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\LogController;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Mail;
 use Barryvdh\Snappy\Facades\SnappyPdf as PDF;
 
 // Importado o arquivo Util para uso
@@ -297,6 +298,55 @@ class ControlPanelController extends Controller
               $log .= $Permission->permission->name.", ";
             }
             LogController::make($log);
+            return redirect()->back();
+          }
+        }
+      }
+      return redirect()->back();
+    }
+
+    public function person_activate_save($Person_id){
+      $adminController = new AdminController;
+      if($adminController->hasPermission([1,4]) && $adminController->hasPermission([3,4])){
+        $person = Person::find($Person_id);
+        if($person){
+          if(!$person->user->is_active){
+            LogController::make("O usuário setou o usuário da pessoa ".$person->id." - '".$person->name."' como ativo.");
+            $person->user->is_active = true;
+            $person->user->save();
+            return redirect()->back();
+          }
+        }
+      }
+      return redirect()->back();
+    }
+
+    public function person_sendConfirmation_save($Person_id){
+      $adminController = new AdminController;
+      if($adminController->hasPermission([1,4])){
+        $person = Person::find($Person_id);
+        if($person){
+          if(!$person->user->is_active){
+            LogController::make("O usuário enviou um novo email para confirmação da inscrição do usuário da pessoa ".$person->id." - '".$person->name."'.");
+            Mail::send('mail.ActivationLink', ["link" => env("APP_URL_FRONT")."/token/".$person->id."/".$person->user->remember_token], function($message) use ($person){
+              $message->to($person->email, $person->name)->subject('Reenvio: Cadastro realizado na '.env("APP_NAME").' - Necessita ativação.');
+            });
+            return redirect()->back();
+          }
+        }
+      }
+      return redirect()->back();
+    }
+
+    public function person_disable_save($Person_id){
+      $adminController = new AdminController;
+      if($adminController->hasPermission([1,4]) && $adminController->hasPermission([3,4])){
+        $person = Person::find($Person_id);
+        if($person){
+          if($person->user->is_active){
+            LogController::make("O usuário setou o usuário da pessoa ".$person->id." - '".$person->name."' como desativado.");
+            $person->user->is_active = false;
+            $person->user->save();
             return redirect()->back();
           }
         }
