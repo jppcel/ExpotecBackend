@@ -38,7 +38,9 @@
                 <td>{{$person->email}}</td>
                 <td>
                   @if($person->user)
-                    <span class="badge bg-blue">Usuário</span>
+                    @if($person->user->is_active)
+                      <span class="badge bg-blue">Usuário</span>
+                    @endif
                     @if($person->user->is_admin)
                       <span class="badge bg-red">Admin</span>
                     @endif
