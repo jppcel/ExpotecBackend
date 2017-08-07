@@ -16,6 +16,7 @@ class UpdateLogTable extends Migration
       if (Schema::hasTable('Log')){
         Schema::table('Log', function (Blueprint $table) {
             $table->integer("type")->default(1);
+            $table->integer("User_id")->unsigned()->nullable()->change();
         });
       }
     }
