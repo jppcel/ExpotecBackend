@@ -295,12 +295,14 @@ class ControlPanelController extends Controller
             foreach(UserPermission::where([["User_id","=",$person->user->id]])->get() as $permission){
               $permission->delete();
             }
-            foreach($request->input("permissions") as $permission){
-              $Permission = new UserPermission;
-              $Permission->User_id = $person->user->id;
-              $Permission->Permission_id = $permission;
-              $Permission->save();
-              $log .= $Permission->permission->name.", ";
+            if($request->input("permissions")){
+              foreach($request->input("permissions") as $permission){
+                $Permission = new UserPermission;
+                $Permission->User_id = $person->user->id;
+                $Permission->Permission_id = $permission;
+                $Permission->save();
+                $log .= $Permission->permission->name.", ";
+              }
             }
             LogController::make($log);
             return redirect()->back();
