@@ -304,6 +304,14 @@ class ControlPanelController extends Controller
             }
             LogController::make($log);
             return redirect()->back();
+          }else{
+            $log = "O usuário setou que o usuário da pessoa ".$person->id." - '".$person->name."' não tem acesso admin.";
+            $person->user->is_admin = false;
+            $person->user->save();
+            foreach(UserPermission::where([["User_id","=",$person->user->id]])->get() as $permission){
+              $permission->delete();
+            }
+            LogController::make($log);
           }
         }
       }
