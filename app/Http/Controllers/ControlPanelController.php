@@ -263,19 +263,29 @@ class ControlPanelController extends Controller
                 "Cidade: ".$person->address->city->name."/".$person->address->city->state->name."\n".
                 "CEP: ".$person->address->zip."."
               );
+              $person->address->TypeStreet_id = $request->input("TypeStreet_id");
+              $person->address->street = $request->input("street");
+              $person->address->number = $request->input("number");
+              $person->address->complement = $request->input("complement");
+              $person->address->neighborhood = $request->input("neighborhood");
+              $person->address->zip = Util::CEPNumbers($request->input("zip"));
+              $person->address->City_id = $request->input("City_id");
+              $person->address->save();
             }else{
               LogController::make(
                 "O usuário setou o endereço da pessoa ".$person->id." - '".$person->name."'."
               );
+              $address = new Address;
+              $address->Person_id = $person->id;
+              $address->TypeStreet_id = $request->input("TypeStreet_id");
+              $address->street = $request->input("street");
+              $address->number = $request->input("number");
+              $address->complement = $request->input("complement");
+              $address->neighborhood = $request->input("neighborhood");
+              $address->zip = Util::CEPNumbers($request->input("zip"));
+              $address->City_id = $request->input("City_id");
+              $address->save();
             }
-            $person->address->TypeStreet_id = $request->input("TypeStreet_id");
-            $person->address->street = $request->input("street");
-            $person->address->number = $request->input("number");
-            $person->address->complement = $request->input("complement");
-            $person->address->neighborhood = $request->input("neighborhood");
-            $person->address->zip = Util::CEPNumbers($request->input("zip"));
-            $person->address->City_id = $request->input("City_id");
-            $person->address->save();
             return redirect()->back();
           }
         }
