@@ -324,7 +324,7 @@
             @endif
           </div>
           <div class="box-footer">
-            <a href="{{env("APP_URL")}}" class="btn btn-default">Cancelar</a>
+            <button type="reset" class="btn btn-info pull-right">Cancelar</button>
             <button type="submit" class="btn btn-info pull-right">Atualizar</button>
           </div>
         </div>
@@ -402,7 +402,7 @@
             <input type="text" id="city" class="form-control" placeholder="Cidade"@if($args["person_dashboard"]->address) value="{{ $args["person_dashboard"]->address->city->name}}/{{ $args["person_dashboard"]->address->city->state->UF}}"@endif  readonly="readonly">
           </div>
           <div class="box-footer">
-            <a href="" class="btn btn-default">Cancelar</a>
+            <button type="reset" class="btn btn-info pull-right">Cancelar</button>
             <button type="submit" class="btn btn-info pull-right">Atualizar</button>
           </div>
         </div>
@@ -442,7 +442,7 @@
             @endif
           </div>
           <div class="box-footer">
-            <a href="{{env("APP_URL")}}" class="btn btn-default">Cancelar</a>
+            <button type="reset" class="btn btn-info pull-right">Cancelar</button>
             <button type="submit" class="btn btn-info pull-right">Atualizar</button>
           </div>
         </div>
@@ -466,13 +466,13 @@
           <input type="hidden" name="Person_id" value="{{ $args["person_dashboard"]->id }}">
           <div class="form-group @if ($errors->has('phone')) has-error @endif">
             <label for="name">Telefone</label>
-            <input type="text" id="phone" class="form-control" name="phone" placeholder="(xx) xxxxxxxxx"@if($args["person_dashboard"]->address) value="{{ $args["person_dashboard"]->phones->ddd . $args["person_dashboard"]->phones->number }}"@endif >
+            <input type="text" id="phone" class="form-control" name="phone" placeholder="(xx) xxxxxxxxx"@if($args["person_dashboard"]->phones) value="{{ $args["person_dashboard"]->phones->ddd . $args["person_dashboard"]->phones->number }}"@endif >
             @if ($errors->has('phone'))
               <label class="control-label" for="phone"><i class="fa fa-times-circle-o"></i> {{ $errors->first('phone') }}</label><br>
             @endif
           </div>
           <div class="box-footer">
-            <a href="{{env("APP_URL")}}" class="btn btn-default">Cancelar</a>
+            <button type="reset" class="btn btn-info pull-right">Cancelar</button>
             <button type="submit" class="btn btn-info pull-right">Atualizar</button>
           </div>
         </div>
@@ -513,7 +513,7 @@
             @endif
           </div>
           <div class="box-footer">
-            <a href="{{env("APP_URL")}}" class="btn btn-default">Cancelar</a>
+            <button type="reset" class="btn btn-info pull-right">Cancelar</button>
             <button type="submit" class="btn btn-info pull-right">Atualizar</button>
           </div>
         </div>
