@@ -21,6 +21,19 @@
       <!-- form start -->
       <form role="form" method="post">
         <div class="box-body">
+          <div class="modal modal-warning" role="dialog">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                  <h4 class="modal-title">AVISO!</h4>
+                </div>
+                <div class="modal-body">
+                  <p>Esse cadastro se destina ao uso interno, ou seja, para pessoas que não estão inscritas para o evento em questão!</p>
+                </div>
+              </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+          </div><!-- /.modal -->
           <input type="hidden" name="_token" value="{{ csrf_token() }}">
           <div class="form-group @if ($errors->has('name')) has-error @endif">
             <label for="name">Nome</label>
