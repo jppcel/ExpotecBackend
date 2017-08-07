@@ -8,12 +8,13 @@ use App\Log;
 
 class LogController extends Controller
 {
-    public static function make($text){
+    public static function make($text, $type = 1){
       $adminController = new AdminController;
       if($adminController->verifylogin()){
         $log = new Log;
         $log->User_id = $adminController->getPerson()->user->id;
         $log->text = "[".date("d/m/Y H:i:s")."]: ".$text;
+        $log->type = $type;
         $log->save();
       }
     }
