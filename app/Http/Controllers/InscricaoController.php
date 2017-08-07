@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 // use App\Http\Request\NewSubscription;
 use App\Http\Controllers\PessoaController;
 use App\Http\Controllers\PacoteController;
+use App\Http\Controllers\LogController;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
@@ -101,7 +102,9 @@ class InscricaoController extends Controller
     ], $messages);
     // Se a validação falha, retorna um JSON de erro
     if($validator->fails()){
-      return response()->json(array("ok" => 0, "error" => 1, "typeError" => "1.0", "errors" => $validator->errors()), 422);
+      $validateErros = $validator->errors();
+      LogController::make("Ocorreu um erro de validação ao efetuar o cadastro pelo método InscricaoController@postNew. Infos: ".implode(",\n",$validateErros),2);
+      return response()->json(array("ok" => 0, "error" => 1, "typeError" => "1.0", "errors" => $validateErros), 422);
     }else{
       $CPF = Util::CPFNumbers($request->input("person.document"));
       $CEP = Util::CEPNumbers($request->input("address.zip"));
@@ -145,6 +148,7 @@ class InscricaoController extends Controller
                 $user->remember_token = sha1($request->input("person.document") . date("YmdHis"));
                 $user->save();
                 if($user->id > 0){
+                  LogController::make("Foi efetuado um cadastro pelo método InscricaoController@postNew. Infos: Nome: ".$request->input("name").", CPF: ".$request->input("document").", Email: ".$request->input("email").".",2);
                   Mail::send('mail.ActivationLink', ["link" => env("APP_URL_FRONT")."/token/".$person->id."/".$user->remember_token], function($message) use ($person){
                     $message->to($person->email, $person->name)->subject('Cadastro realizado na '.env("APP_NAME").' - Necessita ativação.');
                   });
@@ -160,9 +164,11 @@ class InscricaoController extends Controller
             }
           }
         }else{
+          LogController::make("Ocorreu um erro de Cidade ao efetuar o cadastro pelo método InscricaoController@postNew. Infos: O código de cidade informado não existe. Nome: ".$request->input("name").", CPF: ".$request->input("document").", Email: ".$request->input("email").".",2);
           return response()->json(array("ok" => 0, "error" => 1, "typeError" => "1.1", "message" => "A cidade informada não existe."), 422);
         }
       }else{
+        LogController::make("Ocorreu um erro de CEP ao efetuar o cadastro pelo método InscricaoController@postNew. Infos: O CEP não foi informado. Nome: ".$request->input("name").", CPF: ".$request->input("document").", Email: ".$request->input("email").".",2);
         return response()->json(array("ok" => 0, "error" => 1, "typeError" => "1.2", "message" => "O CEP não foi informado."), 422);
       }
     }
@@ -214,12 +220,15 @@ class InscricaoController extends Controller
           $person->user->remember_token = sha1($person->document . date("YmdHis"));
           $person->user->is_active = 1;
           $person->user->save();
+          LogController::make("Foi setada a senha de um usuário pelo método InscricaoController@activateInscricao. Infos: Nome: ".$person->name.", CPF: ".$person->document.", Email: ".$person->email.".",2);
           return response()->json(array("ok" => 1, "token" => $person->user->remember_token));
         }
       }else{
+        LogController::make("Foi efetuada uma tentativa de setar a senha de um usuário pelo método InscricaoController@activateInscricao. Infos: Um erro inesperado aconteceu. É possível que já tenha setado a senha. Nome: ".$person->name.", CPF: ".$person->document.", Email: ".$person->email.".",2);
         return response()->json(array("ok" => 0, "error" => 1, "typeError" => "2.1", "message" => "Um erro inesperado aconteceu. É possível que você já tenha setado a senha."), 422);
       }
     }else{
+      LogController::make("Foi efetuada uma tentativa de setar a senha de um usuário pelo método InscricaoController@activateInscricao. Infos: O código de usuário informado não existe. ID: ".$request->input("id"),2);
       return response()->json(array("ok" => 0, "error" => 1, "typeError" => "2.2", "message" => "O usuário informado não existe."), 404);
     }
   }
@@ -240,9 +249,11 @@ class InscricaoController extends Controller
           foreach($person->packages->all() as $package){
             foreach($package->payment->all() as $payment){
               if($payment->paymentStatus == 3){
+                LogController::make("Foi efetuada uma tentativa de selecionar um pacote e geração de código do pagseguro pelo método InscricaoController@makeInscricao. Infos: Já há uma inscrição confirmada para esse usuário. Nome: ".$person->name.", CPF: ".$person->document.", Email: ".$person->email.".",2);
                 return response()->json(array("ok" => 0, "error" => 1, "typeError" => "3.1", "message" => "Já há uma inscrição confirmada para esse usuário."), 422);
                 exit();
               }elseif($payment->paymentStatus == 2){
+                LogController::make("Foi efetuada uma tentativa de selecionar um pacote e geração de código do pagseguro pelo método InscricaoController@makeInscricao. Infos: Há uma inscrição com pagamento pendente para esse usuário. Nome: ".$person->name.", CPF: ".$person->document.", Email: ".$person->email.".",2);
                 return response()->json(array("ok" => 0, "error" => 1, "typeError" => "3.2", "message" => "Há um pagamento pendente de uma inscrição, caso a mesma seja cancelada, poderá ser feita uma nova inscrição."), 422);
               }
             }
@@ -252,13 +263,16 @@ class InscricaoController extends Controller
           if($package){
             if($package->coupon != NULL){
               if($package->coupon != $request->input("coupon")){
+                LogController::make("Foi efetuada uma tentativa de selecionar um pacote e geração de código do pagseguro pelo método InscricaoController@makeInscricao. Infos: O pacote selecionado é privado e é necessário de código de cupom para a aquisição dele. Nome: ".$person->name.", CPF: ".$person->document.", Email: ".$person->email.".",2);
                 return response()->json(array("ok" => 0, "error" => 1, "typeError" => "3.3", "message" => "O pacote selecionado é privado e é necessário de código de cupom para a aquisição dele."), 422);
               }
             }
             if(!PacoteController::verifyLimit($package->id)){
+              LogController::make("Foi efetuada uma tentativa de selecionar um pacote e geração de código do pagseguro pelo método InscricaoController@makeInscricao. Infos: O pacote selecionado não está aceitando mais inscrições. Nome: ".$person->name.", CPF: ".$person->document.", Email: ".$person->email.".",2);
               return response()->json(array("ok" => 0, "error" => 1, "typeError" => "3.5", "message" => "O pacote selecionado não está aceitando mais inscrições."), 422);
             }
           }else{
+            LogController::make("Foi efetuada uma tentativa de selecionar um pacote e geração de código do pagseguro pelo método InscricaoController@makeInscricao. Infos: O pacote informado não existe. Nome: ".$person->name.", CPF: ".$person->document.", Email: ".$person->email.".",2);
             return response()->json(array("ok" => 0, "error" => 1, "typeError" => "3.4", "message" => "O pacote informado não existe."), 422);
           }
 
@@ -323,6 +337,7 @@ class InscricaoController extends Controller
               // $retorno["code"] = $result;
               $retorno["payment_id"] = $payment->id;
               if($package->value == 0.00){
+                LogController::make("Foi efetuada a seleção de um pacote com inscrição gratuíta pelo método InscricaoController@makeInscricao. Infos: Nome: ".$person->name.", CPF: ".$person->document.", Email: ".$person->email.".",2);
                 Mail::send('mail.PaymentNewFree',
     						[
     							"subscription_id" => $payment->subscription->id,
@@ -333,6 +348,7 @@ class InscricaoController extends Controller
     	            $message->to($payment->subscription->person->email, $payment->subscription->person->name)->subject(env("APP_NAME").' - Inscrição Confirmada - #'.$payment->subscription->id);
     	          });
               }else{
+                LogController::make("Foi efetuada a seleção de um pacote e geração de código do pagseguro pelo método InscricaoController@makeInscricao. Infos: O código foi gerado e enviado email com confirmação do novo pedido. Nome: ".$person->name.", CPF: ".$person->document.", Email: ".$person->email.".",2);
                 Mail::send('mail.PaymentNew',
     						[
     							"subscription_id" => $payment->subscription->id,
