@@ -13,7 +13,7 @@
       }
       .label{
         width: 50%;
-        height: 31mm;
+        height: 35mm;
         float:left;
         background: #eee;
       }
