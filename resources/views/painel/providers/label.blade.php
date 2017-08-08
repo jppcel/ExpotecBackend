@@ -7,12 +7,13 @@
         width: 216mm;
         height: 279mm;
         font-family: 'Zilla Slab', serif;
+        border: 0;
+        margin: 0;
+        padding: 0;
       }
       .label{
-        width: 95mm;
-        height: 27mm;
-        padding: 3.45mm 3.3mm;
-        margin: 2mm;
+        width: 50%;
+        height: 31mm;
         float:left;
         background: #eee;
       }
@@ -25,9 +26,6 @@
       }
       .label div.text .name{
         font-size: 1.2rem;
-      	display: flex;
-      	flex-direction: column;
-      	justify-content: center;
         width: 100%;
         height: 56px;
       }
@@ -37,6 +35,7 @@
         text-transform: uppercase;
         display: inline-block;
         width: 100%;
+        line-height: 56px;
       }
       .label div.text .secondLine{
         width: 100%;
@@ -65,14 +64,19 @@
       .label div.qrcode img{
         width: 100%;
       }
+
+      .nextPage{
+        page-break-after: always;
+      }
     </style>
   </head>
   <body>
+    @php($i=0)
     @foreach($subscriptions as $subscription)
       <div class="label">
         <div class="text">
           <div class="name"><span>
-            @if(strlen($subscription->person->name) > 34)
+            @if(strlen($subscription->person->name) > 23)
               @php
                 $subsStr = explode(" ", $subscription->person->name);
                 echo $subsStr[0]." ".$subsStr[(count($subsStr)-1)];
@@ -82,7 +86,9 @@
             @endif
           </span></div>
           <div class="secondLine">
-            @if($subscription->person->college)<div class="college">{{$subscription->person->college}}</div>@endif
+            @if($subscription->person->college)
+              <div class="college">{{$subscription->person->college}}</div>
+            @endif
             <div class="package">{{$subscription->package->name}}</div>
           </div>
         </div>
@@ -91,6 +97,9 @@
           {{$subscription->id}}
         </div>
       </div>
+      @if($i++ == 17)
+      <div class="nextPage"></div>
+      @endif
     @endforeach
   </body>
 </html>

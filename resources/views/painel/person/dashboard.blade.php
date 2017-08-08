@@ -324,7 +324,7 @@
             @endif
           </div>
           <div class="box-footer">
-            <button type="reset" class="btn btn-info pull-right">Cancelar</button>
+            <button type="reset" class="btn btn-info pull-left">Cancelar</button>
             <button type="submit" class="btn btn-info pull-right">Atualizar</button>
           </div>
         </div>
@@ -402,7 +402,7 @@
             <input type="text" id="city" class="form-control" placeholder="Cidade"@if($args["person_dashboard"]->address) value="{{ $args["person_dashboard"]->address->city->name}}/{{ $args["person_dashboard"]->address->city->state->UF}}"@endif  readonly="readonly">
           </div>
           <div class="box-footer">
-            <button type="reset" class="btn btn-info pull-right">Cancelar</button>
+            <button type="reset" class="btn btn-info pull-left">Cancelar</button>
             <button type="submit" class="btn btn-info pull-right">Atualizar</button>
           </div>
         </div>
@@ -442,7 +442,7 @@
             @endif
           </div>
           <div class="box-footer">
-            <button type="reset" class="btn btn-info pull-right">Cancelar</button>
+            <button type="reset" class="btn btn-info pull-left">Cancelar</button>
             <button type="submit" class="btn btn-info pull-right">Atualizar</button>
           </div>
         </div>
@@ -472,7 +472,7 @@
             @endif
           </div>
           <div class="box-footer">
-            <button type="reset" class="btn btn-info pull-right">Cancelar</button>
+            <button type="reset" class="btn btn-info pull-left">Cancelar</button>
             <button type="submit" class="btn btn-info pull-right">Atualizar</button>
           </div>
         </div>
@@ -513,7 +513,7 @@
             @endif
           </div>
           <div class="box-footer">
-            <button type="reset" class="btn btn-info pull-right">Cancelar</button>
+            <button type="reset" class="btn btn-info pull-left">Cancelar</button>
             <button type="submit" class="btn btn-info pull-right">Atualizar</button>
           </div>
         </div>
