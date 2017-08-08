@@ -165,7 +165,7 @@
   <!-- /.content-wrapper -->
   <footer class="main-footer">
     <div class="pull-right hidden-xs">
-      <b>Versão</b> 0.0.3
+      <b>Versão</b> 0.0.4
     </div>
     <strong>&copy; 2017.</strong> Todos os direitos reservados.
   </footer>
