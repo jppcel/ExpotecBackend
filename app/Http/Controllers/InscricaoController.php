@@ -103,7 +103,7 @@ class InscricaoController extends Controller
     // Se a validação falha, retorna um JSON de erro
     if($validator->fails()){
       $validateErros = $validator->errors();
-      LogController::make("Ocorreu um erro de validação ao efetuar o cadastro pelo método InscricaoController@postNew. Infos: ".implode(",\n",$validateErros),2);
+      LogController::make("Ocorreu um erro de validação ao efetuar o cadastro pelo método InscricaoController@postNew. Infos: ".print_r($validateErros),2);
       return response()->json(array("ok" => 0, "error" => 1, "typeError" => "1.0", "errors" => $validateErros), 422);
     }else{
       $CPF = Util::CPFNumbers($request->input("person.document"));
@@ -148,7 +148,7 @@ class InscricaoController extends Controller
                 $user->remember_token = sha1($request->input("person.document") . date("YmdHis"));
                 $user->save();
                 if($user->id > 0){
-                  LogController::make("Foi efetuado um cadastro pelo método InscricaoController@postNew. Infos: Nome: ".$request->input("name").", CPF: ".$request->input("document").", Email: ".$request->input("email").".",2);
+                  LogController::make("Foi efetuado um cadastro pelo método InscricaoController@postNew. Infos: Nome: ".$person->name.", CPF: ".$person->document.", Email: ".$person->email.".",2);
                   Mail::send('mail.ActivationLink', ["link" => env("APP_URL_FRONT")."/token/".$person->id."/".$user->remember_token], function($message) use ($person){
                     $message->to($person->email, $person->name)->subject('Cadastro realizado na '.env("APP_NAME").' - Necessita ativação.');
                   });
@@ -390,7 +390,7 @@ class InscricaoController extends Controller
       $count = 0;
       $subscriptions = Subscription::all();
       $subscriptionsConfirmed = $this->subscriptionsConfirmed();
-      return number_format($subscriptionsConfirmed/count($subscriptions)*100, 2);
+      return number_format(($subscriptionsConfirmed/count($subscriptions))*100, 2);
     }
 
     public function subscriptionsListCount(){
