@@ -87,7 +87,7 @@
           </div>
         </div>
         <div class="qrcode">
-          <img src="{{env("APP_URL")}}/label/qrcode/{{$subscription->id}}">
+          {!!QrCode::format("svg")->size(85)->margin(2)->generate($subscription->id)!!}
           {{$subscription->id}}
         </div>
       </div>
