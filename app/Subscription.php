@@ -21,4 +21,8 @@ class Subscription extends Model
     public function payment(){
       return $this->hasMany("App\Payment", "Subscription_id");
     }
+
+    public function onepayment(){
+      return $this->hasOne("App\Payment", "Subscription_id");
+    }
 }

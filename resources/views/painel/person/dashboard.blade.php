@@ -236,6 +236,7 @@
                           @else
                             <span class="badge bg-green">3 - Pagamento Confirmado</span>
                           @endif
+                          <a class="btn btn-success btn-sm" href="{{url("/label/generate/".$subscription->id)}}" title="Gerar Etiqueta para Impressão" target="_blank"><i class="fa fa-print"></i></a>
                         @endif
                       @endif
                     @endif<br/>{{date("d/m/Y H:i",strtotime($payment->created_at))}}
@@ -256,6 +257,42 @@
         </table>
       </div>
     </div>
+    @if(!$hasPaid)
+      @if($args["adminController"]->hasPermission([4,5]))
+        <!-- Inscrição -->
+        <div class="box box-primary collapsed-box">
+          <div class="box-header with-border">
+            <h3 class="box-title">Efetuar Inscrição</h3>
+            <div class="pull-right box-tools">
+              <button type="button" class="btn btn-primary btn-sm pull-right" data-widget="collapse" data-toggle="tooltip" title="" style="margin-right: 5px;" data-original-title="Collapse">
+                <i class="fa fa-plus"></i></button>
+            </div>
+          </div>
+          <!-- /.box-header -->
+          <!-- form start -->
+          <form role="form" action="{{url("/person/payment/newSubscription")}}" method="post">
+            <div class="box-body">
+              <input type="hidden" name="_token" value="{{ csrf_token() }}">
+              <input type="hidden" name="Person_id" value="{{ $args["person_dashboard"]->id }}">
+              <div class="form-group @if ($errors->has('name')) has-error @endif">
+                @foreach($args["packages"] as $package)
+                  @if($package->coupon == null || $args["is_super_admin"])
+                  <label>
+                    <input type="radio" name="Package_id" value="{{$package->id}}"> {{$package->name}} - R$ {{number_format($package->value,2)}}
+                  </label> <br/>
+                  @endif
+                @endforeach
+              </div>
+              <div class="box-footer">
+                <button type="reset" class="btn btn-info pull-left">Cancelar</button>
+                <button type="submit" class="btn btn-info pull-right">Atualizar</button>
+              </div>
+            </div>
+            <!-- /.box-body -->
+          </form>
+        </div>
+      @endif
+    @endif
     <!-- Cadastro -->
     <div class="box box-primary collapsed-box">
       <div class="box-header with-border">

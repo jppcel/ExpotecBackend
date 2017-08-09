@@ -6,7 +6,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\AdminController;
 use App\Payment;
+use App\Package;
 use App\Subscription;
+use App\Person;
 use App\PaymentUpdateLog;
 
 class PaymentController extends Controller
@@ -244,6 +246,40 @@ class PaymentController extends Controller
  		 }
  		 return redirect()->back();
  	 }
+
+	 /*
+	 	*
+	 	*/
+	 public function newSubscription(Request $request){
+		 $adminController = new AdminController;
+		 $person_user = $adminController->getPerson();
+		 $person = Person::find($request->input("Person_id"));
+		 if($person){
+			 $package = Package::find($request->input("Package_id"));
+			 if($package){
+				 $subscription = new Subscription;
+				 $subscription->Person_id = $person->id;
+				 $subscription->Package_id = $package->id;
+				 $subscription->save();
+
+				 $payment = new Payment;
+				 $payment->Subscription_id = $subscription->id;
+				 $payment->paymentStatus = 3;
+				 if(intval($package->value) == 0){
+					 $payment->isFree = true;
+				 }
+				 $payment->save();
+
+ 				 $paymentLog = new PaymentUpdateLog;
+ 				 $paymentLog->User_id = $person_user->user->id;
+ 				 $paymentLog->Payment_id = $payment->id;
+ 				 $paymentLog->from = 0;
+ 				 $paymentLog->to = 4;
+ 				 $paymentLog->save();
+			 }
+		 }
+		 return redirect()->back();
+	 }
 
 
 }

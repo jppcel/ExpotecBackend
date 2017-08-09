@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Subscription;
+use App\Person;
 
 class SubscriptionController extends Controller
 {
@@ -16,6 +17,7 @@ class SubscriptionController extends Controller
       }
       return false;
     }
+
     public function havePermission($Subscription_id, $Activity_id){
       $subscription = Subscription::find($Subscription_id);
       if($subscription){

@@ -82,12 +82,12 @@
               <!-- Menu Body -->
               <li class="user-body">
                 <div class="row">
-                  <div class="col-xs-6 text-center">
+                  <!-- <div class="col-xs-6 text-center">
                     <a href="#">Alterar Senha</a>
                   </div>
                   <div class="col-xs-6 text-center">
                     <a href="#">Alterar Dados Cadastrais</a>
-                  </div>
+                  </div> -->
                 </div>
                 <!-- /.row -->
               </li>
@@ -137,6 +137,27 @@
           <ul class="treeview-menu">
             <li><a href="{{url("/person/new")}}"><i class="fa fa-user-plus"></i> Nova Pessoa</a></li>
             <li><a href="{{url("/person/list")}}"><i class="fa fa-users"></i> Listar Pessoas</a></li>
+            <li><a href="{{url("/person/list")}}"><i class="fa fa-list"></i> Listar Inscrições</a></li>
+          </ul>
+        </li>
+        <li class="treeview">
+          <a href="#">
+            <i class="fa fa-user"></i>
+            <span>Lista de Entrega</span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="{{url("/label/list/generate/3")}}" target="_blank"><i class="fa fa-users"></i> Pagamento Confirmado</a></li>
+            <li><a href="{{url("/label/list/generate/2")}}" target="_blank"><i class="fa fa-list"></i> Pagamento Pendente</a></li>
+          </ul>
+        </li>
+        <li class="treeview">
+          <a href="#">
+            <i class="fa fa-user"></i>
+            <span>Etiquetas</span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="{{url("/label/generate/3")}}" target="_blank"><i class="fa fa-users"></i> Pagamento Confirmado</a></li>
+            <li><a href="{{url("/label/generate/2")}}" target="_blank"><i class="fa fa-list"></i> Pagamento Pendente</a></li>
           </ul>
         </li>
         @endif

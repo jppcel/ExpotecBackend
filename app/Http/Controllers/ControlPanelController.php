@@ -15,6 +15,7 @@ use Barryvdh\Snappy\Facades\SnappyPdf as PDF;
 use App\Http\Util\Util;
 use App\Subscription;
 use App\Person;
+use App\Package;
 use App\User;
 use App\TypeStreet;
 use App\Permission;
@@ -117,6 +118,7 @@ class ControlPanelController extends Controller
       $args["typestreet"] = TypeStreet::all();
       $args["permission"] = Permission::all();
       $args["adminController"] = new AdminController;
+      $args["packages"] = Package::all();
       $args["person_gravatar"] = $this->get_gravatar($args["person"]->email, 160);
       $args["is_admin"] = $adminController->hasPermission([3,4]);
       $args["is_super_admin"] = $adminController->hasPermission([4]);
@@ -379,6 +381,9 @@ class ControlPanelController extends Controller
       return redirect()->back();
     }
 
+
+
+
     public function person_list(){
       $inscricaoController = new InscricaoController;
       $personController = new PessoaController;
@@ -389,9 +394,61 @@ class ControlPanelController extends Controller
       return view("painel.person.list", compact("args"));
     }
 
+    public function subscription_list(){
+      $inscricaoController = new InscricaoController;
+      $personController = new PessoaController;
+      $args["person"] = AdminController::getPerson();
+      $args["subscriptions"] = Subscription::all();
+      $args["adminController"] = new AdminController;
+      $args["person_gravatar"] = $this->get_gravatar($args["person"]->email, 160);
+      return view("painel.person.subscriptions", compact("args"));
+    }
+
     public function label_generate(){
       $pdf = PDF::loadFile(env("APP_URL").'/label/intern_generate');
       return $pdf->stream();
+    }
+
+
+
+    public function label_subscription_generate($id){
+      $subscriptionController = new SubscriptionController;
+      $subscription = Subscription::find($id);
+      if($subscription){
+        if($subscriptionController->isPaid($id)){
+          $subscriptions = array($subscription);
+          return view("painel.providers.label",compact("subscriptions"));
+        }
+      }
+      return view("painel.providers.errorLabel");
+    }
+
+
+    public function label_intern_generate(){
+      $inscricaoController = new InscricaoController;
+      $subscriptions = $inscricaoController->listSubscriptionsConfirmed();
+      return view("painel.providers.label",compact("subscriptions"));
+    }
+
+
+    public function assign_intern_generate(){
+      $inscricaoController = new InscricaoController;
+      $subscriptions = $inscricaoController->listSubscriptionsConfirmed();
+      return view("painel.providers.assign",compact("subscriptions"));
+    }
+
+
+    public function label_intern_generate_pending(){
+      $inscricaoController = new InscricaoController;
+      $subscriptions = $inscricaoController->listSubscriptionsPending();
+      return view("painel.providers.label",compact("subscriptions"));
+    }
+
+
+    public function assign_intern_generate_pending(){
+      $inscricaoController = new InscricaoController;
+      $subscriptions = $inscricaoController->listSubscriptionsPending();
+      return view("painel.providers.assign",compact("subscriptions"));
     }
 
 

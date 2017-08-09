@@ -382,6 +382,19 @@ class InscricaoController extends Controller
       return $array;
     }
 
+    public function listSubscriptionsPending(){
+      $array = array();
+      $subscriptions = Subscription::all();
+      foreach($subscriptions as $subscription){
+        foreach($subscription->payment->all() as $payment){
+          if($payment->paymentStatus == 2){
+            $array[] = $subscription;
+          }
+        }
+      }
+      return $array;
+    }
+
     public function subscriptionsConfirmed(){
       return count($this->listSubscriptionsConfirmed());
     }
@@ -414,14 +427,6 @@ class InscricaoController extends Controller
         $count += $subscription->package->value;
       }
       return $count;
-    }
-
-
-
-    public function label_intern_generate(){
-      $inscricaoController = new InscricaoController;
-      $subscriptions = $inscricaoController->listSubscriptionsConfirmed();
-      return view("painel.providers.label",compact("subscriptions"));
     }
 
 
