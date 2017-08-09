@@ -236,7 +236,16 @@
                           @else
                             <span class="badge bg-green">3 - Pagamento Confirmado</span>
                           @endif
-                          <a class="btn btn-success btn-sm" href="{{url("/label/generate/".$subscription->id)}}" title="Gerar Etiqueta para Impressão" target="_blank"><i class="fa fa-print"></i></a>
+                          <form action="{{url("/label/generate/one/".$subscription->id)}}" method="post" target="_blank">
+                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                            <input type="hidden" name="Subscription_id" value="{{ $subscription->id }}">
+                            <select name="position">
+                              @for($i=1;$i<=14;$i++)
+                                <option value="{{$i}}">{{$i}}</option>
+                              @endfor
+                            </select>
+                            <button class="btn btn-success btn-sm" href="{{url("/label/generate/".$subscription->id)}}" title="Gerar Etiqueta para Impressão" target="_blank"><i class="fa fa-print"></i></button>
+                          </form>
                         @endif
                       @endif
                     @endif<br/>{{date("d/m/Y H:i",strtotime($payment->created_at))}}

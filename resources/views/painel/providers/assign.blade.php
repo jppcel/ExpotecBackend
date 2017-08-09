@@ -15,6 +15,7 @@
       }
       td{
         text-align: center;
+        font-size: 10px;
       }
     </style>
   </head>
@@ -26,20 +27,20 @@
           <th>Nome</th>
           <th>Pacote</th>
           <th>Status</th>
-          <th width="20%">Assinatura</th>
+          <th width="25%">Assinatura</th>
         </tr>
       </thead>
       <tbody>
         @foreach($subscriptions as $subscription)
           <tr>
             <td>{{$subscription->id}}</td>
-            <td>{{$subscription->person->name}}</td>
-            <td>{{$subscription->package->name}}</td>
+            <td>{{$subscription->name}}</td>
+            <td>{{$subscription->package_name}}</td>
             <td>
-              @if($subscription->onepayment->paymentStatus == 2)
+              @if($subscription->paymentStatus == 2)
                 2 - Pagamento Pendente
               @endif
-              @if($subscription->onepayment->paymentStatus == 3)
+              @if($subscription->paymentStatus == 3)
                 3 - Pagamento Confirmado
               @endif
             </td>

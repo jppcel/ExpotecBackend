@@ -10,6 +10,7 @@ use App\Http\Controllers\LogController;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Mail;
 use Barryvdh\Snappy\Facades\SnappyPdf as PDF;
+use Illuminate\Support\Facades\DB;
 
 // Importado o arquivo Util para uso
 use App\Http\Util\Util;
@@ -411,13 +412,22 @@ class ControlPanelController extends Controller
 
 
 
-    public function label_subscription_generate($id){
+    public function label_subscription_generate(Request $request){
       $subscriptionController = new SubscriptionController;
-      $subscription = Subscription::find($id);
+      $subscription = Subscription::find($request->input("Subscription_id"));
       if($subscription){
-        if($subscriptionController->isPaid($id)){
-          $subscriptions = array($subscription);
-          return view("painel.providers.label",compact("subscriptions"));
+        if($subscriptionController->isPaid($subscription->id)){
+          $subscriptions = array();
+          for($i=0;$i<($request->input("position")-1);$i++){
+            $subscriptions[] = false;
+          }
+          $Subscription["id"] = $subscription->id;
+          $Subscription["name"] = $subscription->person->name;
+          $Subscription["college"] = $subscription->person->college;
+          $Subscription["package_name"] = $subscription->package->name;
+          $Subscription["paymentStatus"] = $subscription->onepayment->paymentStatus;
+          $subscriptions[] = $Subscription;
+          return view("painel.providers.labelone",compact("subscriptions"));
         }
       }
       return view("painel.providers.errorLabel");
@@ -425,29 +435,39 @@ class ControlPanelController extends Controller
 
 
     public function label_intern_generate(){
-      $inscricaoController = new InscricaoController;
-      $subscriptions = $inscricaoController->listSubscriptionsConfirmed();
+      $subscriptions = DB::table("Subscription")
+      ->join('Person', 'Person.id', '=', 'Subscription.Person_id')
+      ->join('Package', 'Package.id', '=', 'Subscription.Package_id')
+      ->join('Payment', 'Payment.Subscription_id', '=', 'Subscription.id')
+      ->select('Subscription.id','Person.name','Person.college','Package.name as package_name','Payment.paymentStatus')
+      ->where('Payment.paymentStatus', '=', '3')
+      ->orderBy("Person.name")
+      ->get();
       return view("painel.providers.label",compact("subscriptions"));
     }
 
 
     public function assign_intern_generate(){
-      $inscricaoController = new InscricaoController;
-      $subscriptions = $inscricaoController->listSubscriptionsConfirmed();
+      $subscriptions = DB::table("Subscription")->join('Person', 'Person.id', '=', 'Subscription.Person_id')->join('Package', 'Package.id', '=', 'Subscription.Package_id')->join('Payment', 'Payment.Subscription_id', '=', 'Subscription.id')->select('Subscription.id','Person.name','Package.name as package_name','Payment.paymentStatus')->where('Payment.paymentStatus', '=', '3')->orderBy("Person.name")->get();
       return view("painel.providers.assign",compact("subscriptions"));
     }
 
 
     public function label_intern_generate_pending(){
-      $inscricaoController = new InscricaoController;
-      $subscriptions = $inscricaoController->listSubscriptionsPending();
+      $subscriptions = DB::table("Subscription")
+      ->join('Person', 'Person.id', '=', 'Subscription.Person_id')
+      ->join('Package', 'Package.id', '=', 'Subscription.Package_id')
+      ->join('Payment', 'Payment.Subscription_id', '=', 'Subscription.id')
+      ->select('Subscription.id','Person.name','Person.college','Package.name as package_name','Payment.paymentStatus')
+      ->where('Payment.paymentStatus', '=', '2')
+      ->orderBy("Person.name")
+      ->get();
       return view("painel.providers.label",compact("subscriptions"));
     }
 
 
     public function assign_intern_generate_pending(){
-      $inscricaoController = new InscricaoController;
-      $subscriptions = $inscricaoController->listSubscriptionsPending();
+      $subscriptions = DB::table("Subscription")->join('Person', 'Person.id', '=', 'Subscription.Person_id')->join('Package', 'Package.id', '=', 'Subscription.Package_id')->join('Payment', 'Payment.Subscription_id', '=', 'Subscription.id')->select('Subscription.id','Person.name','Package.name as package_name','Payment.paymentStatus')->where('Payment.paymentStatus', '=', '2')->orderBy("Person.name")->get();
       return view("painel.providers.assign",compact("subscriptions"));
     }
 

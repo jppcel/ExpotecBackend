@@ -93,25 +93,25 @@
         <div class="label @if($i == 0 || $i == 1) mTopPage @endif  @if($i == 14 || $i == 15) mBottomPage @endif">
           <div class="text">
             <div class="name"><span>
-              @if(strlen($subscription->name) > 23)
+              @if(strlen($subscription["name"]) > 23)
                 @php
-                  $subsStr = explode(" ", $subscription->name);
+                  $subsStr = explode(" ", $subscription["name"]);
                   echo $subsStr[0]." ".$subsStr[(count($subsStr)-1)];
                 @endphp
               @else
-                {{$subscription->name}}
+                {{$subscription["name"]}}
               @endif
             </span></div>
             <div class="secondLine">
-              @if($subscription->college)
-                <div class="college">{{$subscription->college}}</div>
+              @if($subscription["college"])
+                <div class="college">{{$subscription["college"]}}</div>
               @endif
-              <div class="package">{{$subscription->package_name}}</div>
+              <div class="package">{{$subscription["package_name"]}}</div>
             </div>
           </div>
           <div class="qrcode">
-            {!!QrCode::format("svg")->size(85)->margin(2)->generate($subscription->id)!!}
-            {{$subscription->id}}
+            {!!QrCode::format("svg")->size(85)->margin(2)->generate($subscription["id"])!!}
+            {{$subscription["id"]}}
           </div>
         </div>
         @endif

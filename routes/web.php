@@ -45,5 +45,5 @@ Route::group(['prefix' => "label"], function(){
   Route::get("/list/generate/2", "ControlPanelController@assign_intern_generate_pending");
   Route::get("/generate/3", "ControlPanelController@label_intern_generate");
   Route::get("/list/generate/3", "ControlPanelController@assign_intern_generate");
-  Route::get("/generate/{id}", "ControlPanelController@label_subscription_generate");
+  Route::post("/generate/one/{id}", "ControlPanelController@label_subscription_generate");
 });
