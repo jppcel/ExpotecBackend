@@ -401,9 +401,9 @@ class InscricaoController extends Controller
 
     public function subscriptionsRate(){
       $count = 0;
-      $subscriptions = Subscription::all();
+      $persons = Person::all();
       $subscriptionsConfirmed = $this->subscriptionsConfirmed();
-      return number_format(($subscriptionsConfirmed/count($subscriptions))*100, 2);
+      return number_format(($subscriptionsConfirmed/count($persons))*100, 2);
     }
 
     public function subscriptionsListCount(){
