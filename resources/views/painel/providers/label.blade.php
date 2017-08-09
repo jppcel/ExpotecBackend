@@ -12,8 +12,10 @@
         padding: 0;
       }
       .label{
-        width: 50%;
+        width: 49%;
         height: 35mm;
+        margin-left: 1%;
+        margin-bottom: 4mm;
         float:left;
         background: #eee;
       }
@@ -68,12 +70,17 @@
       .nextPage{
         page-break-after: always;
       }
+
+      .mTopPage{
+        margin-top: 17mm;
+      }
     </style>
   </head>
   <body>
     @php($i=0)
     @foreach($subscriptions as $subscription)
-      <div class="label">
+    @if($i == 0)<div>@endif
+      <div class="label @if($i == 0 || $i == 1) mTopPage @endif">
         <div class="text">
           <div class="name"><span>
             @if(strlen($subscription->person->name) > 23)
@@ -97,8 +104,10 @@
           {{$subscription->id}}
         </div>
       </div>
-      @if($i++ == 17)
-      <div class="nextPage"></div>
+      @if($i == 15 || $i == (count($subscriptions)-1))</div>@endif
+      @if($i++ == 13)
+        <div class="nextPage"></div>
+        @php($i=0)
       @endif
     @endforeach
   </body>
