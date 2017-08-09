@@ -82,7 +82,6 @@ class ControlPanelController extends Controller
         if($validator->fails()){
             return redirect()->back()->withErrors($validator->errors());
         }else{
-          LogController::make("O usuário adicionou uma pessoa: ".$person->id." - '".$person->name."'.");
 
           $person = new Person;
           $person->name = $request->input("name");
@@ -94,6 +93,7 @@ class ControlPanelController extends Controller
           }
           $person->univelStudent = 0;
           $person->save();
+            LogController::make("O usuário adicionou uma pessoa: ".$person->id." - '".$person->name."'.");
 
 
           $user = new User;
