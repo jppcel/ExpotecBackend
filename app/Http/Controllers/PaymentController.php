@@ -276,6 +276,17 @@ class PaymentController extends Controller
  				 $paymentLog->from = 0;
  				 $paymentLog->to = 4;
  				 $paymentLog->save();
+
+				 Mail::send('mail.PaymentConfirmedHour',
+				 [
+					 "subscription_id" => $payment->subscription->id,
+					 "person_name" => $payment->subscription->person->name,
+					 "package_name" => $payment->subscription->package->name,
+					 "package_price" => $payment->subscription->package->value,
+					 "user_name" => $person_user->name
+				 ], function($message) use ($payment){
+					 $message->to($payment->subscription->person->email, $payment->subscription->person->name)->subject(env("APP_NAME").' - Pagamento Confirmado na Hora - Inscrição #'.$payment->subscription->id.' confirmada');
+				 });
 			 }
 		 }
 		 return redirect()->back();
