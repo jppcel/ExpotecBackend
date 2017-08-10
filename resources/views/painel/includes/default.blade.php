@@ -195,7 +195,7 @@
   <!-- /.content-wrapper -->
   <footer class="main-footer">
     <div class="pull-right hidden-xs">
-      <b>Versão</b> 0.0.6
+      <b>Versão</b> 0.0.7b BETA
     </div>
     <strong>&copy; 2017.</strong> Todos os direitos reservados.
   </footer>
