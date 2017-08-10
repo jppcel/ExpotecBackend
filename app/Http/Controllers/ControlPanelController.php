@@ -17,11 +17,13 @@ use App\Http\Util\Util;
 use App\Subscription;
 use App\Person;
 use App\Package;
+use App\Activity;
 use App\User;
 use App\TypeStreet;
 use App\Permission;
 use App\UserPermission;
 use App\Phone;
+use App\Check;
 
 class ControlPanelController extends Controller
 {
@@ -93,7 +95,7 @@ class ControlPanelController extends Controller
           }
           $person->univelStudent = 0;
           $person->save();
-            LogController::make("O usuário adicionou uma pessoa: ".$person->id." - '".$person->name."'.");
+          LogController::make("O usuário adicionou uma pessoa: ".$person->id." - '".$person->name."'.");
 
 
           $user = new User;
@@ -118,6 +120,7 @@ class ControlPanelController extends Controller
       $args["person"] = AdminController::getPerson();
       $args["typestreet"] = TypeStreet::all();
       $args["permission"] = Permission::all();
+      $args["checks"] = Check::where("Subscription_id","=",$id)->get();
       $args["adminController"] = new AdminController;
       $args["packages"] = Package::all();
       $args["person_gravatar"] = $this->get_gravatar($args["person"]->email, 160);
@@ -469,6 +472,20 @@ class ControlPanelController extends Controller
     public function assign_intern_generate_pending(){
       $subscriptions = DB::table("Subscription")->join('Person', 'Person.id', '=', 'Subscription.Person_id')->join('Package', 'Package.id', '=', 'Subscription.Package_id')->join('Payment', 'Payment.Subscription_id', '=', 'Subscription.id')->select('Subscription.id','Person.name','Package.name as package_name','Payment.paymentStatus')->where('Payment.paymentStatus', '=', '2')->orderBy("Person.name")->get();
       return view("painel.providers.assign",compact("subscriptions"));
+    }
+
+
+
+
+
+    public function check_new(){
+      $inscricaoController = new InscricaoController;
+      $personController = new PessoaController;
+      $args["person"] = AdminController::getPerson();
+      $args["activities"] = Activity::all();
+      $args["adminController"] = new AdminController;
+      $args["person_gravatar"] = $this->get_gravatar($args["person"]->email, 160);
+      return view("painel.check.new", compact("args"));
     }
 
 

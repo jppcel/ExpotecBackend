@@ -16,6 +16,11 @@ Route::get("/login", "AdminController@login");
 Route::get("/logout", "AdminController@logout");
 Route::post("/login", "AdminController@logar");
 
+
+Route::group(['prefix' => "check", 'middleware' => ['HasPermission_Check']], function(){
+  Route::get("/new", "ControlPanelController@check_new");
+});
+
 Route::group(['prefix' => "person", 'middleware' => ['HasPermission_Person']], function(){
   Route::get("/new", "ControlPanelController@person_new");
   Route::post("/new", "ControlPanelController@person_new_post");

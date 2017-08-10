@@ -63,6 +63,7 @@ Route::group(['prefix' => 'mobile'], function(){
   Route::group(['prefix' => 'check'], function(){
     Route::group(['prefix' => 'new'], function(){
       Route::post("/", "CheckController@newCheck");
+      Route::post("/panel", "CheckController@newCheckByPanel")->middleware(["verifylogin","HasPermission_Check"]);
       Route::post("/list", "CheckController@listCheck");
     });
   });

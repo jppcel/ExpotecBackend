@@ -114,6 +114,57 @@ class CheckController extends Controller
        }
 
 
+
+       /*
+        *  @route: /api/mobile/check/new/panel
+        *
+        *  @method: Post
+        *
+        *  @param: integer Activity_id => Activity id
+        *  @param: integer Subscription_id => Subscription id
+        *  @param: integer type => Type of check: 1 for in, 2 for out
+        */
+        public function newCheckByPanel(Request $request){
+          $adminController = new AdminController;
+          $person = $adminController->getPerson();
+          if($person){
+            $activity = Activity::find($request->input("Activity_id"));
+            if($activity){
+              $subscription = Subscription::find($request->input("Subscription_id"));
+              if($subscription){
+                $subscriptionController = new SubscriptionController;
+                if($subscriptionController->isPaid($request->input("Subscription_id"))){
+                  if($subscriptionController->havePermission($request->input("Subscription_id"), $request->input("Activity_id"))){
+                    if(!empty($request->input("type"))){
+                      $check = new Check;
+                      $check->type = $this->typeCheck[$request->input("type")];
+                      $check->User_id = 1;
+                      $check->Subscription_id = $request->input("Subscription_id");
+                      $check->Activity_id = $request->input("Activity_id");
+                      $check->checked_at = date("Y-m-d H:i:s",time()-(60*60*3));
+                      $check->save();
+                      return response()->json(array("ok" => 1));
+                    }else{
+                      return response()->json(array("ok" => 0, "error" => 1, "typeError" => "10.1", "message" => "É necessário selecionar qual é o tipo de registro que deseja realizar: check-in ou check-out."));
+                    }
+                  }else{
+                    return response()->json(array("ok" => 0, "error" => 1, "typeError" => "10.2", "message" => "A inscrição informada não tem acesso a essa atividade."));
+                  }
+                }else{
+                  return response()->json(array("ok" => 0, "error" => 1, "typeError" => "10.3", "message" => "A inscrição informada não está confirmada."));
+                }
+              }else{
+                return response()->json(array("ok" => 0, "error" => 1, "typeError" => "10.4", "message" => "A inscrição informada não existe."));
+              }
+            }else{
+              return response()->json(array("ok" => 0, "error" => 1, "typeError" => "10.5", "message" => "A atividade informada não existe."));
+            }
+          }else{
+            return response()->json(array("ok" => 0, "error" => 1, "typeError" => "0.0", "message" => "Usuário deslogado."), 401);
+          }
+        }
+
+
        /*
         *  @route: /api/mobile/check/new/list
         *

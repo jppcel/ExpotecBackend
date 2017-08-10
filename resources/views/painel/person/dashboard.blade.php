@@ -455,6 +455,41 @@
         <!-- /.box-body -->
       </form>
     </div>
+
+
+    <!-- Checks -->
+    <div class="box box-primary collapsed-box">
+      <div class="box-header with-border">
+        <h3 class="box-title">Registros de Presenças</h3>
+        <div class="pull-right box-tools">
+          <button type="button" class="btn btn-primary btn-sm pull-right" data-widget="collapse" data-toggle="tooltip" title="" style="margin-right: 5px;" data-original-title="Collapse">
+            <i class="fa fa-plus"></i></button>
+        </div>
+      </div>
+      <!-- /.box-header -->
+      <div class="box-body">
+        <table class="table table-hover" width="100%">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Atividade</th>
+              <th>Tipo</th>
+              <th>Data e Hora</th>
+            </tr>
+          </thead>
+          <tbody>
+            @foreach($args["checks"] as $check)
+              <tr>
+                <td>{{$check->id}}</td>
+                <td>{{$check->activity->name}}</td>
+                <td>{{($check->type == "in") ? "Entrada" : "Saída"}}</td>
+                <td>{{date("d/m/Y H:i:s",strtotime($check->checked_at))}}</td>
+              </tr>
+            @endforeach
+          </tbody>
+        </table>
+      </div>
+    </div>
   </section>
   <section class="col-lg-4 col-md-4 connectedSortable">
     <!-- Alterar Senha -->

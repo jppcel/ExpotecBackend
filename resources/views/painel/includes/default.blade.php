@@ -137,28 +137,37 @@
           <ul class="treeview-menu">
             <li><a href="{{url("/person/new")}}"><i class="fa fa-user-plus"></i> Nova Pessoa</a></li>
             <li><a href="{{url("/person/list")}}"><i class="fa fa-users"></i> Listar Pessoas</a></li>
-            <li><a href="{{url("/person/list")}}"><i class="fa fa-list"></i> Listar Inscrições</a></li>
+            <li><a href="{{url("/person/subscriptions")}}"><i class="fa fa-list"></i> Listar Inscrições</a></li>
           </ul>
         </li>
         <li class="treeview">
           <a href="#">
-            <i class="fa fa-user"></i>
+            <i class="fa fa-list"></i>
             <span>Lista de Entrega</span>
           </a>
           <ul class="treeview-menu">
-            <li><a href="{{url("/label/list/generate/3")}}" target="_blank"><i class="fa fa-users"></i> Pagamento Confirmado</a></li>
-            <li><a href="{{url("/label/list/generate/2")}}" target="_blank"><i class="fa fa-list"></i> Pagamento Pendente</a></li>
+            <li><a href="{{url("/label/list/generate/3")}}" target="_blank"><i class="fa fa-check-square"></i> Pagamento Confirmado</a></li>
+            <li><a href="{{url("/label/list/generate/2")}}" target="_blank"><i class="fa fa-spinner"></i> Pagamento Pendente</a></li>
           </ul>
         </li>
         <li class="treeview">
           <a href="#">
-            <i class="fa fa-user"></i>
+            <i class="fa fa-tag"></i>
             <span>Etiquetas</span>
           </a>
           <ul class="treeview-menu">
-            <li><a href="{{url("/label/generate/3")}}" target="_blank"><i class="fa fa-users"></i> Pagamento Confirmado</a></li>
-            <li><a href="{{url("/label/generate/2")}}" target="_blank"><i class="fa fa-list"></i> Pagamento Pendente</a></li>
+            <li><a href="{{url("/label/generate/3")}}" target="_blank"><i class="fa fa-check-square"></i> Pagamento Confirmado</a></li>
+            <li><a href="{{url("/label/generate/2")}}" target="_blank"><i class="fa fa-spinner"></i> Pagamento Pendente</a></li>
           </ul>
+        </li>
+        @endif
+
+        @if($args["adminController"]->hasPermission([2,4]))
+        <li>
+          <a href="{{url("/check/new")}}">
+            <i class="fa fa-flag-checkered"></i>
+            <span>Registro de Presença</span>
+          </a>
         </li>
         @endif
       </ul>
