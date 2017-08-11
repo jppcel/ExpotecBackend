@@ -120,7 +120,14 @@ class ControlPanelController extends Controller
       $args["person"] = AdminController::getPerson();
       $args["typestreet"] = TypeStreet::all();
       $args["permission"] = Permission::all();
-      $args["checks"] = Check::where("Subscription_id","=",$id)->get();
+      $args["checks"] = array();
+      foreach($args["person_dashboard"]->packages->all() as $package){
+        foreach($subscription->payment->all() as $payment){
+          if($payment->paymentStatus == 3){
+            $args["checks"][] = Check::where("Subscription_id","=",$subscription->id)->get();
+          }
+        }
+      }
       $args["adminController"] = new AdminController;
       $args["packages"] = Package::all();
       $args["person_gravatar"] = $this->get_gravatar($args["person"]->email, 160);

@@ -478,13 +478,15 @@
             </tr>
           </thead>
           <tbody>
-            @foreach($args["checks"] as $check)
+            @foreach($args["checks"] as $checks)
+              @foreach($checks as $check)
               <tr>
                 <td>{{$check->id}}</td>
                 <td>{{$check->activity->name}}</td>
                 <td>{{($check->type == "in") ? "Entrada" : "Saída"}}</td>
                 <td>{{date("d/m/Y H:i:s",strtotime($check->checked_at))}}</td>
               </tr>
+              @endforeach
             @endforeach
           </tbody>
         </table>
