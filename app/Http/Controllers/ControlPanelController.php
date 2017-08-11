@@ -121,10 +121,10 @@ class ControlPanelController extends Controller
       $args["typestreet"] = TypeStreet::all();
       $args["permission"] = Permission::all();
       $args["checks"] = array();
-      foreach($args["person_dashboard"]->packages->all() as $package){
+      foreach($args["person_dashboard"]->packages->all() as $subscription){
         foreach($subscription->payment->all() as $payment){
           if($payment->paymentStatus == 3){
-            $args["checks"][] = Check::where("Subscription_id","=",$subscription->id)->get();
+            $args["checks"][] = Check::where("Subscription_id","=",$subscription->id)->orderBy("checked_at")->get();
           }
         }
       }
@@ -489,7 +489,7 @@ class ControlPanelController extends Controller
       $inscricaoController = new InscricaoController;
       $personController = new PessoaController;
       $args["person"] = AdminController::getPerson();
-      $args["activities"] = Activity::all();
+      $args["activities"] = Activity::orderBy("startDate")->get();
       $args["adminController"] = new AdminController;
       $args["person_gravatar"] = $this->get_gravatar($args["person"]->email, 160);
       return view("painel.check.new", compact("args"));
