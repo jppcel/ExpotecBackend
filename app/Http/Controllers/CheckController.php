@@ -87,7 +87,7 @@ class CheckController extends Controller
                    if(!empty($request->input("type"))){
                      $check = new Check;
                      $check->type = $this->typeCheck[$request->input("type")];
-                     $check->User_id = 1;
+                     $check->User_id = $person->user->id;
                      $check->Subscription_id = $request->input("Subscription_id");
                      $check->Activity_id = $request->input("Activity_id");
                      $check->checked_at = date("Y-m-d H:i:s");
@@ -138,7 +138,7 @@ class CheckController extends Controller
                     if(!empty($request->input("type"))){
                       $check = new Check;
                       $check->type = $this->typeCheck[$request->input("type")];
-                      $check->User_id = 1;
+                      $check->User_id = $person->user->id;
                       $check->Subscription_id = $request->input("Subscription_id");
                       $check->Activity_id = $request->input("Activity_id");
                       $check->checked_at = date("Y-m-d H:i:s",time()-(60*60*3));
@@ -196,7 +196,7 @@ class CheckController extends Controller
                         if(!empty($Check["type"])){
                           $check = new Check;
                           $check->type = $this->typeCheck[$Check["type"]];
-                          $check->User_id = 1;
+                          $check->User_id = $person->user->id;
                           $check->Subscription_id = $Check["Subscription_id"];
                           $check->Activity_id = $Check["Activity_id"];
                           $check->checked_at = $Check["checked_at"];
