@@ -141,7 +141,7 @@ class CheckController extends Controller
                       $check->User_id = $person->user->id;
                       $check->Subscription_id = $request->input("Subscription_id");
                       $check->Activity_id = $request->input("Activity_id");
-                      $check->checked_at = date("Y-m-d H:i:s",time()-(60*60*3));
+                      $check->checked_at = date("Y-m-d H:i:s",time()+(60*60*3));
                       $check->save();
                       return response()->json(array("ok" => 1));
                     }else{
