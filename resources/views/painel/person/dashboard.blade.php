@@ -484,7 +484,7 @@
                 <td>{{$check->id}}</td>
                 <td>{{$check->activity->name}}</td>
                 <td>{{($check->type == "in") ? "Entrada" : "Saída"}}</td>
-                <td>{{date("d/m/Y H:i:s",strtotime($check->checked_at))}}</td>
+                <td>{{date("d/m/Y H:i:s",strtotime($check->checked_at)-(60*60*3))}}</td>
               </tr>
               @endforeach
             @endforeach
