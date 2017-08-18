@@ -132,14 +132,20 @@ class CertificateController extends Controller
             if($participations){
               // $select = DB::table("Certificate")->selectRaw("SEC_TO_TIME(SUM(TIME_TO_SEC(hours))) as hours")->where(["Subscription_id" => 34])->toSql();
 
-              $select = DB::table("Participation")->selectRaw("SEC_TO_TIME(SUM(TIME_TO_SEC(hours))) as hours")->where(["Subscription_id" => 34])->get();
+              $select = DB::table("Participation")->selectRaw("SEC_TO_TIME(SUM(TIME_TO_SEC(hours))) as hours")->where(["Subscription_id" => $subscription->id])->first();
+              // echo $select."<br><br><br>";
+              // print_r($select);
               if($select){
-                if($select[0]->hours != "00:00:00"){
-                  $certificate = new Certificate;
-                  $certificate->Subscription_id = $subscription->id;
-                  $certificate->hours = $select[0]->hours;
-                  $certificate->key = hash("crc32", env("APP_NAME")."_".date("Y")."_".$subscription->id);
-                  $certificate->save();
+                if($select->hours){
+                  // echo $select->hours;
+                  if($select->hours != "00:00:00"){
+                    $certificate = new Certificate;
+                    $certificate->Subscription_id = $subscription->id;
+                    $certificate->hours = $select->hours;
+                    $certificate->key = hash("crc32", env("APP_NAME")."_".date("Y")."_".$subscription->id);
+                    $certificate->save();
+                    echo " - ".$certificate->hours."<br><br>";
+                  }
                 }
               }
             }
