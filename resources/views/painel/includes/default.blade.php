@@ -229,7 +229,7 @@
   <!-- /.content-wrapper -->
   <footer class="main-footer">
     <div class="pull-right hidden-xs">
-      <b>Versão</b> 0.0.8 BETA
+      <b>Versão</b> 0.0.9 BETA
     </div>
     <strong>&copy; 2017.</strong> Todos os direitos reservados.
   </footer>
