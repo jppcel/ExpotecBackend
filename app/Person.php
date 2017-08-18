@@ -26,6 +26,6 @@ class Person extends Model
     }
 
     public function packages(){
-      return $this->hasMany("App\Subscription");
+      return $this->hasMany("App\Subscription", "Person_id");
     }
 }

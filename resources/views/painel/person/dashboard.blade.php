@@ -492,6 +492,45 @@
         </table>
       </div>
     </div>
+
+
+    <!-- Certificados -->
+    <div class="box box-primary collapsed-box">
+      <div class="box-header with-border">
+        <h3 class="box-title">Certificados</h3>
+        <div class="pull-right box-tools">
+          <button type="button" class="btn btn-primary btn-sm pull-right" data-widget="collapse" data-toggle="tooltip" title="" style="margin-right: 5px;" data-original-title="Collapse">
+            <i class="fa fa-plus"></i></button>
+        </div>
+      </div>
+      <!-- /.box-header -->
+      <div class="box-body">
+        <table class="table table-hover" width="100%">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Inscrição</th>
+              <th>Evento</th>
+              <th>Horas</th>
+              <th>Chave</th>
+            </tr>
+          </thead>
+          <tbody>
+            @foreach($args["person_dashboard"]->packages->all() as $Subscription)
+              @if($Subscription->certificate)
+                <tr>
+                  <td>{{$Subscription->certificate["id"]}}</td>
+                  <td>{{$Subscription->id}}</td>
+                  <td>{{$Subscription->package->event->name}}</td>
+                  <td>{{$Subscription->certificate["hours"]}}</td>
+                  <td>{{$Subscription->certificate["key"]}}</td>
+                </tr>
+              @endif
+            @endforeach
+          </tbody>
+        </table>
+      </div>
+    </div>
   </section>
   <section class="col-lg-4 col-md-4 connectedSortable">
     <!-- Alterar Senha -->

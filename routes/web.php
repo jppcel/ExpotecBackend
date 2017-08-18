@@ -52,3 +52,10 @@ Route::group(['prefix' => "label"], function(){
   Route::get("/list/generate/3", "ControlPanelController@assign_intern_generate");
   Route::post("/generate/one/{id}", "ControlPanelController@label_subscription_generate");
 });
+
+Route::group(['prefix' => "certificate"], function(){
+  Route::get("/growChecks", "CertificateController@growChecks")->middleware(["HasPermission_Certificate","HasPermission_Admin"]);
+  Route::get("/calculateHours", "CertificateController@calculateHours")->middleware(["HasPermission_Certificate","HasPermission_Admin"]);
+  Route::get("/deleteParticipations", "CertificateController@deleteParticipations")->middleware(["HasPermission_Certificate","HasPermission_Admin"]);
+  Route::get("/generate", "CertificateController@generateCertificates")->middleware(["HasPermission_Certificate","HasPermission_Admin"]);
+});

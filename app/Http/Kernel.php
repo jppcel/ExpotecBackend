@@ -64,5 +64,6 @@ class Kernel extends HttpKernel
         'HasPermission_Person' => \App\Http\Middleware\HasPermission_Person::class,
         'HasPermission_Admin' => \App\Http\Middleware\HasPermission_Admin::class,
         'HasPermission_Check' => \App\Http\Middleware\HasPermission_Check::class,
+        'HasPermission_Certificate' => \App\Http\Middleware\HasPermission_Certificate::class,
     ];
 }
