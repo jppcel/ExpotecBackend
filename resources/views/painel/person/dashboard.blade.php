@@ -480,12 +480,14 @@
           <tbody>
             @foreach($args["checks"] as $checks)
               @foreach($checks as $check)
-              <tr>
-                <td>{{$check->id}}</td>
-                <td>{{$check->activity->name}}</td>
-                <td>{{($check->type == "in") ? "Entrada" : "Saída"}}</td>
-                <td>{{date("d/m/Y H:i:s",strtotime($check->checked_at)-(60*60*3))}}</td>
-              </tr>
+              @if($check->registryType == 1 || $check->registryType == 3)
+                <tr>
+                  <td>{{$check->id}}</td>
+                  <td>{{$check->activity->name}}</td>
+                  <td>{{($check->type == "in") ? "Entrada" : "Saída"}}</td>
+                  <td>{{date("d/m/Y H:i:s",strtotime($check->checked_at)-(60*60*3))}}</td>
+                </tr>
+              @endif
               @endforeach
             @endforeach
           </tbody>
