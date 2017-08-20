@@ -21,6 +21,9 @@
     .modal{
       text-align: center;
     }
+    #checks th, #checks td.center{
+      text-align: center;
+    }
   </style>
 @endsection
 
@@ -468,10 +471,11 @@
       </div>
       <!-- /.box-header -->
       <div class="box-body">
-        <table class="table table-hover" width="100%">
+        <table class="table table-hover" id="checks" width="100%">
           <thead>
             <tr>
               <th>#</th>
+              <th>Inscrição</th>
               <th>Atividade</th>
               <th>Tipo</th>
               <th>Data e Hora</th>
@@ -483,11 +487,12 @@
               @foreach($checks as $check)
               @if($check->registryType == 1 || $check->registryType == 3)
                 <tr>
-                  <td>{{$check->id}}</td>
+                  <td class="center">{{$check->id}}</td>
+                  <td class="center">{{$check->subscription->id}}</td>
                   <td>{{$check->activity->name}}</td>
-                  <td>{{($check->type == "in") ? "Entrada" : "Saída"}}</td>
-                  <td>{{date("d/m/Y H:i:s",strtotime($check->checked_at)-(60*60*3))}}</td>
-                  @if($args["adminController"]->hasPermission([3,4]) && !$check->subscription->certificate)<td><a href="{{url("/person/check/delete/".$check->id)}}" class='btn btn-danger btn-sm'><i class="fa fa-times"></i></a></td>@endif
+                  <td class="center">{{($check->type == "in") ? "Entrada" : "Saída"}}</td>
+                  <td class="center">{{date("d/m/Y H:i:s",strtotime($check->checked_at)-(60*60*3))}}</td>
+                  @if($args["adminController"]->hasPermission([3,4]) && !$check->subscription->certificate)<td class="center"><a href="{{url("/person/check/delete/".$check->id)}}" class='btn btn-danger btn-sm'><i class="fa fa-times"></i></a></td>@endif
                 </tr>
               @endif
               @endforeach
@@ -702,7 +707,9 @@
             }
           @endphp
           @if($thisPaid)
-            @if(count($subscription->participates->all()) == 0)
+            <h5>#<strong>{{$subscription->id}}</strong></h5>
+            @if(count($subscription->checks->all()) == 0)<span>Não há registro de presença.</span>@endif
+            @if(count($subscription->participates->all()) == 0 && count($subscription->checks->all()) > 0)
               <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalReGrow_{{$subscription->id}}"><i class="fa fa-clone"></i> Re-geminar Registros</button><br/>
               <!-- Modal Re-geminação -->
               <div class="modal fade modal-danger" id="modalReGrow_{{$subscription->id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -725,10 +732,10 @@
                 </div>
               </div>
             @endif
-            @if(count($subscription->participates->all()) == 0 && !$subscription->certificate)
+            @if(count($subscription->participates->all()) == 0 && !$subscription->certificate && count($subscription->checks->all()) > 0)
               <a class="btn btn-success" href="{{url("/certificate/calculateHours/".$subscription->id)}}" title="Efetuar o Calculo das Horas"  data-toggle="tooltip" data-original-title="Serve para calcular as horas da inscrição."><i class="fa fa-calculator"></i> Calcular Horas <span class="badge bg-orange">?</span></a><br/>
             @endif
-            @if(count($subscription->participates->all()) > 0 && !$subscription->certificate)
+            @if(count($subscription->participates->all()) > 0 && !$subscription->certificate && count($subscription->checks->all()) > 0)
               <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalApagarHoras_{{$subscription->id}}"><i class="fa fa-eraser"></i> Apagar Horas</button><br/>
               <!-- Modal Calcular Horas -->
               <div class="modal fade modal-danger" id="modalApagarHoras_{{$subscription->id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -741,7 +748,7 @@
                     <div class="modal-body">
                       <h2>Você tem certeza que pretende fazer isso?</h2><br>
                       O inscrito terá as suas horas já calculadas excluídas, assim fazendo necessário re-criar calcular as horas e criar o novo certificado.
-                      <h4>Você deseja ainda assim efetuar a re-geminação?</h4>
+                      <h4>Você deseja ainda assim apagar as horas calculadas?</h4>
                     </div>
                     <div class="modal-footer">
                       <button type="button" class="btn btn-success" data-dismiss="modal">Não quero mais</button>
@@ -752,7 +759,7 @@
               </div>
             @endif
 
-            @if(!$subscription->certificate && count($subscription->participates->all()) > 0)
+            @if(!$subscription->certificate && count($subscription->participates->all()) > 0 && count($subscription->checks->all()) > 0)
               <a class="btn btn-success" href="{{url("/certificate/generate/".$subscription->id)}}" title="Gerar Certificado" data-toggle="tooltip" data-original-title="Serve para gerar um certificado para a inscrição."><i class="fa fa-certificate"></i> Gerar Certificado <span class="badge bg-orange">?</span></a><br/>
             @endif
 
@@ -769,7 +776,7 @@
                     <div class="modal-body">
                       <h2>Você tem certeza que pretende fazer isso?</h2><br>
                       O inscrito terá o seu certificado excluído e será necessário gerar um novo certificado posteriormente.
-                      <h4>Você deseja ainda assim efetuar a exclusão?</h4>
+                      <h4>Você deseja ainda assim efetuar a exclusão do certificado?</h4>
                     </div>
                     <div class="modal-footer">
                       <button type="button" class="btn btn-success" data-dismiss="modal">Não quero mais</button>
