@@ -66,5 +66,6 @@ Route::group(['prefix' => "certificate"], function(){
   Route::get("/deleteParticipations/{id}", "CertificateController@deleteParticipations")->middleware(["HasPermission_Certificate","HasPermission_Admin"]);
   Route::get("/generate", "CertificateController@generateCertificates")->middleware(["HasPermission_Certificate","HasPermission_Admin"]);
   Route::get("/generate/{id}", "CertificateController@generateCertificates")->middleware(["HasPermission_Certificate","HasPermission_Admin"]);
+  Route::get("/delete", "CertificateController@deleteCertificate")->middleware(["HasPermission_Certificate","HasPermission_Admin"]);
   Route::get("/delete/{id}", "CertificateController@deleteCertificate")->middleware(["HasPermission_Certificate","HasPermission_Admin"]);
 });

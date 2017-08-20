@@ -219,17 +219,24 @@ class CertificateController extends Controller
       return redirect("/");
     }
 
-    public function deleteCertificate($id){
-      $person = AdminController::getPerson();
-      if($person){
-        $subscription = Subscription::find($id);
-        if($subscription){
-          if($subscription->certificate){
-            $subscription->certificate->delete();
-            LogController::make("O usuário deletou o certificado do inscrito '#".$subscription->id." - ".$subscription->person->name."' no evento.");
-            return redirect()->back();
+    public function deleteCertificate($id = null){
+      if($id){
+        $person = AdminController::getPerson();
+        if($person){
+          $subscription = Subscription::find($id);
+          if($subscription){
+            if($subscription->certificate){
+              $subscription->certificate->delete();
+              LogController::make("O usuário deletou o certificado do inscrito '#".$subscription->id." - ".$subscription->person->name."' no evento.");
+              return redirect()->back();
+            }
           }
         }
+      }else{
+        foreach(Certificate::all() as $certificate){
+          $certificate->delete();
+        }
+        LogController::make("O usuário deletou todos os certificados do evento.");
       }
       return redirect("/");
     }
