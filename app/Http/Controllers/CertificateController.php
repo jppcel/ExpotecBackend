@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\PessoaController;
+use App\Http\Controllers\LogController;
 use Illuminate\Support\Facades\DB;
 use App\Subscription;
 use App\Participation;
@@ -17,10 +18,14 @@ class CertificateController extends Controller
       $this->middleware("verifylogin");
       $_SESSION["redirectLoopPrevent"] = 0;
     }
-    public function calculateHours(){
+    public function calculateHours($id = null){
       $person = AdminController::getPerson();
       if($person){
-        $subscriptions = Subscription::all();
+        if($id){
+          $subscriptions[] = Subscription::find($id);
+        }else{
+          $subscriptions = Subscription::all();
+        }
         foreach($subscriptions as $subscription){
           $checks = array();
           $activities = array();
@@ -73,18 +78,34 @@ class CertificateController extends Controller
             $participation->save();
           }
         }
+        if($id){
+          LogController::make("O usuário fez o cálculo das horas da participação do inscrito '#".$subscriptions[0]->id." - ".$subscriptions[0]->person->name."' no evento.");
+          return redirect("/person/dashboard/".$subscriptions[0]->person->id);
+        }
+        LogController::make("O usuário fez o cálculo das horas das participações dos inscritos no evento.");
         return redirect("/");
       }else{
         return response()->json(array("ok" => 0, "error" => 1, "typeError" => "0.0", "message" => "Usuário deslogado."), 422);
       }
     }
 
-    public function growChecks(){
+    public function growChecks($id = null){
       $person = AdminController::getPerson();
       if($person){
         $activities = Activity::all();
+        if($id){
+          foreach(Check::where(["Person_id" => $id]) as $check){
+            $check->delete();
+          }
+          $subscription = Subscription::find($id);
+        }
         foreach($activities as $activity){
-          foreach($activity->checks->all() as $check){
+          if($id){
+            $checks = Check::where(["Subscription_id" => $id, "Activity_id" => $activity->id])->get();
+          }else{
+            $checks = $activity->checks->all();
+          }
+          foreach($checks as $check){
             $checksOk = Check::where([
               "Subscription_id" =>  $check->Subscription_id,
               "Activity_id" =>  $check->Activity_id,
@@ -111,23 +132,61 @@ class CertificateController extends Controller
             }
           }
         }
+        if($id){
+          LogController::make("O usuário efetuou a geminação dos registros de presença do inscrito '#".$subscription->id." - ".$subscription->person->name."' no evento.");
+          return redirect("/person/dashboard/".$subscription->person->id);
+        }else{
+          LogController::make("O usuário efetuou a geminação dos registros de presença dos inscritos do evento.");
+        }
         return redirect("/");
       }else{
         return response()->json(array("ok" => 0, "error" => 1, "typeError" => "0.0", "message" => "Usuário deslogado."), 422);
       }
     }
 
-    public function deleteParticipations(){
-      foreach(Participation::all() as $participation){
+    public function deleteParticipations($id = null){
+      if($id){
+        $participations = Participation::where(["Subscription_id" => $id])->get();
+        $subscription = Subscription::find($id);
+      }else{
+        $participations = Participation::all();
+      }
+      foreach($participations as $participation){
         $participation->delete();
+      }
+      if($id){
+        LogController::make("O usuário deletou as horas calculadas das presenças do inscrito '#".$subscription->id." - ".$subscription->person->name."' no evento.");
+        return redirect("/person/dashboard/".$subscription->person->id);
+      }else{
+        LogController::make("O usuário deletou as horas calculadas das presenças dos inscritos do evento.");
       }
       return redirect("/");
     }
 
-    public function generateCertificates(){
-      if(count(Participation::all()) > 0){
-        if(count(Certificate::all()) == 0){
-          foreach(Subscription::all() as $subscription){
+    public function generateCertificates($id = null){
+      if($id){
+        $participations = Participation::where(["Subscription_id" => $id])->get();
+        $Subscription = Subscription::find($id);
+      }else{
+        $participations = Participation::all();
+      }
+      if(count($participations) > 0){
+        if($id){
+          $certificates = Certificate::where(["Subscription_id" => $id])->get();
+          foreach($certificates as $certificate){
+            $certificate->delete();
+          }
+          $certificates = array();
+        }else{
+          $certificates = Certificate::all();
+        }
+        if(count($certificates) == 0){
+          if($id){
+            $subscriptons[] = Subscription::find($id);
+          }else{
+            $subscriptons = Subscription::all();
+          }
+          foreach($subscriptons as $subscription){
             $participations = $subscription->participates->all();
             if($participations){
               // $select = DB::table("Certificate")->selectRaw("SEC_TO_TIME(SUM(TIME_TO_SEC(hours))) as hours")->where(["Subscription_id" => 34])->toSql();
@@ -144,11 +203,31 @@ class CertificateController extends Controller
                     $certificate->hours = $select->hours;
                     $certificate->key = hash("crc32", env("APP_NAME")."_".date("Y")."_".$subscription->id);
                     $certificate->save();
-                    echo " - ".$certificate->hours."<br><br>";
+                    // echo " - ".$certificate->hours."<br><br>";
                   }
                 }
               }
             }
+          }
+        }
+      }
+      if($id){
+        LogController::make("O usuário gerou o certificado do inscrito '#".$subscription->id." - ".$subscription->person->name."' no evento.");
+        return redirect("/person/dashboard/".$Subscription->person->id);
+      }
+      LogController::make("O usuário gerou os certificados dos inscritos do evento.");
+      return redirect("/");
+    }
+
+    public function deleteCertificate($id){
+      $person = AdminController::getPerson();
+      if($person){
+        $subscription = Subscription::find($id);
+        if($subscription){
+          if($subscription->certificate){
+            $subscription->certificate->delete();
+            LogController::make("O usuário deletou o certificado do inscrito '#".$subscription->id." - ".$subscription->person->name."' no evento.");
+            return redirect()->back();
           }
         }
       }

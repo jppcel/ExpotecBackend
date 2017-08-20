@@ -475,6 +475,7 @@
               <th>Atividade</th>
               <th>Tipo</th>
               <th>Data e Hora</th>
+              @if($args["adminController"]->hasPermission([3,4]))<th>Opções</th>@endif
             </tr>
           </thead>
           <tbody>
@@ -486,6 +487,7 @@
                   <td>{{$check->activity->name}}</td>
                   <td>{{($check->type == "in") ? "Entrada" : "Saída"}}</td>
                   <td>{{date("d/m/Y H:i:s",strtotime($check->checked_at)-(60*60*3))}}</td>
+                  @if($args["adminController"]->hasPermission([3,4]) && !$check->subscription->certificate)<td><a href="{{url("/person/check/delete/".$check->id)}}" class='btn btn-danger btn-sm'><i class="fa fa-times"></i></a></td>@endif
                 </tr>
               @endif
               @endforeach
@@ -528,6 +530,37 @@
                   <td>{{$Subscription->certificate["key"]}}</td>
                 </tr>
               @endif
+            @endforeach
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+
+    <!-- Certificados -->
+    <div class="box box-primary collapsed-box">
+      <div class="box-header with-border">
+        <h3 class="box-title">Logs</h3>
+        <div class="pull-right box-tools">
+          <button type="button" class="btn btn-primary btn-sm pull-right" data-widget="collapse" data-toggle="tooltip" title="" style="margin-right: 5px;" data-original-title="Collapse">
+            <i class="fa fa-plus"></i></button>
+        </div>
+      </div>
+      <!-- /.box-header -->
+      <div class="box-body">
+        <table class="table table-hover" width="100%">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Mensagem</th>
+            </tr>
+          </thead>
+          <tbody>
+            @foreach($args["person_dashboard"]->user->log->all() as $log)
+              <tr>
+                <td>{{$log->id}}</td>
+                <td>{{$log->text}}</td>
+              </tr>
             @endforeach
           </tbody>
         </table>
@@ -646,6 +679,112 @@
     </div>
     @endif
 
+    @if((($args["adminController"]->hasPermission([5]) && $args["is_admin"]) || $args["is_super_admin"]) && count($subscription->checks->all()) > 0)
+    <!-- Funções de Certificado -->
+    <div class="box box-primary collapsed-box">
+      <div class="box-header with-border">
+        <h3 class="box-title">Opções de Certificado</h3>
+        <div class="pull-right box-tools">
+          <button type="button" class="btn btn-primary btn-sm pull-right" data-widget="collapse" data-toggle="tooltip" title="" style="margin-right: 5px;" data-original-title="Collapse">
+            <i class="fa fa-plus"></i></button>
+        </div>
+      </div>
+      <!-- /.box-header -->
+      <div class="box-body">
+        @foreach($args["person_dashboard"]->packages->all() as $subscription)
+          @php
+            foreach($subscription->payment->all() as $payment){
+              if($payment->paymentStatus == 3){
+                $thisPaid = true;
+              }else{
+                $thisPaid = false;
+              }
+            }
+          @endphp
+          @if($thisPaid)
+            @if(count($subscription->participates->all()) == 0)
+              <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalReGrow_{{$subscription->id}}"><i class="fa fa-clone"></i> Re-geminar Registros</button><br/>
+              <!-- Modal Re-geminação -->
+              <div class="modal fade modal-danger" id="modalReGrow_{{$subscription->id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                      <h4 class="modal-title" id="myModalLabel">Efetuar a re-geminação dos registros de presença do inscrito</h4>
+                    </div>
+                    <div class="modal-body">
+                      <h2>Você tem certeza que pretende fazer isso?</h2><br>
+                      O inscrito terá as suas geminações anteriores excluídas e serão refeitas, assim fazendo necessário re-criar o certificado do mesmo.
+                      <h4>Você deseja ainda assim efetuar a re-geminação?</h4>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-success" data-dismiss="modal">Não quero mais</button>
+                      <a class="btn btn-danger" href="{{url("/certificate/growChecks/".$subscription->id)}}">Efetuar a re-geminação</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            @endif
+            @if(count($subscription->participates->all()) == 0 && !$subscription->certificate)
+              <a class="btn btn-success" href="{{url("/certificate/calculateHours/".$subscription->id)}}" title="Efetuar o Calculo das Horas"  data-toggle="tooltip" data-original-title="Serve para calcular as horas da inscrição."><i class="fa fa-calculator"></i> Calcular Horas <span class="badge bg-orange">?</span></a><br/>
+            @endif
+            @if(count($subscription->participates->all()) > 0 && !$subscription->certificate)
+              <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalApagarHoras_{{$subscription->id}}"><i class="fa fa-eraser"></i> Apagar Horas</button><br/>
+              <!-- Modal Calcular Horas -->
+              <div class="modal fade modal-danger" id="modalApagarHoras_{{$subscription->id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                      <h4 class="modal-title" id="myModalLabel">Apagar as horas já calculadas</h4>
+                    </div>
+                    <div class="modal-body">
+                      <h2>Você tem certeza que pretende fazer isso?</h2><br>
+                      O inscrito terá as suas horas já calculadas excluídas, assim fazendo necessário re-criar calcular as horas e criar o novo certificado.
+                      <h4>Você deseja ainda assim efetuar a re-geminação?</h4>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-success" data-dismiss="modal">Não quero mais</button>
+                      <a class="btn btn-danger" href="{{url("/certificate/deleteParticipations/".$subscription->id)}}">Apagar as horas</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            @endif
+
+            @if(!$subscription->certificate && count($subscription->participates->all()) > 0)
+              <a class="btn btn-success" href="{{url("/certificate/generate/".$subscription->id)}}" title="Gerar Certificado" data-toggle="tooltip" data-original-title="Serve para gerar um certificado para a inscrição."><i class="fa fa-certificate"></i> Gerar Certificado <span class="badge bg-orange">?</span></a><br/>
+            @endif
+
+            @if($subscription->certificate)
+              <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalReGrow_{{$subscription->id}}" title="Serve para apagar a geminação anterior e geminar novamente (considerar que este inscrito esteve em todo o período das atividades que ele teve algum registro de entrada e/ou saída)."><i class="fa fa-times-circle"></i> Deletar Certificado <span class="badge bg-orange">?</span></button>
+              <!-- Modal Re-geminação -->
+              <div class="modal fade modal-danger" id="modalReGrow_{{$subscription->id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                      <h4 class="modal-title" id="myModalLabel">Deletar o certificado</h4>
+                    </div>
+                    <div class="modal-body">
+                      <h2>Você tem certeza que pretende fazer isso?</h2><br>
+                      O inscrito terá o seu certificado excluído e será necessário gerar um novo certificado posteriormente.
+                      <h4>Você deseja ainda assim efetuar a exclusão?</h4>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-success" data-dismiss="modal">Não quero mais</button>
+                      <a class="btn btn-danger" href="{{url("/certificate/delete/".$subscription->id)}}">Efetuar a exclusão</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            @endif
+          @endif
+        @endforeach
+      </div>
+        <!-- /.box-body -->
+    </div>
+    @endif
     @if(!$args["person_dashboard"]->user->is_active || $args["is_admin"])
     <!-- Enviar o email de confirmação -->
     <div class="box box-primary collapsed-box">

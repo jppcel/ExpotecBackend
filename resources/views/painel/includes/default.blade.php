@@ -173,17 +173,17 @@
         @if($args["adminController"]->hasPermission([6,4]))
         <li class="treeview">
           <a href="#">
-            <i class="fa fa-user"></i>
+            <i class="fa fa-certificate"></i>
             <span>Certificados</span>
           </a>
           <ul class="treeview-menu">
             <li class="treeview">
               <a href="#">
-                <i class="fa fa-user"></i>
+                <i class="fa fa-pencil-square-o"></i>
                 <span>Atualização de Registros</span>
               </a>
               <ul class="treeview-menu">
-                <li><a href="{{url("/certificate/growChecks")}}"><i class="fa fa-user-plus"></i> Geminar Registros <span class="badge bg-orange" data-toggle="tooltip" data-original-title="Serve para considerar que todos os inscritos que tiveram registros de entrada ou saída de alguma atividade estiveram presentes em toda a atividade. Isso pode demorar um pouco para executar.">?</span></a></li>
+                <li><a href="{{url("/certificate/growChecks")}}"><i class="fa fa-clone"></i> Geminar Registros <span class="badge bg-orange" data-toggle="tooltip" data-original-title="Serve para considerar que todos os inscritos que tiveram registros de entrada ou saída de alguma atividade estiveram presentes em toda a atividade. Isso pode demorar um pouco para executar.">?</span></a></li>
                 <!-- <li><a href="{{url("/person/new")}}"><i class="fa fa-user-plus"></i> Aplicar Saída para Registros<br> Pendentes <span class="badge bg-orange" title="Serve para dar saída em registros que só tenham a entrada ou que estão pendentes de saída.">?</span></a></li> -->
                 <!-- <li><a href="{{url("/person/new")}}"><i class="fa fa-user-plus"></i>  <span class="badge bg-orange" title="Serve para dar saída em registros que só tenham a entrada ou que estão pendentes de saída.">?</span></a></li> -->
 
@@ -195,11 +195,11 @@
                   <span>Horas</span>
                 </a>
                 <ul class="treeview-menu">
-                  <li><a href="{{url("/certificate/calculateHours")}}"><i class="fa fa-users"></i> Calcular Horas <span class="badge bg-orange" data-toggle="tooltip" data-original-title="Serve para efetuar o cálculo das horas para a certificação. Isso pode demorar um pouco.">?</span></a></li>
-                  <li><a href="{{url("/certificate/deleteParticipations")}}"><i class="fa fa-users"></i> Deletar Horas Calculadas <span class="badge bg-orange" data-toggle="tooltip" data-original-title="Serve para apagar os calculos de horas efetuados. Isso pode demorar um pouco.">?</span></a></li>
+                  <li><a href="{{url("/certificate/calculateHours")}}"><i class="fa fa-calculator"></i> Calcular Horas <span class="badge bg-orange" data-toggle="tooltip" data-original-title="Serve para efetuar o cálculo das horas para a certificação. Isso pode demorar um pouco.">?</span></a></li>
+                  <li><a href="{{url("/certificate/deleteParticipations")}}"><i class="fa fa-eraser"></i> Deletar Horas Calculadas <span class="badge bg-orange" data-toggle="tooltip" data-original-title="Serve para apagar os calculos de horas efetuados. Isso pode demorar um pouco.">?</span></a></li>
                 </ul>
               </li>
-              <li><a href="{{url("/certificate/generate")}}"><i class="fa fa-users"></i> Gerar certificados <span class="badge bg-orange" data-toggle="tooltip" data-original-title="Serve para gerar os certificados para os participantes do evento. Isso pode demorar um pouco.">?</span></a></li>
+              <li><a href="{{url("/certificate/generate")}}"><i class="fa fa-certificate"></i> Gerar certificados <span class="badge bg-orange" data-toggle="tooltip" data-original-title="Serve para gerar os certificados para os participantes do evento. Isso pode demorar um pouco.">?</span></a></li>
             <!-- <li><a href="{{url("/person/subscriptions")}}"><i class="fa fa-list"></i> Listar Inscrições</a></li> -->
           </ul>
         </li>

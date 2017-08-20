@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\SubscriptionController;
+use App\Http\Controllers\AdminController;
 use App\Check;
 use App\Event;
 use App\Subscription;
@@ -278,4 +279,17 @@ class CheckController extends Controller
           }
         }
 
+
+        public function removeCheck($id){
+          $person = AdminController::getPerson();
+          if($person){
+            $check = Check::find($id);
+            if($check){
+              LogController::make("O usuário removeu o registro de presença de '".$check->subscription->person->id." - ".$check->subscription->person->name."' na atividade '".$check->activity->id." - ".$check->activity->name."' de tipo de '".$check->type."' às '".date("d/m/Y H:i:s",strtotime($check->checked_at))."'.");
+              $check->delete();
+            }
+            return redirect()->back();
+          }
+          return redirect("/");
+        }
 }

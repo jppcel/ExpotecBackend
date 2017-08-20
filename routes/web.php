@@ -42,6 +42,10 @@ Route::group(['prefix' => "person", 'middleware' => ['HasPermission_Person']], f
     Route::get("/disable/{Person_id}", "ControlPanelController@person_disable_save")->middleware(["HasPermission_Person", "HasPermission_Admin"]);
     Route::get("/sendConfirmation/{Person_id}", "ControlPanelController@person_sendConfirmation_save")->middleware(["HasPermission_Person"]);
   });
+
+  Route::group(['prefix' => "check", 'middleware' => ['HasPermission_Check','HasPermission_Person','HasPermission_Admin']], function(){
+    Route::get("/delete/{id}", "CheckController@removeCheck");
+  });
 });
 
 Route::group(['prefix' => "label"], function(){
@@ -55,7 +59,12 @@ Route::group(['prefix' => "label"], function(){
 
 Route::group(['prefix' => "certificate"], function(){
   Route::get("/growChecks", "CertificateController@growChecks")->middleware(["HasPermission_Certificate","HasPermission_Admin"]);
+  Route::get("/growChecks/{id}", "CertificateController@growChecks")->middleware(["HasPermission_Certificate","HasPermission_Admin"]);
   Route::get("/calculateHours", "CertificateController@calculateHours")->middleware(["HasPermission_Certificate","HasPermission_Admin"]);
+  Route::get("/calculateHours/{id}", "CertificateController@calculateHours")->middleware(["HasPermission_Certificate","HasPermission_Admin"]);
   Route::get("/deleteParticipations", "CertificateController@deleteParticipations")->middleware(["HasPermission_Certificate","HasPermission_Admin"]);
+  Route::get("/deleteParticipations/{id}", "CertificateController@deleteParticipations")->middleware(["HasPermission_Certificate","HasPermission_Admin"]);
   Route::get("/generate", "CertificateController@generateCertificates")->middleware(["HasPermission_Certificate","HasPermission_Admin"]);
+  Route::get("/generate/{id}", "CertificateController@generateCertificates")->middleware(["HasPermission_Certificate","HasPermission_Admin"]);
+  Route::get("/delete/{id}", "CertificateController@deleteCertificate")->middleware(["HasPermission_Certificate","HasPermission_Admin"]);
 });
