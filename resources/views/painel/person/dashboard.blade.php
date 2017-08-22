@@ -65,7 +65,14 @@
     <div class="small-box bg-green">
       <div class="inner">
         @if($hasPaid)
-          <h4><strong>{{$args["person_subscription"]->package->name}}</strong></h4>
+          <h4><strong>
+          @foreach($args["person_dashboard"]->packages->all() as $subscription)
+            @foreach($subscription->payment->all() as $payment)
+              @if($payment->paymentStatus == 3)
+                {{$subscription->package->name}}<br/>
+              @endif
+            @endforeach
+          @endforeach</strong></h4>
         @else
           <h3>N.P.</h3>
         @endif
@@ -684,7 +691,16 @@
     </div>
     @endif
 
-    @if((($args["adminController"]->hasPermission([5]) && $args["is_admin"]) || $args["is_super_admin"]) && count($subscription->checks->all()) > 0)
+    @php
+      $certificateOptions = false;
+      foreach($args["person_dashboard"]->packages->all() as $Subscription){
+        if(count($Subscription->checks->all()) > 0){
+          $certificateOptions = true;
+        }
+      }
+    @endphp
+
+    @if((($args["adminController"]->hasPermission([5]) && $args["is_admin"]) || $args["is_super_admin"]) && $certificateOptions)
     <!-- Funções de Certificado -->
     <div class="box box-primary collapsed-box">
       <div class="box-header with-border">
