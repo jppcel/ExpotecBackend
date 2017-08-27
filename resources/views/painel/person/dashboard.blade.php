@@ -65,14 +65,7 @@
     <div class="small-box bg-green">
       <div class="inner">
         @if($hasPaid)
-          <h4><strong>
-          @foreach($args["person_dashboard"]->packages->all() as $subscription)
-            @foreach($subscription->payment->all() as $payment)
-              @if($payment->paymentStatus == 3)
-                {{$subscription->package->name}}<br/>
-              @endif
-            @endforeach
-          @endforeach</strong></h4>
+          <h4><strong>{{$args["person_subscription"]->package->name}}</strong></h4>
         @else
           <h3>N.P.</h3>
         @endif
@@ -692,15 +685,14 @@
     @endif
 
     @php
-      $certificateOptions = false;
-      foreach($args["person_dashboard"]->packages->all() as $Subscription){
-        if(count($Subscription->checks->all()) > 0){
-          $certificateOptions = true;
+      $hasSubscriptionWithCheck = false;
+      foreach($args["person_dashboard"]->packages->all() as $subscription){
+        if(count($subscription->checks->all()) > 0){
+          $hasSubscriptionWithCheck = true;
         }
       }
     @endphp
-
-    @if((($args["adminController"]->hasPermission([5]) && $args["is_admin"]) || $args["is_super_admin"]) && $certificateOptions)
+    @if((($args["adminController"]->hasPermission([5]) && $args["is_admin"]) || $args["is_super_admin"]) && $hasSubscriptionWithCheck)
     <!-- Funções de Certificado -->
     <div class="box box-primary collapsed-box">
       <div class="box-header with-border">
@@ -774,7 +766,6 @@
                 </div>
               </div>
             @endif
-
             @if(!$subscription->certificate && count($subscription->participates->all()) > 0 && count($subscription->checks->all()) > 0)
               <a class="btn btn-success" href="{{url("/certificate/generate/".$subscription->id)}}" title="Gerar Certificado" data-toggle="tooltip" data-original-title="Serve para gerar um certificado para a inscrição."><i class="fa fa-certificate"></i> Gerar Certificado <span class="badge bg-orange">?</span></a><br/>
             @endif
