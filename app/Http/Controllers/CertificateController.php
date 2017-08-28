@@ -94,7 +94,7 @@ class CertificateController extends Controller
       if($person){
         $activities = Activity::all();
         if($id){
-          foreach(Check::where(["Person_id" => $id]) as $check){
+          foreach(Check::where(["Person_id" => $id])->get() as $check){
             $check->delete();
           }
           $subscription = Subscription::find($id);
