@@ -18,6 +18,7 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
+        \Barryvdh\Cors\HandleCors::class,
     ];
 
     /**
@@ -34,6 +35,7 @@ class Kernel extends HttpKernel
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            \Barryvdh\Cors\HandleCors::class,
         ],
 
         'api' => [
@@ -56,5 +58,12 @@ class Kernel extends HttpKernel
         'can' => \Illuminate\Auth\Middleware\Authorize::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
+        'verifylogin' => \App\Http\Middleware\VerifyLogin::class,
+
+
+        'HasPermission_Person' => \App\Http\Middleware\HasPermission_Person::class,
+        'HasPermission_Admin' => \App\Http\Middleware\HasPermission_Admin::class,
+        'HasPermission_Check' => \App\Http\Middleware\HasPermission_Check::class,
+        'HasPermission_Certificate' => \App\Http\Middleware\HasPermission_Certificate::class,
     ];
 }

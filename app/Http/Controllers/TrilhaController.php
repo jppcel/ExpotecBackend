@@ -53,7 +53,7 @@ class TrilhaController extends Controller
         }
         return response()->json(array("ok" => 1, "return" => $retorno));
       }else{
-        return response()->json(array("ok" => 0, "error" => 1, "typeError" => "0.0", "message" => "Usuário deslogado."));
+        return response()->json(array("ok" => 0, "error" => 1, "typeError" => "0.0", "message" => "Usuário deslogado."), 422);
       }
     }
 

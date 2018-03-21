@@ -10,11 +10,6 @@ class Person extends Model
     protected $primaryKey = 'id';
     protected $table = 'Person';
 
-    public function city()
-    {
-      return $this->belongsTo('App\City', 'City_Cod_Ibge');
-    }
-
     public function user()
     {
       return $this->hasOne('App\User');
@@ -25,7 +20,12 @@ class Person extends Model
       return $this->hasOne('App\Address');
     }
 
+    public function phones()
+    {
+      return $this->hasOne('App\Phone');
+    }
+
     public function packages(){
-      return $this->hasMany("App\Subscription");
+      return $this->hasMany("App\Subscription", "Person_id");
     }
 }

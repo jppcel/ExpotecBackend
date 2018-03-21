@@ -15,10 +15,11 @@ class CreatePacoteTable extends Migration
     {
       Schema::create('Package', function (Blueprint $table) {
           $table->increments("id");
-          $table->string("name", 50);
+          $table->string("name", 100);
           $table->float("value");
           $table->date("startDate");
           $table->date("endDate");
+          $table->text("description");
           $table->timestamps();
       });
     }

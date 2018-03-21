@@ -26,18 +26,63 @@ class PessoaController extends Controller
       $retorno = false;
       if(!$validator->fails()){
         $CPF = Util::CPFNumbers($cpf);
-        $person = Person::where("document", $CPF)->first();
+        $person = Person::where(["document" => $CPF])->first();
         if($person){
           $user = $person->user;
           if($user->remember_token == $token){
-            if($user->updated_at > date("Y-m-d H:i:s",time()-900)){
-              $retorno = $user->person;
-            }else{
-              LoginController::logout($cpf, $token, 0);
+            if($user->is_active == 1){
+              if($user->updated_at > date("Y-m-d H:i:s",time()-900)){
+                $retorno = $user->person;
+                $user->save();
+              }else{
+                LoginController::logout($cpf, $token, 0);
+              }
             }
           }
         }
       }
       return $retorno;
+    }
+    /**
+     *  Method Util: Verify login Mobile | Don't have route!
+     *  @param  string  cpf [14] => CPF of Person
+     *  @param  string  token => Token of this session
+     *
+     */
+      public static function verifyLoginMobile($cpf, $token){
+        $validator = \Validator::make(["cpf" => $cpf, "token" => $token], [
+          'cpf' => 'required|cpf',
+          'token' => 'required',
+        ]);
+        // Se a validação falha, retorna falso
+        $retorno = false;
+        if(!$validator->fails()){
+          $CPF = Util::CPFNumbers($cpf);
+          $person = Person::where(["document" => $CPF])->first();
+          if($person){
+            $user = $person->user;
+            if($user->remember_token == $token){
+              if($user->is_active == 1){
+                if($user->updated_at > date("Y-m-d H:i:s",time()-(60*60*24))){
+                  $adminController = new AdminController;
+                  if(AdminController::hasPermissionMobile([2,4],$person,$cpf,$token)){
+                    $retorno = $person;
+                    $user->save();
+                  }else{
+                    LoginController::logout($cpf, $token, 0);
+                  }
+                }else{
+                  LoginController::logout($cpf, $token, 0);
+                }
+              }
+            }
+          }
+        }
+        return $retorno;
+      }
+
+    public function registerCount(){
+      $person = Person::all();
+      return count($person);
     }
 }

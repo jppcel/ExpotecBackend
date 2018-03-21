@@ -9,10 +9,33 @@ use App\City;
 
 class CityController extends Controller
 {
+
+    /**
+     *  @route: /api/web/states
+     *
+     *  @method: Get
+     */
     public function listStates(){
-      return response()->json(State::all());
+      $states = State::all();
+      if(count($states) > 0){
+        return response()->json($states);
+      }
+      return response()->json(array("ok" => 0), 404);
     }
+
+      /**
+       *  @route: /api/web/cities/{id}
+       *
+       *  @method: Get
+       *
+       *  @param: integer id => State id
+       */
     public function listCities($state_id){
-      return response()->json(City::where("State_id", $state_id)->get());
+      $cities = City::where("State_id", $state_id)->get();
+      if(count($cities) > 0){
+        return response()->json($cities);
+      }else{
+        return response()->json(array("ok" => 0), 404);
+      }
     }
 }

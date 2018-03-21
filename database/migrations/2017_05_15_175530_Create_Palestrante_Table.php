@@ -18,7 +18,7 @@ class CreatePalestranteTable extends Migration
           $table->string("name", 50);
           $table->string("photo")->nullable();
           $table->string("website", 100)->nullable();
-          $table->string("description", 150);
+          $table->text("description");
           $table->timestamps();
       });
     }

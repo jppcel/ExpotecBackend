@@ -6,8 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class City extends Model
 {
-    public $timestamps = true;
-    protected $primaryKey = 'Cod_Ibge';
+    public $timestamps = false;
+    protected $primaryKey = 'id';
     protected $table = 'City';
 
     public function state()

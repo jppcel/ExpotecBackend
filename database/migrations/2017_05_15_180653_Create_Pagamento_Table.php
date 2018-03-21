@@ -17,6 +17,7 @@ class CreatePagamentoTable extends Migration
           $table->increments("id");
           $table->integer("Subscription_id")->unsigned();
           $table->string("Transaction_id");
+          $table->string("code");
           $table->integer("paymentStatus");
           $table->foreign("Subscription_id")->references("id")->on("Subscription");
           $table->timestamps();

@@ -15,6 +15,10 @@ class Activity extends Model
     }
 
     public function track(){
-      return $this->belongsTo("App\Track");
+      return $this->belongsTo("App\Track", "Track_id");
+    }
+
+    public function checks(){
+      return $this->hasMany("App\Check", "Activity_id");
     }
 }
